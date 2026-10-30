@@ -1,0 +1,50 @@
+{
+  "task_id": "PQC-003",
+  "difficulty": "constrained",
+  "scenario": "MediTrust Health operates 3 hospitals and 15 clinics, using a centralized Electronic Health Record (EHR) system. Patient data (including genomic records) has a confidentiality lifetime of 50+ years. The EHR vendor uses RSA-2048 for database encryption and TLS 1.2 with ECDHE for all inter-hospital traffic. The hospital's security policy mandates FIPS 140-3 validated modules for all cryptography. The current HSM provider (Utimaco) has stated that their HSM firmware will support ML-KEM and ML-DSA by Q1 2027. The hospital has a budget of $500,000 and a change freeze from December 1 to January 15. However, the EHR vendor has a strict policy: they do not allow custom cryptographic configurations and only support algorithms they have explicitly certified. The EHR vendor has not certified ML-KEM or ML-DSA yet.",
+  "question": "Develop a migration plan for MediTrust Health. Identify what can be migrated, what cannot, and what blockers exist. Respect the FIPS 140-3 requirement and the EHR vendor's certification policy. Return an ordered list of steps, blockers, vendor dependencies, algorithm roles, and budget.",
+  "expected_output_schema": {
+    "migration_steps": [{"step_number": "Integer", "activity": "String", "activity_type": "String", "start_date": "String", "end_date": "String", "prerequisites": ["String"]}],
+    "blockers": [{"blocker_id": "String", "category": "String", "blocker": "String", "reason": "String", "resolution_required": "String"}],
+    "vendor_dependencies": [{"vendor": "String", "pqc_support_status": "String", "evidence_required": "String"}],
+    "algorithm_roles": {"ML-KEM": "String", "ML-DSA": "String"},
+    "budget": {"estimated_total_usd": "Number", "budget_limit_usd": 500000, "within_budget": "Boolean", "cost_assumptions": [{"category": "String", "estimated_cost_usd": "Number"}]},
+    "confidence": "String"
+  },
+  "grading_rules": [
+    {
+      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "parameters": {
+        "freeze_start": "2026-12-01", "freeze_end": "2027-01-15",
+        "prohibited_activity_types": ["production_crypto_change", "hsm_firmware_upgrade", "major_application_deployment"],
+        "budget_limit_usd": 500000,
+        "failure_conditions": ["Claims EHR vendor supports ML-KEM without certification", "Proposes non-FIPS validated crypto modules"]
+      }
+    },
+    {
+      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "parameters": {
+        "required_blockers": [
+          {"id": "EHR_CERTIFICATION", "category": "CORE_BANKING_VENDOR", "accepted_terms": ["EHR vendor", "certification", "not certified"], "required_context": ["certification policy", "vendor restriction"], "resolution_required": ["Wait for vendor certification", "Use hybrid approach"]},
+          {"id": "FIPS_VALIDATION", "category": "REGULATORY", "accepted_terms": ["FIPS 140-3", "validated module", "FIPS"], "required_context": ["FIPS requirement"], "resolution_required": ["Select FIPS-validated HSM", "Ensure modules meet FIPS"]}
+        ],
+        "require_blocker_reason": true,
+        "require_resolution_action": true
+      }
+    },
+    {
+      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "parameters": {
+        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
+        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
+        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
+        "require_correct_algorithm_roles": true
+      }
+    },
+    {
+      "id": "G4", "type": "budget_compliance", "weight": "high",
+      "parameters": {"maximum_budget_usd": 500000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+    }
+  ],
+  "expert_notes": "A model might recommend using ML-KEM with a non-FIPS library, or falsely assume the EHR vendor will certify the new algorithms quickly. An expert must recognize that the EHR vendor's certification restriction is a hard blocker, and FIPS 140-3 validation limits the choices of PQC implementations. The plan must involve waiting for certified modules."
+}

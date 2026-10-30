@@ -1,0 +1,87 @@
+{
+  "task_id": "PQC-002",
+  "difficulty": "adversarial",
+  "scenario": "QuantumLeap FinTech is a startup providing payment processing to 200 merchants. It operates a single legacy HSM (SafeNet Luna SA 5) that is now end-of-life and must be replaced within 12 months. The vendor offers a new HSM (SafeNet Luna 8) that is 'PQC-ready' according to a marketing brochure, but the firmware update enabling ML-KEM and ML-DSA will not be available until Q3 2028. The startup's current cryptographic stack uses RSA-2048 for TLS and ECDSA P-256 for API signatures. The CTO wants to migrate to PQC within 6 months to win a government contract that requires 'quantum-resistant' cryptography. The startup has a budget of $50,000 for the migration and can only tolerate 2 hours of downtime per quarter. They have 3 engineers, none with PQC experience. The startup's biggest customer has announced that it will only accept payment processors that have a documented PQC migration plan by the end of this year.",
+  "question": "Develop a first-phase PQC migration plan for QuantumLeap FinTech. Identify which cryptographic assets should be prioritized, what migration approach is technically feasible given the HSM limitations and budget, and what blockers exist. Explain what can and cannot be achieved within 6 months. Return an ordered list of migration steps, an explicit list of blockers, vendor dependencies, algorithm roles, a numeric budget estimate, and a confidence assessment.",
+  "expected_output_schema": {
+    "migration_steps": [
+      {
+        "step_number": "Integer",
+        "activity": "Description",
+        "activity_type": "inventory | risk_assessment | vendor_engagement | procurement | planning | lab_testing | production_crypto_change | hsm_firmware_upgrade | major_application_deployment",
+        "start_date": "YYYY-MM-DD or null",
+        "end_date": "YYYY-MM-DD or null",
+        "prerequisites": ["List of strings"]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "String",
+        "category": "HSM_VENDOR | CORE_BANKING_VENDOR | PROCUREMENT | TECHNICAL | REGULATORY | OPERATIONAL",
+        "blocker": "Description",
+        "reason": "Explanation",
+        "resolution_required": "Action"
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "String",
+        "pqc_support_status": "confirmed | unconfirmed | unsupported",
+        "evidence_required": "String"
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "Key establishment",
+      "ML-DSA": "Digital signatures"
+    },
+    "budget": {
+      "estimated_total_usd": "Number",
+      "budget_limit_usd": 50000,
+      "within_budget": "true | false",
+      "cost_assumptions": [
+        {"category": "String", "estimated_cost_usd": "Number"}
+      ]
+    },
+    "confidence": "low | medium | high"
+  },
+  "grading_rules": [
+    {
+      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "parameters": {
+        "freeze_start": "2026-11-01", "freeze_end": "2027-04-30",
+        "prohibited_activity_types": ["production_crypto_change", "hsm_firmware_upgrade", "major_application_deployment"],
+        "budget_limit_usd": 50000, "max_downtime_hours": 2,
+        "failure_conditions": [
+          "Claims HSM firmware is available before 2028-07-01",
+          "Schedules production activity requiring >2 hours downtime",
+          "Exceeds $50,000 budget"
+        ]
+      }
+    },
+    {
+      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "parameters": {
+        "required_blockers": [
+          {"id": "HSM_FIRMWARE", "category": "HSM_VENDOR", "accepted_terms": ["SafeNet Luna 8", "firmware", "PQC-ready", "Q3 2028"], "required_context": ["firmware availability", "PQC support"], "resolution_required": ["Wait for firmware", "Alternative HSM", "Software PQC"]},
+          {"id": "BUDGET", "category": "PROCUREMENT", "accepted_terms": ["budget", "$50,000", "cost", "insufficient"], "required_context": ["budget limitation"], "resolution_required": ["Reduce scope", "Additional funding"]}
+        ],
+        "require_blocker_reason": true,
+        "require_resolution_action": true
+      }
+    },
+    {
+      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "parameters": {
+        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
+        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
+        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
+        "require_correct_algorithm_roles": true
+      }
+    },
+    {
+      "id": "G4", "type": "budget_compliance", "weight": "high",
+      "parameters": {"maximum_budget_usd": 50000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+    }
+  ],
+  "expert_notes": "A naive model will recommend buying the new HSM immediately. An expert recognizes the firmware is unavailable until Q3 2028 and the budget is insufficient. The model must recommend software-based PQC or wait for firmware."
+}

@@ -1,4 +1,3 @@
-
 import os
 import json
 import re
@@ -17,26 +16,21 @@ from grader import grade_response
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
-
-TASK_PATH = BASE_DIR / "tasks" / "task_001.json"
+TASKS_DIR = BASE_DIR / "tasks"
 RESULTS_DIR = BASE_DIR / "results"
+SUMMARY_PATH = RESULTS_DIR / "batch_summary.json"
 
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-# Models to evaluate.
 DEFAULT_MODELS = [
-    "anthropic/claude-sonnet-4.6",
-    "openai/gpt-4o",
+    "deepseek-v4-pro",
+    "deepseek-flash"
 ]
 
-TEMPERATURE = 0.0
-
-# Reduced to fit your current OpenRouter token allowance.
-MAX_TOKENS = 3000
-
-REQUEST_TIMEOUT = 180
-
-DELAY_BETWEEN_MODELS = 2
+TEMPERATURE = float(os.getenv("TEMPERATURE", "0.0"))
+MAX_TOKENS = int(os.getenv("MAX_TOKENS", "8000"))
+REQUEST_TIMEOUT = int(os.getenv("REQUEST_TIMEOUT", "180"))
+DELAY_BETWEEN_MODELS = float(os.getenv("DELAY_BETWEEN_MODELS", "2"))
 
 
 # ============================================================
@@ -45,16 +39,16 @@ DELAY_BETWEEN_MODELS = 2
 
 load_dotenv(BASE_DIR / ".env")
 
-API_KEY = os.getenv("OPENROUTER_API_KEY")
+API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 if not API_KEY:
     raise ValueError(
-        "OPENROUTER_API_KEY not found in .env. "
-        "Please add your OpenRouter API key."
+    "DEEPSEEK_API_KEY not found in .env. "
+    "Please add your DeepSeek API key."
     )
 
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
+    base_url="https://api.deepseek.com/v1",
     api_key=API_KEY,
     timeout=REQUEST_TIMEOUT,
     max_retries=2,
@@ -66,42 +60,47 @@ client = OpenAI(
 # ============================================================
 
 def load_json(path):
-
     with open(path, "r", encoding="utf-8") as file:
         return json.load(file)
 
 
 def save_json(path, data):
-
+    path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
 
     with open(path, "w", encoding="utf-8") as file:
-        json.dump(
-            data,
-            file,
-            indent=2,
-            ensure_ascii=False
-        )
+        json.dump(data, file, indent=2, ensure_ascii=False)
 
 
-def safe_filename(model_id):
+def safe_filename(value):
+    filename = str(value).replace("/", "_")
+    filename = re.sub(r"[^A-Za-z0-9_.-]+", "_", filename)
+    return filename.strip("._") or "unknown"
 
-    filename = str(model_id).replace("/", "_")
 
-    filename = re.sub(
-        r"[^A-Za-z0-9_.-]+",
-        "_",
-        filename
+def get_output_path(model_id, task_id):
+    return RESULTS_DIR / (
+        f"{safe_filename(model_id)}_{safe_filename(task_id)}.json"
     )
 
-    return filename.strip("._") or "unknown_model"
+
+def utc_now():
+    return datetime.now(timezone.utc).isoformat()
 
 
-def get_output_path(model_id):
+def json_safe_usage(response):
+    usage = getattr(response, "usage", None)
 
-    filename = safe_filename(model_id)
+    if usage is None:
+        return None
 
-    return RESULTS_DIR / f"{filename}_task001.json"
+    if hasattr(usage, "model_dump"):
+        return usage.model_dump()
+
+    if isinstance(usage, dict):
+        return usage
+
+    return str(usage)
 
 
 # ============================================================
@@ -109,22 +108,15 @@ def get_output_path(model_id):
 # ============================================================
 
 def get_model_list():
-
     """
-    Models can be changed without editing this file.
-
-    Add this to .env if you want to override the defaults:
+    Override the default model list in .env:
 
     OPENROUTER_MODELS=provider/model1,provider/model2
     """
 
-    configured_models = os.getenv(
-        "OPENROUTER_MODELS",
-        ""
-    ).strip()
+    configured_models = os.getenv("OPENROUTER_MODELS", "").strip()
 
     if configured_models:
-
         models = [
             model.strip()
             for model in configured_models.split(",")
@@ -149,7 +141,7 @@ def validate_response_structure(response):
         "vendor_dependencies",
         "algorithm_roles",
         "budget",
-        "confidence"
+        "confidence",
     ]
 
     expected_types = {
@@ -158,15 +150,22 @@ def validate_response_structure(response):
         "vendor_dependencies": list,
         "algorithm_roles": dict,
         "budget": dict,
-        "confidence": str
+        "confidence": str,
     }
 
     missing_fields = []
-
     type_errors = []
 
-    for field in required_fields:
+    if not isinstance(response, dict):
+        return {
+            "valid": False,
+            "missing_fields": required_fields,
+            "type_errors": [
+                "Top-level JSON response must be an object."
+            ],
+        }
 
+    for field in required_fields:
         if field not in response:
             missing_fields.append(field)
 
@@ -174,142 +173,109 @@ def validate_response_structure(response):
 
         if field in response:
 
-            if not isinstance(
-                response[field],
-                expected_type
-            ):
+            if not isinstance(response[field], expected_type):
 
                 type_errors.append(
-                    f"{field} should be "
-                    f"{expected_type.__name__}, "
+                    f"{field} should be {expected_type.__name__}, "
                     f"not {type(response[field]).__name__}."
                 )
 
     return {
-        "valid": (
-            len(missing_fields) == 0
-            and len(type_errors) == 0
-        ),
+        "valid": not missing_fields and not type_errors,
         "missing_fields": missing_fields,
-        "type_errors": type_errors
+        "type_errors": type_errors,
     }
 
 
 # ============================================================
-# 6. TOKEN USAGE EXTRACTION
-# ============================================================
-
-def extract_usage(response):
-
-    usage = getattr(response, "usage", None)
-
-    if usage is None:
-        return None
-
-    if hasattr(usage, "model_dump"):
-        return usage.model_dump()
-
-    if isinstance(usage, dict):
-        return usage
-
-    return str(usage)
-
-
-# ============================================================
-# 7. PROMPT CONSTRUCTION
+# 6. PROMPT CONSTRUCTION
 # ============================================================
 
 def build_prompt(task):
 
-    schema = task.get(
-        "expected_output_schema",
-        {}
-    )
+    """
+    Build a task-specific prompt using only the task's scenario,
+    question and expected output schema.
+
+    Grading rules and expert notes are intentionally not exposed
+    to the evaluated model.
+    """
+
+    schema = task.get("expected_output_schema", {})
 
     prompt = f"""
-You are an expert enterprise cybersecurity architect
-specialising in post-quantum cryptography migration
-for financial institutions.
+You are an expert cybersecurity architect specialising in
+post-quantum cryptography (PQC) migration planning.
 
-Your task is to develop a technically defensible,
-practical first-phase PQC migration plan.
+Prepare a technically defensible, practical migration plan
+that directly answers the task below.
+
+TASK ID:
+{task.get("task_id", "Not specified")}
 
 SCENARIO:
-
-{task["scenario"]}
-
+{task.get("scenario", "")}
 
 QUESTION:
+{task.get("question", "")}
 
-{task["question"]}
-
-
-EXPECTED OUTPUT STRUCTURE:
-
+REQUIRED OUTPUT STRUCTURE:
 {json.dumps(schema, indent=2, ensure_ascii=False)}
 
+INSTRUCTIONS:
 
-IMPORTANT INSTRUCTIONS:
+1. Return exactly one valid JSON object. Do not include Markdown,
+   code fences, or explanatory text outside the JSON object.
 
-1. Return exactly one valid JSON object.
+2. Use the exact top-level field names and data structures
+   specified in the required output structure.
 
-2. Do not include Markdown code fences or explanatory
-   text outside the JSON object.
+3. Respect every constraint stated in the scenario, including
+   budget limits, dates, change freezes, downtime limits,
+   regulatory requirements, vendor restrictions, staffing limits,
+   product capabilities and delivery timelines.
 
-3. Use the exact top-level field names specified
-   in the expected output structure.
+4. Distinguish confirmed capabilities from vendor claims,
+   forecasts, assumptions and unconfirmed dependencies.
+   Never present an expected future capability as currently
+   available or validated.
 
-4. Use arrays for migration_steps, blockers,
-   vendor_dependencies, and cost_assumptions.
+5. Do not invent vendor confirmations, product capabilities,
+   firmware versions, certification status, delivery dates,
+   regulatory approvals or technical compatibility.
 
-5. Use integer values for step_number.
+6. Identify blockers explicitly. Explain why each blocker matters
+   and specify concrete evidence or actions needed to resolve it.
 
-6. Use YYYY-MM-DD dates, or null where a date
-   cannot responsibly be determined.
+7. Distinguish what can realistically be completed in the
+   requested timeframe from what must wait for vendor support,
+   validation, certification, procurement or other dependencies.
 
-7. Use only the activity_type values specified
-   in the expected output structure.
+8. Use ML-KEM for post-quantum key establishment and ML-DSA
+   for post-quantum digital signatures where relevant.
+   Do not interchange their cryptographic roles.
 
-8. ML-KEM must be used for key establishment.
-   It must not be assigned to digital signatures.
+9. Schedule activities in a logical order. Make prerequisites
+   explicit. Do not schedule a production change before its
+   technical, operational, vendor and regulatory prerequisites
+   have been satisfied.
 
-9. ML-DSA must be used for digital signatures.
-   It must not be assigned to key establishment.
+10. Respect all change freezes and operational downtime limits.
+    Do not assume that a non-production activity is permitted
+    if the scenario prohibits it.
 
-10. Do not claim that Thales Luna Network HSM 7
-    supports ML-KEM or ML-DSA.
+11. Provide a numeric budget estimate and a numeric cost
+    breakdown. Ensure the cost assumptions reconcile with
+    the estimated total and remain within the stated budget
+    unless the scenario explicitly asks for an over-budget
+    assessment.
 
-11. Do not claim that the third-party core banking
-    platform supports PQC.
+12. Use dates in YYYY-MM-DD format where dates can responsibly
+    be determined. Use null where the schema permits it and
+    a date cannot responsibly be determined.
 
-12. Both vendor dependencies remain unconfirmed
-    unless written evidence is explicitly provided
-    in the scenario.
-
-13. Do not schedule production cryptographic changes,
-    HSM firmware upgrades, or major application
-    deployments from 1 December 2026 through
-    15 January 2027 inclusive.
-
-14. Prioritise sensitive information that must remain
-    confidential for 10 to 15 years.
-
-15. Explain harvest-now-decrypt-later exposure.
-
-16. Provide a numeric estimated_total_usd.
-
-17. Provide a numeric cost breakdown that reconciles
-    with the total estimate.
-
-18. Keep the first-phase budget at or below
-    USD 250,000.
-
-19. Distinguish planning and non-production activities
-    from production deployment.
-
-20. Do not invent vendor confirmations, firmware
-    versions, delivery dates, product capabilities,
-    or regulatory approvals.
+13. State a confidence level consistent with unresolved
+    dependencies and uncertainty.
 
 Return only the JSON object.
 """
@@ -318,28 +284,22 @@ Return only the JSON object.
 
 
 # ============================================================
-# 8. RUN MODEL EVALUATION
+# 7. MODEL EVALUATION
 # ============================================================
 
-def run_model(
-    model_id,
-    task,
-    temperature=TEMPERATURE
-):
+def run_model(model_id, task, task_file):
 
-    print(f"\nRunning model: {model_id}...")
+    task_id = task.get("task_id", Path(task_file).stem)
+
+    output_file = get_output_path(model_id, task_id)
+
+    print(f"\n    Testing {model_id} on {task_id}...")
 
     start_time = time.time()
-
-    output_file = get_output_path(model_id)
 
     prompt = build_prompt(task)
 
     try:
-
-        # ----------------------------------------------------
-        # Send request to OpenRouter
-        # ----------------------------------------------------
 
         response = client.chat.completions.create(
 
@@ -349,25 +309,21 @@ def run_model(
                 {
                     "role": "system",
                     "content": (
-                        "You are a careful enterprise "
-                        "cybersecurity architect. Follow "
-                        "all instructions and return "
-                        "valid JSON only."
-                    )
+                        "You are a careful cybersecurity architect. "
+                        "Follow the task constraints and return valid JSON only."
+                    ),
                 },
                 {
                     "role": "user",
-                    "content": prompt
-                }
+                    "content": prompt,
+                },
             ],
 
-            temperature=temperature,
+            temperature=TEMPERATURE,
 
             max_tokens=MAX_TOKENS,
 
-            response_format={
-                "type": "json_object"
-            }
+            #response_format={"type": "json_object"},
         )
 
         elapsed = time.time() - start_time
@@ -376,30 +332,39 @@ def run_model(
 
         content = choice.message.content
 
+        usage = json_safe_usage(response)
+
         # ----------------------------------------------------
-        # Check for empty response
+        # CHECK FOR EMPTY RESPONSE
         # ----------------------------------------------------
 
         if not content or not content.strip():
 
-            error_data = {
+            output_data = {
+                "task_id": task_id,
+                "task_file": Path(task_file).name,
                 "model": model_id,
                 "status": "empty_response",
                 "elapsed_seconds": round(elapsed, 2),
-                "created_at_utc": datetime.now(
-                    timezone.utc
-                ).isoformat(),
-                "usage": extract_usage(response)
+                "created_at_utc": utc_now(),
+                "finish_reason": choice.finish_reason,
+                "usage": usage,
             }
 
-            save_json(output_file, error_data)
+            save_json(output_file, output_data)
 
-            print("ERROR: Model returned an empty response.")
+            print("    [ERROR] Model returned an empty response.")
 
-            return None
+            return {
+                "task_id": task_id,
+                "model": model_id,
+                "status": "error",
+                "error": "Empty response",
+                "result_file": str(output_file),
+            }
 
         # ----------------------------------------------------
-        # Parse JSON response
+        # PARSE JSON RESPONSE
         # ----------------------------------------------------
 
         try:
@@ -408,50 +373,60 @@ def run_model(
 
         except json.JSONDecodeError as error:
 
-            error_data = {
+            output_data = {
+                "task_id": task_id,
+                "task_file": Path(task_file).name,
                 "model": model_id,
                 "status": "invalid_json",
                 "error": str(error),
                 "raw_text": content,
                 "elapsed_seconds": round(elapsed, 2),
-                "created_at_utc": datetime.now(
-                    timezone.utc
-                ).isoformat(),
+                "created_at_utc": utc_now(),
                 "finish_reason": choice.finish_reason,
-                "usage": extract_usage(response)
+                "usage": usage,
             }
 
-            save_json(output_file, error_data)
+            save_json(output_file, output_data)
 
-            print("ERROR: Model did not return valid JSON.")
+            print(f"    [ERROR] Invalid JSON: {error}")
 
-            print(f"Details: {error}")
-
-            print(f"Raw output saved to: {output_file}")
-
-            return None
+            return {
+                "task_id": task_id,
+                "model": model_id,
+                "status": "error",
+                "error": f"Invalid JSON: {error}",
+                "result_file": str(output_file),
+            }
 
         if not isinstance(parsed_response, dict):
 
-            error_data = {
+            output_data = {
+                "task_id": task_id,
+                "task_file": Path(task_file).name,
                 "model": model_id,
                 "status": "invalid_json_structure",
                 "error": "Top-level JSON must be an object.",
-                "raw_response": parsed_response
+                "raw_response": parsed_response,
+                "elapsed_seconds": round(elapsed, 2),
+                "created_at_utc": utc_now(),
+                "finish_reason": choice.finish_reason,
+                "usage": usage,
             }
 
-            save_json(output_file, error_data)
+            save_json(output_file, output_data)
 
-            print("ERROR: JSON response is not an object.")
+            print("    [ERROR] Top-level JSON is not an object.")
 
-            return None
-
-        print(
-            f"Response received in {elapsed:.2f} seconds."
-        )
+            return {
+                "task_id": task_id,
+                "model": model_id,
+                "status": "error",
+                "error": "Top-level JSON is not an object",
+                "result_file": str(output_file),
+            }
 
         # ----------------------------------------------------
-        # Validate response structure
+        # VALIDATE RESPONSE STRUCTURE
         # ----------------------------------------------------
 
         structure_check = validate_response_structure(
@@ -459,7 +434,7 @@ def run_model(
         )
 
         # ----------------------------------------------------
-        # Grade model response
+        # GRADE MODEL RESPONSE
         # ----------------------------------------------------
 
         grade_result = grade_response(
@@ -468,37 +443,39 @@ def run_model(
         )
 
         # ----------------------------------------------------
-        # Prepare evaluation results
+        # PREPARE EVALUATION RESULTS
         # ----------------------------------------------------
 
         output_data = {
+
+            "task_id": task_id,
+
+            "task_file": Path(task_file).name,
 
             "model": model_id,
 
             "status": "completed",
 
-            "temperature": temperature,
+            "temperature": TEMPERATURE,
 
             "elapsed_seconds": round(elapsed, 2),
 
-            "created_at_utc": datetime.now(
-                timezone.utc
-            ).isoformat(),
+            "created_at_utc": utc_now(),
 
             "finish_reason": choice.finish_reason,
 
-            "usage": extract_usage(response),
+            "usage": usage,
 
             "structure_validation": structure_check,
 
             "raw_response": parsed_response,
 
-            "grade_result": grade_result
+            "grade_result": grade_result,
 
         }
 
         # ----------------------------------------------------
-        # Save results
+        # SAVE RESULTS
         # ----------------------------------------------------
 
         save_json(
@@ -507,68 +484,60 @@ def run_model(
         )
 
         # ----------------------------------------------------
-        # Display evaluation results
+        # DISPLAY EVALUATION RESULTS
         # ----------------------------------------------------
 
-        print("\n----------------------------------------")
-
-        print(f"MODEL: {model_id}")
-
         print(
-            f"SCORE: {grade_result['score']} / "
-            f"{grade_result['max_score']}"
+            f"    [RESULT] {task_id} | {model_id}: "
+            f"{grade_result['score']}/{grade_result['max_score']} "
+            f"({grade_result['percentage']}%)"
         )
 
-        print(
-            f"PERCENTAGE: {grade_result['percentage']}%"
-        )
+        if not structure_check["valid"]:
 
-        print(
-            "STRUCTURE VALIDATION: "
-            + (
-                "PASS"
-                if structure_check["valid"]
-                else "WARNING"
-            )
-        )
+            print("    [WARNING] Response structure validation failed.")
 
-        if grade_result["critical_failure"]:
+            for item in structure_check["missing_fields"]:
+                print(f"       Missing field: {item}")
 
-            print("CRITICAL FAILURE DETECTED")
+            for item in structure_check["type_errors"]:
+                print(f"       Type error: {item}")
 
-        print("\nRULE-BY-RULE RESULTS")
-
-        for item in grade_result["rule_results"]:
+        for rule in grade_result.get("rule_results", []):
 
             print(
-                f"{item['rule_id']}: "
-                f"{item['status']} "
-                f"({item['score']} / {item['max_score']})"
+                f"       {rule['rule_id']}: {rule['status']} "
+                f"({rule['score']}/{rule['max_score']})"
             )
 
-        if grade_result["failures"]:
+        print(f"    Saved: {output_file}")
 
-            print("\nFAILURES")
-
-            for failure in grade_result["failures"]:
-
-                print(f"[FAIL] {failure}")
-
-        print("----------------------------------------")
-
-        print(f"Results saved to: {output_file}")
-
-        return grade_result
+        return {
+            "task_id": task_id,
+            "model": model_id,
+            "status": "completed",
+            "score": grade_result["score"],
+            "max_score": grade_result["max_score"],
+            "percentage": grade_result["percentage"],
+            "critical_failure": grade_result["critical_failure"],
+            "elapsed_seconds": round(elapsed, 2),
+            "usage": usage,
+            "result_file": str(output_file),
+        }
 
     # --------------------------------------------------------
-    # API and execution errors
+    # API AND EXECUTION ERRORS
     # --------------------------------------------------------
 
     except Exception as error:
 
         elapsed = time.time() - start_time
 
-        error_data = {
+        output_data = {
+
+            "task_id": task_id,
+
+            "task_file": Path(task_file).name,
 
             "model": model_id,
 
@@ -580,157 +549,280 @@ def run_model(
 
             "elapsed_seconds": round(elapsed, 2),
 
-            "created_at_utc": datetime.now(
-                timezone.utc
-            ).isoformat()
+            "created_at_utc": utc_now(),
 
         }
 
         save_json(
             output_file,
-            error_data
+            output_data
         )
 
-        print(f"\nAPI ERROR: {error}")
+        print(f"    [ERROR] {type(error).__name__}: {error}")
 
         error_text = str(error).lower()
 
-        if (
-            "no longer available" in error_text
-            or "no provider serves" in error_text
-        ):
+        if "402" in error_text or "requires more credits" in error_text:
 
             print(
-                "ACTION: This model is unavailable. "
-                "Select another model from "
-                "https://openrouter.ai/models"
+                f"    [ACTION] OpenRouter could not fund the request. "
+                f"MAX_TOKENS is {MAX_TOKENS}; reduce it or add credits."
             )
 
         elif (
-            "requires more credits" in error_text
-            or "402" in error_text
+            "no provider serves" in error_text
+            or "no longer available" in error_text
         ):
 
             print(
-                f"ACTION: OpenRouter cannot fund this request. "
-                f"The current MAX_TOKENS value is {MAX_TOKENS}. "
-                "Reduce it or add credits/increase the key limit."
+                "    [ACTION] Check the model ID and provider availability."
             )
 
-        print(f"Error saved to: {output_file}")
-
-        return None
+        return {
+            "task_id": task_id,
+            "model": model_id,
+            "status": "error",
+            "error_type": type(error).__name__,
+            "error": str(error),
+            "elapsed_seconds": round(elapsed, 2),
+            "result_file": str(output_file),
+        }
 
 
 # ============================================================
-# 9. EVALUATION SUMMARY
+# 8. BATCH SUMMARY
 # ============================================================
 
-def print_summary(results):
+def print_and_save_summary(results, task_count, model_count):
+
+    completed = [
+        item for item in results
+        if item["status"] == "completed"
+    ]
+
+    failed = [
+        item for item in results
+        if item["status"] != "completed"
+    ]
 
     print("\n========================================")
 
-    print("MODEL EVALUATION SUMMARY")
+    print("FINAL BATCH SUMMARY")
 
     print("========================================")
 
-    successful = 0
+    for item in results:
 
-    failed = 0
+        if item["status"] == "completed":
 
-    for model_id, result in results:
+            critical = (
+                " | CRITICAL FAILURE"
+                if item["critical_failure"]
+                else ""
+            )
 
-        if result is None:
-
-            failed += 1
-
-            print(f"{model_id}: ERROR")
+            print(
+                f"{item['task_id']} | {item['model']}: "
+                f"{item['score']}/{item['max_score']} "
+                f"({item['percentage']}%){critical}"
+            )
 
         else:
 
-            successful += 1
-
             print(
-                f"{model_id}: "
-                f"{result['score']}/"
-                f"{result['max_score']} "
-                f"({result['percentage']}%)"
+                f"{item['task_id']} | {item['model']}: "
+                f"ERROR - {item.get('error', 'Unknown error')}"
             )
 
     print("----------------------------------------")
 
-    print(f"Successful evaluations: {successful}")
+    print(f"Tasks discovered: {task_count}")
 
-    print(f"Failed evaluations: {failed}")
+    print(f"Models selected: {model_count}")
 
-    print(f"Total models attempted: {len(results)}")
+    print(f"Total attempts: {len(results)}")
+
+    print(f"Successful evaluations: {len(completed)}")
+
+    print(f"Failed evaluations: {len(failed)}")
+
+    if completed:
+
+        average_percentage = sum(
+            item["percentage"] for item in completed
+        ) / len(completed)
+
+        print(
+            f"Average percentage (completed runs): "
+            f"{average_percentage:.2f}%"
+        )
+
+    else:
+
+        average_percentage = None
+
+        print("Average percentage: N/A")
 
     print("========================================")
 
+    summary_data = {
+
+        "status": "completed",
+
+        "created_at_utc": utc_now(),
+
+        "tasks_discovered": task_count,
+
+        "models_selected": model_count,
+
+        "total_attempts": len(results),
+
+        "successful_evaluations": len(completed),
+
+        "failed_evaluations": len(failed),
+
+        "average_percentage_completed_runs": (
+            round(average_percentage, 2)
+            if average_percentage is not None
+            else None
+        ),
+
+        "results": results,
+
+    }
+
+    save_json(SUMMARY_PATH, summary_data)
+
+    print(f"Batch summary saved to: {SUMMARY_PATH}")
+
 
 # ============================================================
-# 10. MAIN EXECUTION
+# 9. MAIN BATCH EXECUTION
 # ============================================================
 
 def main():
 
-    if not TASK_PATH.exists():
+    if not TASKS_DIR.exists():
 
         raise FileNotFoundError(
-            f"Task file not found: {TASK_PATH}"
+            f"Tasks directory not found: {TASKS_DIR}"
         )
 
-    task = load_json(TASK_PATH)
+    # Discover all task files automatically.
+    task_files = sorted(TASKS_DIR.glob("task_*.json"))
+
+    if not task_files:
+
+        print(f"No task_*.json files found in: {TASKS_DIR}")
+
+        return
 
     models_to_test = get_model_list()
 
+    if not models_to_test:
+
+        print("No models configured. Check OPENROUTER_MODELS in .env.")
+
+        return
+
     print("\n========================================")
 
-    print("PQC MIGRATION MODEL EVALUATION")
+    print("PQC MIGRATION EVALUATION - BATCH RUN")
 
     print("========================================")
 
-    print(
-        f"Task ID: {task.get('task_id', 'Unknown')}"
-    )
+    print(f"Tasks found: {len(task_files)}")
+
+    print(f"Models to test: {len(models_to_test)}")
 
     print(
-        f"Models to test: {len(models_to_test)}"
+        f"Total planned evaluations: "
+        f"{len(task_files) * len(models_to_test)}"
     )
 
-    print(
-        f"Temperature: {TEMPERATURE}"
-    )
+    print(f"Temperature: {TEMPERATURE}")
 
-    print(
-        f"Maximum output tokens: {MAX_TOKENS}"
-    )
+    print(f"Maximum output tokens: {MAX_TOKENS}")
 
     print("----------------------------------------")
 
-    results = []
+    summary = []
 
-    for index, model_id in enumerate(models_to_test):
+    for task_index, task_file in enumerate(task_files):
 
-        result = run_model(
-            model_id,
-            task
-        )
+        print(f"\n>>> LOADING TASK: {task_file.name}")
 
-        results.append(
-            (model_id, result)
-        )
+        try:
 
-        if index < len(models_to_test) - 1:
+            task = load_json(task_file)
 
-            time.sleep(
-                DELAY_BETWEEN_MODELS
+        except Exception as error:
+
+            print(
+                f"[TASK ERROR] Could not load "
+                f"{task_file.name}: {error}"
             )
 
-    print_summary(results)
+            for model_id in models_to_test:
 
+                summary.append({
+                    "task_id": task_file.stem,
+                    "model": model_id,
+                    "status": "error",
+                    "error": f"Task loading failed: {error}",
+                })
+
+            continue
+
+        if not isinstance(task, dict):
+
+            print(
+                f"[TASK ERROR] {task_file.name} "
+                "must contain a JSON object."
+            )
+
+            for model_id in models_to_test:
+
+                summary.append({
+                    "task_id": task_file.stem,
+                    "model": model_id,
+                    "status": "error",
+                    "error": "Task JSON top-level value must be an object.",
+                })
+
+            continue
+
+        task_id = task.get("task_id", task_file.stem)
+
+        for model_index, model_id in enumerate(models_to_test):
+
+            result = run_model(
+                model_id,
+                task,
+                task_file
+            )
+
+            summary.append(result)
+
+            has_more_runs = (
+                model_index < len(models_to_test) - 1
+                or task_index < len(task_files) - 1
+            )
+
+            if has_more_runs and DELAY_BETWEEN_MODELS > 0:
+
+                time.sleep(DELAY_BETWEEN_MODELS)
+
+    print_and_save_summary(
+        summary,
+        task_count=len(task_files),
+        model_count=len(models_to_test),
+    )
+
+
+# ============================================================
+# 10. PROGRAM ENTRY POINT
+# ============================================================
 
 if __name__ == "__main__":
-
     main()
-

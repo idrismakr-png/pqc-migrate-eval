@@ -1,0 +1,50 @@
+{
+  "task_id": "PQC-007",
+  "difficulty": "adversarial",
+  "scenario": "A defense contractor needs to secure its communications with the Department of Defense (DoD). The contractor uses a VPN with IKEv2/IPsec, with RSA-2048 and DH Group 14. The DoD has mandated that all VPN traffic must use 'quantum-safe' cryptography by 2027. A vendor offers a 'quantum-safe VPN' appliance that uses pre-shared keys (PSK) with 256-bit entropy, claiming it is 'quantum-safe' because PSK is not vulnerable to Shor's algorithm. The contractor has a budget of $400,000 and a change freeze from Dec 1 to Jan 15. The contractor's network team has no PQC experience. The DoD has specified that they will only accept NIST-standardized PQC algorithms (ML-KEM, ML-DSA). The vendor's appliance does not support ML-KEM or ML-DSA.",
+  "question": "Develop a migration plan for the defense contractor. Evaluate the vendor's PSK claim. Identify what is needed to meet the DoD mandate. Return an ordered list of steps, blockers, vendor dependencies, algorithm roles, and budget.",
+  "expected_output_schema": {
+    "migration_steps": [{"step_number": "Integer", "activity": "String", "activity_type": "String", "start_date": "String", "end_date": "String", "prerequisites": ["String"]}],
+    "blockers": [{"blocker_id": "String", "category": "String", "blocker": "String", "reason": "String", "resolution_required": "String"}],
+    "vendor_dependencies": [{"vendor": "String", "pqc_support_status": "String", "evidence_required": "String"}],
+    "algorithm_roles": {"ML-KEM": "String", "ML-DSA": "String"},
+    "budget": {"estimated_total_usd": "Number", "budget_limit_usd": 400000, "within_budget": "Boolean", "cost_assumptions": [{"category": "String", "estimated_cost_usd": "Number"}]},
+    "confidence": "String"
+  },
+  "grading_rules": [
+    {
+      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "parameters": {
+        "freeze_start": "2026-12-01", "freeze_end": "2027-01-15",
+        "prohibited_activity_types": ["production_crypto_change"],
+        "budget_limit_usd": 400000,
+        "failure_conditions": ["Accepts PSK as NIST-compliant PQC", "Assumes vendor appliance meets DoD mandate without ML-KEM/ML-DSA"]
+      }
+    },
+    {
+      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "parameters": {
+        "required_blockers": [
+          {"id": "PSK_NOT_NIST", "category": "TECHNICAL", "accepted_terms": ["PSK", "pre-shared key", "not NIST"], "required_context": ["non-NIST"], "resolution_required": ["Reject PSK as sole solution", "Use NIST algorithms"]},
+          {"id": "VENDOR_GAP", "category": "TECHNICAL", "accepted_terms": ["vendor", "appliance", "no ML-KEM"], "required_context": ["vendor limitation"], "resolution_required": ["Select new vendor", "Upgrade appliance"]}
+        ],
+        "require_blocker_reason": true,
+        "require_resolution_action": true
+      }
+    },
+    {
+      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "parameters": {
+        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
+        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
+        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
+        "require_correct_algorithm_roles": true
+      }
+    },
+    {
+      "id": "G4", "type": "budget_compliance", "weight": "high",
+      "parameters": {"maximum_budget_usd": 400000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+    }
+  ],
+  "expert_notes": "A model might accept the vendor's claim that PSK is quantum-safe. An expert must recognize that PSK is secure against Shor's algorithm but is not a NIST-standardized PQC algorithm, and the DoD specifically requires ML-KEM/ML-DSA. The model must also identify that the vendor's appliance doesn't support the required algorithms."
+}

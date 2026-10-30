@@ -1,0 +1,50 @@
+{
+  "task_id": "PQC-008",
+  "difficulty": "constrained",
+  "scenario": "A manufacturer of smart home devices (thermostats, cameras, door locks) uses embedded firmware with limited RAM (64KB) and flash memory (256KB). The devices use ECC P-256 for secure boot and TLS 1.2 for cloud communication. The manufacturer's cloud backend uses RSA-2048. The devices must remain operational for 10 years. The manufacturer wants to migrate to PQC but is constrained by the small memory footprint. NIST's ML-KEM requires more memory and CPU than ECC P-256. The manufacturer has a budget of $150,000 and a change freeze from Nov 15 to Jan 15. The cloud backend is hosted on AWS (which will support ML-KEM in 2027).",
+  "question": "Develop a PQC migration plan for the IoT manufacturer. Address the resource constraints on the embedded devices, the long operational lifetime, and the cloud dependencies. Return an ordered list of steps, blockers, vendor dependencies, algorithm roles, and budget.",
+  "expected_output_schema": {
+    "migration_steps": [{"step_number": "Integer", "activity": "String", "activity_type": "String", "start_date": "String", "end_date": "String", "prerequisites": ["String"]}],
+    "blockers": [{"blocker_id": "String", "category": "String", "blocker": "String", "reason": "String", "resolution_required": "String"}],
+    "vendor_dependencies": [{"vendor": "String", "pqc_support_status": "String", "evidence_required": "String"}],
+    "algorithm_roles": {"ML-KEM": "String", "ML-DSA": "String"},
+    "budget": {"estimated_total_usd": "Number", "budget_limit_usd": 150000, "within_budget": "Boolean", "cost_assumptions": [{"category": "String", "estimated_cost_usd": "Number"}]},
+    "confidence": "String"
+  },
+  "grading_rules": [
+    {
+      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "parameters": {
+        "freeze_start": "2026-11-15", "freeze_end": "2027-01-15",
+        "prohibited_activity_types": ["production_crypto_change"],
+        "budget_limit_usd": 150000,
+        "failure_conditions": ["Assumes embedded devices can run full ML-KEM without optimization", "Ignores memory constraints"]
+      }
+    },
+    {
+      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "parameters": {
+        "required_blockers": [
+          {"id": "MEMORY", "category": "TECHNICAL", "accepted_terms": ["memory", "RAM", "flash", "resource"], "required_context": ["resource limitation"], "resolution_required": ["Use lightweight PQC", "Hardware upgrade", "Hybrid approach"]},
+          {"id": "AWS_DEPENDENCY", "category": "TECHNICAL", "accepted_terms": ["AWS", "cloud", "backend"], "required_context": ["cloud dependency"], "resolution_required": ["Wait for AWS 2027", "Use client-side"]}
+        ],
+        "require_blocker_reason": true,
+        "require_resolution_action": true
+      }
+    },
+    {
+      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "parameters": {
+        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
+        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
+        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
+        "require_correct_algorithm_roles": true
+      }
+    },
+    {
+      "id": "G4", "type": "budget_compliance", "weight": "high",
+      "parameters": {"maximum_budget_usd": 150000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+    }
+  ],
+  "expert_notes": "A model might ignore the memory constraints of embedded devices. An expert will recommend lightweight PQC variants, or hardware upgrades for devices, and recognize that the cloud backend must wait for AWS KEM support. The 10-year operational lifetime means the devices must be capable of running PQC for their entire lifespan."
+}
