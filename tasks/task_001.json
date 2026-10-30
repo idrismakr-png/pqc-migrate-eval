@@ -1,0 +1,234 @@
+
+{
+  "task_id": "PQC-001",
+  "difficulty": "conventional",
+  "scenario": "Meridian Trust Bank is a fictional commercial bank planning its migration to post-quantum cryptography (PQC). Its current cryptographic environment contains four major assets: (1) RSA-2048 certificates used for TLS connections between customer-facing applications and backend services; (2) ECDSA P-256 digital signatures used for internal API authentication; (3) RSA-3072 key wrapping used to protect selected database encryption keys; and (4) ECDH P-256 key exchange used in several internal secure communication channels. The bank operates a Thales Luna Network HSM 7 appliance that currently supports its existing RSA and ECC workloads. The HSM vendor has not yet confirmed production support, firmware compatibility, or a delivery timeline for NIST-standardized ML-KEM and ML-DSA. The bank also depends on a third-party core banking platform whose vendor has not provided written confirmation of PQC compatibility or a migration roadmap. The bank has an approved migration budget of USD 250,000 for the first phase. A mandatory infrastructure change freeze will run from 1 December 2026 through 15 January 2027 inclusive. During this period, production cryptographic changes, HSM firmware upgrades, and major application deployments are prohibited. Planning, documentation, vendor engagement, and non-production laboratory activities may continue where permitted by internal policies. The bank must protect sensitive customer information that may remain confidential for 10 to 15 years, creating exposure to harvest-now-decrypt-later attacks. Management wants a practical migration roadmap that reduces exposure to future quantum attacks without compromising current security, regulatory obligations, or service availability.",
+
+  "question": "Develop an ordered and technically defensible first-phase PQC migration plan for Meridian Trust Bank. Identify which cryptographic assets should be prioritized and explain the recommended migration approach. Explicitly identify all blockers that cannot be resolved without further confirmation, procurement, or third-party action. Respect the USD 250,000 budget and the production change freeze from 1 December 2026 through 15 January 2027 inclusive. Do not assume that the HSM or core banking vendor supports PQC unless written confirmation is provided. Distinguish activities that can proceed immediately, activities permitted during the change freeze, and activities that must wait until dependencies and operational approvals are resolved. Prioritize long-lived sensitive data and explain the exposure to harvest-now-decrypt-later attacks. Distinguish ML-KEM for key establishment from ML-DSA for digital signatures. Return structured migration steps, blockers with reasons, an overall confidence assessment, identified vendor dependencies, and an estimated first-phase budget.",
+
+  "expected_output_schema": {
+    "migration_steps": [
+      {
+        "step_number": "Integer representing execution order",
+        "activity": "Description of the migration activity",
+        "activity_type": "inventory | risk_assessment | vendor_engagement | procurement | planning | lab_testing | production_crypto_change | hsm_firmware_upgrade | major_application_deployment",
+        "start_date": "YYYY-MM-DD or null if not yet determined",
+        "end_date": "YYYY-MM-DD or null if not yet determined",
+        "prerequisites": [
+          "Dependencies or approvals required before execution"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "Unique blocker identifier",
+        "category": "HSM_VENDOR | CORE_BANKING_VENDOR | PROCUREMENT | TECHNICAL | REGULATORY | OPERATIONAL",
+        "blocker": "Description of the unresolved dependency",
+        "reason": "Why the dependency prevents or limits migration",
+        "resolution_required": "Action required to resolve the blocker"
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "Vendor or platform name",
+        "pqc_support_status": "confirmed | unconfirmed | unsupported",
+        "evidence_required": "Evidence required before production migration"
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "Key establishment",
+      "ML-DSA": "Digital signatures"
+    },
+    "budget": {
+      "estimated_total_usd": "Numeric first-phase budget estimate",
+      "budget_limit_usd": 250000,
+      "within_budget": "true | false",
+      "cost_assumptions": [
+        "Explanation of significant cost assumptions"
+      ]
+    },
+    "confidence": "low | medium | high"
+  },
+
+  "grading_rules": [
+    {
+      "id": "G1",
+      "type": "hard_constraint",
+      "description": "Critical constraint enforcement. The plan must not schedule prohibited production activities during the mandatory change freeze or falsely claim that unconfirmed vendor capabilities are available.",
+      "weight": "critical",
+      "parameters": {
+        "freeze_start": "2026-12-01",
+        "freeze_end": "2027-01-15",
+        "freeze_end_inclusive": true,
+        "prohibited_activity_types": [
+          "production_crypto_change",
+          "hsm_firmware_upgrade",
+          "major_application_deployment"
+        ],
+        "permitted_nonproduction_activity_types": [
+          "inventory",
+          "risk_assessment",
+          "vendor_engagement",
+          "procurement",
+          "planning",
+          "lab_testing"
+        ],
+        "vendor_support_must_remain_unconfirmed_without_written_evidence": true,
+        "unconfirmed_vendors": [
+          "Thales Luna Network HSM 7",
+          "Third-party core banking platform"
+        ],
+        "failure_conditions": [
+          "Schedules a prohibited production activity with a date overlapping the freeze",
+          "Explicitly claims unconfirmed vendor PQC support is available",
+          "Schedules production cryptographic replacement before required compatibility and security validation"
+        ],
+        "scoring": {
+          "pass": 1,
+          "fail": 0,
+          "critical_failure_effect": "Overall evaluation cannot receive a passing result"
+        }
+      }
+    },
+
+    {
+      "id": "G2",
+      "type": "blocker_coverage",
+      "description": "The response must identify both unresolved vendor dependencies as explicit blockers and explain their consequences.",
+      "weight": "high",
+      "parameters": {
+        "required_blockers": [
+          {
+            "id": "HSM",
+            "category": "HSM_VENDOR",
+            "accepted_terms": [
+              "Thales",
+              "Luna",
+              "HSM",
+              "hardware security module"
+            ],
+            "required_context": [
+              "PQC compatibility",
+              "ML-KEM support",
+              "ML-DSA support",
+              "firmware compatibility",
+              "vendor confirmation"
+            ],
+            "resolution_required": [
+              "Written vendor confirmation",
+              "Supported firmware and software versions",
+              "Production compatibility information",
+              "Implementation and delivery timeline"
+            ]
+          },
+          {
+            "id": "CORE_BANKING",
+            "category": "CORE_BANKING_VENDOR",
+            "accepted_terms": [
+              "core banking",
+              "third-party platform",
+              "platform vendor",
+              "banking system vendor"
+            ],
+            "required_context": [
+              "PQC compatibility",
+              "vendor confirmation",
+              "migration roadmap",
+              "software support"
+            ],
+            "resolution_required": [
+              "Written compatibility confirmation",
+              "Vendor migration roadmap",
+              "Supported implementation options",
+              "Integration and testing requirements"
+            ]
+          }
+        ],
+        "required_in_blockers_array": true,
+        "require_blocker_reason": true,
+        "require_resolution_action": true,
+        "scoring": {
+          "both_blockers_correctly_identified": 1,
+          "one_blocker_identified": 0.5,
+          "neither_identified": 0
+        }
+      }
+    },
+
+    {
+      "id": "G3",
+      "type": "sequence_order",
+      "description": "Cryptographic discovery and risk assessment must precede production migration. The correct NIST-standardized PQC algorithms and their respective roles must be identified.",
+      "weight": "medium",
+      "parameters": {
+        "required_activity_categories": [
+          "inventory",
+          "risk_assessment",
+          "vendor_engagement",
+          "lab_testing"
+        ],
+        "must_precede": [
+          {
+            "before": "inventory",
+            "after": "risk_assessment"
+          },
+          {
+            "before": "risk_assessment",
+            "after": "production_crypto_change"
+          },
+          {
+            "before": "vendor_engagement",
+            "after": "production_crypto_change"
+          },
+          {
+            "before": "lab_testing",
+            "after": "production_crypto_change"
+          }
+        ],
+        "acceptable_inventory_terms": [
+          "cryptographic inventory",
+          "asset discovery",
+          "cryptographic discovery",
+          "crypto inventory"
+        ],
+        "acceptable_assessment_terms": [
+          "risk assessment",
+          "cryptographic risk analysis",
+          "quantum risk assessment"
+        ],
+        "required_algorithms": {
+          "key_encapsulation": "ML-KEM",
+          "digital_signature": "ML-DSA"
+        },
+        "require_correct_algorithm_roles": true,
+        "require_long_lived_data_prioritization": true,
+        "scoring": {
+          "correct_sequence_and_algorithm_roles": 1,
+          "partial_sequence_or_algorithm_errors": 0.5,
+          "fundamental_sequence_or_algorithm_errors": 0
+        }
+      }
+    },
+
+    {
+      "id": "G4",
+      "type": "budget_compliance",
+      "description": "The proposed first-phase migration expenditure must not exceed the approved USD 250,000 budget.",
+      "weight": "high",
+      "parameters": {
+        "maximum_budget_usd": 250000,
+        "required_output_field": "budget.estimated_total_usd",
+        "require_numeric_estimate": true,
+        "require_cost_assumptions": true,
+        "failure_condition": "estimated_total_usd exceeds 250000 or no verifiable numeric budget estimate is provided",
+        "scoring": {
+          "within_budget_with_reasonable_cost_breakdown": 1,
+          "within_budget_without_sufficient_cost_explanation": 0.5,
+          "exceeds_budget_or_missing_estimate": 0
+        }
+      }
+    }
+  ],
+
+  "expert_notes": "This task evaluates whether frontier AI models can develop a realistic post-quantum cryptography migration strategy under competing technical, financial, and operational constraints. It targets several known weaknesses in AI-generated technical recommendations: hallucinating vendor readiness, confusing cryptographic algorithm roles, overlooking implementation dependencies, ignoring change freezes, and producing unrealistic migration budgets. The scenario deliberately distinguishes between the existence of a cryptographic algorithm and the operational readiness of the infrastructure required to deploy it. ML-KEM, standardized in NIST FIPS 203, is intended for key establishment, while ML-DSA, standardized in NIST FIPS 204, is intended for digital signatures. Models must also recognize that replacing RSA key wrapping and ECDH key exchange may require application and protocol changes, not simply an algorithm substitution. Long-lived sensitive information deserves particular attention because of harvest-now-decrypt-later exposure. A strong response should prioritize cryptographic inventory, risk assessment, vendor engagement, procurement planning, controlled laboratory validation, and appropriately approved production migration. It must not invent HSM or core banking vendor capabilities, violate the change freeze, or exceed the approved budget. The grading rules are designed to support deterministic checks through structured output, dates, activity categories, required blocker identifiers, algorithm roles, and numeric budget estimates. Natural-language keyword matching alone is insufficient to establish that a model has genuinely satisfied a technical requirement."
+}

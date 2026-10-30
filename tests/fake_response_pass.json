@@ -1,0 +1,132 @@
+
+{
+  "migration_steps": [
+    {
+      "step_number": 1,
+      "activity": "Perform a comprehensive cryptographic inventory and asset discovery covering RSA-2048 TLS certificates, ECDSA P-256 signatures, RSA-3072 key wrapping, and ECDH P-256 key exchange. Document algorithms, key sizes, certificates, dependencies, data flows, and system owners.",
+      "activity_type": "inventory",
+      "start_date": "2026-11-01",
+      "end_date": "2026-11-15",
+      "prerequisites": []
+    },
+    {
+      "step_number": 2,
+      "activity": "Conduct a quantum risk assessment prioritizing RSA-3072 key wrapping and ECDH P-256 key exchange because they protect sensitive information that may remain confidential for 10 to 15 years. Assess harvest-now-decrypt-later exposure. Include RSA-2048 TLS certificates and ECDSA P-256 signatures in the migration risk assessment.",
+      "activity_type": "risk_assessment",
+      "start_date": "2026-11-16",
+      "end_date": "2026-11-20",
+      "prerequisites": [
+        "Step 1: Completed cryptographic inventory"
+      ]
+    },
+    {
+      "step_number": 3,
+      "activity": "Engage Thales and the third-party core banking platform vendor to obtain written confirmation of ML-KEM and ML-DSA compatibility, supported firmware and software versions, licensing requirements, implementation timelines, and migration roadmaps. Continue documentation, procurement planning, and vendor discussions during the change freeze where permitted. Do not assume vendor readiness.",
+      "activity_type": "vendor_engagement",
+      "start_date": "2026-11-21",
+      "end_date": "2026-12-15",
+      "prerequisites": [
+        "Step 2: Completed quantum risk assessment"
+      ]
+    },
+    {
+      "step_number": 4,
+      "activity": "Conduct controlled non-production laboratory testing of NIST-standardized ML-KEM for key establishment and ML-DSA for digital signatures. Evaluate interoperability, cryptographic performance, key and signature sizes, HSM integration, application compatibility, latency, and resource consumption. Proceed only with available compatible test environments and do not assume production HSM support.",
+      "activity_type": "lab_testing",
+      "start_date": "2027-01-16",
+      "end_date": "2027-03-01",
+      "prerequisites": [
+        "Step 3: Vendor compatibility information",
+        "Availability of suitable non-production cryptographic implementations",
+        "Approved laboratory testing environment"
+      ]
+    },
+    {
+      "step_number": 5,
+      "activity": "Prepare a controlled, phased production migration beginning with the highest-risk cryptographic dependencies. Migrate key establishment and digital signature mechanisms only after HSM and core banking compatibility, security validation, interoperability testing, procurement, and operational approvals are completed. Maintain appropriate classical cryptographic protection during transition and establish rollback procedures.",
+      "activity_type": "production_crypto_change",
+      "start_date": "2027-03-02",
+      "end_date": "2027-06-01",
+      "prerequisites": [
+        "Step 4: Successful laboratory testing",
+        "Written HSM vendor compatibility confirmation",
+        "Written core banking vendor compatibility confirmation",
+        "Approved procurement and implementation budget",
+        "Security and interoperability validation",
+        "Production change approval"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "blocker_id": "B1",
+      "category": "HSM_VENDOR",
+      "blocker": "Thales Luna Network HSM 7 has no confirmed production support for ML-KEM or ML-DSA.",
+      "reason": "The bank cannot safely deploy PQC algorithms through its existing HSM infrastructure without confirmation of supported firmware, cryptographic capabilities, and production compatibility.",
+      "resolution_required": "Obtain written Thales confirmation, supported firmware and software versions, implementation documentation, and a delivery timeline. Evaluate procurement or alternative supported implementations if necessary."
+    },
+    {
+      "blocker_id": "B2",
+      "category": "CORE_BANKING_VENDOR",
+      "blocker": "The third-party core banking platform has no confirmed PQC compatibility or migration roadmap.",
+      "reason": "Application cryptographic dependencies may be embedded in vendor-controlled software and interfaces. Changing cryptographic libraries without vendor support could compromise interoperability, security, and service availability.",
+      "resolution_required": "Obtain written PQC compatibility confirmation, a migration roadmap, supported software versions, integration requirements, and vendor implementation commitments."
+    },
+    {
+      "blocker_id": "B3",
+      "category": "PROCUREMENT",
+      "blocker": "Potential additional HSM licensing, firmware, software, and integration costs remain unconfirmed.",
+      "reason": "The approved first-phase budget is USD 250,000, but final implementation costs depend on vendor quotations and compatibility requirements.",
+      "resolution_required": "Obtain formal vendor quotations, evaluate procurement alternatives, and maintain contingency within the approved budget."
+    }
+  ],
+  "vendor_dependencies": [
+    {
+      "vendor": "Thales Luna Network HSM 7",
+      "pqc_support_status": "unconfirmed",
+      "evidence_required": "Written confirmation of ML-KEM and ML-DSA support, supported firmware versions, production compatibility, and implementation timeline."
+    },
+    {
+      "vendor": "Third-party core banking platform",
+      "pqc_support_status": "unconfirmed",
+      "evidence_required": "Written PQC compatibility confirmation, supported software versions, integration documentation, and migration roadmap."
+    }
+  ],
+  "algorithm_roles": {
+    "ML-KEM": "Key establishment",
+    "ML-DSA": "Digital signatures"
+  },
+  "budget": {
+    "estimated_total_usd": 200000,
+    "budget_limit_usd": 250000,
+    "within_budget": true,
+    "cost_assumptions": [
+      {
+        "category": "Cryptographic inventory and risk assessment",
+        "estimated_cost_usd": 25000
+      },
+      {
+        "category": "Vendor engagement and support",
+        "estimated_cost_usd": 35000
+      },
+      {
+        "category": "Laboratory infrastructure and testing",
+        "estimated_cost_usd": 45000
+      },
+      {
+        "category": "Engineering and integration",
+        "estimated_cost_usd": 65000
+      },
+      {
+        "category": "Security validation and testing",
+        "estimated_cost_usd": 20000
+      },
+      {
+        "category": "Contingency",
+        "estimated_cost_usd": 10000
+      }
+    ],
+    "budget_justification": "The estimated first-phase expenditure is USD 200,000, leaving USD 50,000 below the approved budget. Estimates are provisional planning assumptions pending formal vendor quotations and compatibility assessments."
+  },
+  "confidence": "medium"
+}
