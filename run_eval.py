@@ -1,4 +1,5 @@
 import os
+import hashlib
 import json
 import re
 import time
@@ -8,7 +9,7 @@ from datetime import datetime, timezone
 from dotenv import load_dotenv
 from openai import OpenAI
 
-from grader import grade_response
+from grader import grade_response, GRADER_VERSION
 
 
 # ============================================================
@@ -409,7 +410,14 @@ def run_model(model_id, task, task_file):
         structure_check = validate_response_structure(parsed_response)
         grade_result = grade_response(task, parsed_response)
 
+        # Reproducibility metadata (Item K)
+        prompt_hash = hashlib.sha256(prompt.encode("utf-8")).hexdigest()[:16]
+        task_file_hash = hashlib.sha256(Path(task_file).read_bytes()).hexdigest()[:16]
+
         output_data = {
+            "grader_version": GRADER_VERSION,
+            "prompt_hash": prompt_hash,
+            "task_file_hash": task_file_hash,
             "task_id": task_id,
             "task_file": Path(task_file).name,
             "model": model_id,

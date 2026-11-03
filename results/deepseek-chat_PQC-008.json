@@ -122,7 +122,7 @@
       },
       {
         "step_number": 9,
-        "activity": "Prepare change management plan and schedule production rollout windows outside the Nov 15–Jan 15 change freeze; define rollback and recovery procedures.",
+        "activity": "Prepare change management plan and schedule production rollout windows outside the Nov 15\u2013Jan 15 change freeze; define rollback and recovery procedures.",
         "activity_type": "Change Management Planning",
         "start_date": "2025-10-27",
         "end_date": "2025-11-14",
@@ -164,7 +164,7 @@
         "prerequisites": [
           "Step 11 pilot success criteria met",
           "OTA infrastructure capacity validated",
-          "Change freeze windows respected (no rollout Nov 15–Jan 15)"
+          "Change freeze windows respected (no rollout Nov 15\u2013Jan 15)"
         ]
       },
       {
@@ -344,5 +344,8 @@
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied.",
       "G3: Risk assessment does not sufficiently prioritise long-lived sensitive data and HNDL exposure."
     ]
-  }
+  },
+  "grader_version": "3.0.0",
+  "prompt_hash": "c1d3413f56ab0599",
+  "task_file_hash": "ea14c749d83d8349"
 }

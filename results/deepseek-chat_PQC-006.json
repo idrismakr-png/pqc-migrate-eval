@@ -278,5 +278,8 @@
       "G3: Required order 'inventory' before 'risk_assessment' is not satisfied.",
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied."
     ]
-  }
+  },
+  "grader_version": "3.0.0",
+  "prompt_hash": "2cde7b9ca3b8d770",
+  "task_file_hash": "59e58a03c5894c66"
 }

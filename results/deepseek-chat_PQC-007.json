@@ -108,7 +108,7 @@
       },
       {
         "step_number": 8,
-        "activity": "Procure PQC-capable VPN hardware/software and required licenses; schedule delivery outside the Dec 1–Jan 15 change freeze.",
+        "activity": "Procure PQC-capable VPN hardware/software and required licenses; schedule delivery outside the Dec 1\u2013Jan 15 change freeze.",
         "activity_type": "Procurement",
         "start_date": "2025-07-28",
         "end_date": "2025-09-12",
@@ -141,7 +141,7 @@
       },
       {
         "step_number": 11,
-        "activity": "Develop production cutover plan, rollback plan, and maintenance windows that respect the Dec 1–Jan 15 change freeze; schedule production changes for after 2026-01-15.",
+        "activity": "Develop production cutover plan, rollback plan, and maintenance windows that respect the Dec 1\u2013Jan 15 change freeze; schedule production changes for after 2026-01-15.",
         "activity_type": "Planning",
         "start_date": "2025-11-17",
         "end_date": "2025-11-28",
@@ -318,5 +318,8 @@
       "G3: Required order 'inventory' before 'risk_assessment' is not satisfied.",
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied."
     ]
-  }
+  },
+  "grader_version": "3.0.0",
+  "prompt_hash": "7ee638f1defedb26",
+  "task_file_hash": "d74039a1e028bb96"
 }

@@ -108,7 +108,7 @@
       },
       {
         "step_number": 8,
-        "activity": "Procure and deploy FIPS 140-3 validated PQC-capable modules for non-EHR systems only after Utimaco provides validated firmware and certificates; schedule outside the December 1–January 15 change freeze.",
+        "activity": "Procure and deploy FIPS 140-3 validated PQC-capable modules for non-EHR systems only after Utimaco provides validated firmware and certificates; schedule outside the December 1\u2013January 15 change freeze.",
         "activity_type": "Procurement and deployment",
         "start_date": "2027-01-16",
         "end_date": "2027-06-30",
@@ -187,7 +187,7 @@
         "category": "Change freeze",
         "blocker": "Change freeze from December 1 to January 15 restricts production changes.",
         "reason": "Any production migration activity must avoid this window; scheduling must account for it.",
-        "resolution_required": "Plan all production changes outside December 1–January 15; obtain exception approval only if absolutely necessary and permitted by policy."
+        "resolution_required": "Plan all production changes outside December 1\u2013January 15; obtain exception approval only if absolutely necessary and permitted by policy."
       },
       {
         "blocker_id": "B-04",
@@ -304,5 +304,8 @@
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied.",
       "G3: Risk assessment does not sufficiently prioritise long-lived sensitive data and HNDL exposure."
     ]
-  }
+  },
+  "grader_version": "3.0.0",
+  "prompt_hash": "0e7694de33ba31b8",
+  "task_file_hash": "0123fa3a4c38c924"
 }

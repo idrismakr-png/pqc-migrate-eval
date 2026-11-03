@@ -314,5 +314,8 @@
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied.",
       "G3: Risk assessment does not sufficiently prioritise long-lived sensitive data and HNDL exposure."
     ]
-  }
+  },
+  "grader_version": "3.0.0",
+  "prompt_hash": "98174db7ec8e0cec",
+  "task_file_hash": "5dbd0dc5ae440374"
 }

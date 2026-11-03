@@ -13,6 +13,9 @@ RESPONSE_PATH = BASE_DIR / "tests" / "fake_response_pass.json"
 # scenario or a different assessment date.
 DEFAULT_PLANNING_REFERENCE_DATE = date(2026, 10, 30)
 
+# Grader version for reproducibility metadata
+GRADER_VERSION = "3.0.0"
+
 
 # ============================================================
 # GENERAL UTILITIES
