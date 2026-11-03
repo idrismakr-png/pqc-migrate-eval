@@ -4,46 +4,126 @@
 
 **Domain:** Enterprise post-quantum cryptography (PQC) migration planning.
 
-**Gap:** Frontier AI models can generate a plausible-sounding PQC migration plan in seconds, but they fail to produce a *valid* one. They violate hard constraints (change freezes, budget limits), hallucinate vendor readiness, miss prerequisite chains (lab testing before production), and fail to explain blockers with actionable resolutions. An expert enterprise security architect would not make these errors.
+**Gap:** Frontier AI models can generate a plausible PQC migration plan in seconds, but they fail to produce a valid one. They violate hard constraints (change freezes, budget limits), hallucinate vendor readiness, miss prerequisite chains (lab testing before production), and fail to explain blockers with actionable resolutions.
 
-**Key finding:** On an 8-task suite, `deepseek-chat` averaged **53.47%**, including **two full zero-scores (critical failures)** on tasks where it violated change-freeze and prerequisite constraints. It consistently failed the "blocker coverage" rule across all 8 tasks — naming vendors but not explaining why they block migration or what evidence would resolve them.
+**Key finding:** On an 8-task suite, `deepseek-chat` averaged **54.16%**, including **two full zero-scores (critical failures)**. It failed the "blocker coverage" rule on **all 8 tasks**.
+
 
 ## 2. Video Walkthrough
 
 [VIDEO_LINK_HERE]
 
+
 ## 3. Domain and Expertise
 
-This eval draws on enterprise cybersecurity architecture expertise in post-quantum cryptography migration, specifically:
+This eval draws on enterprise cybersecurity architecture expertise in post-quantum cryptography migration:
 
-- NIST FIPS 203 (ML-KEM / Kyber), FIPS 204 (ML-DSA / Dilithium), FIPS 205 (SLH-DSA / SPHINCS+).
-- Cryptographic Bill of Materials (CBOM) and asset discovery.
-- Harvest-Now-Decrypt-Later (HNDL) threat modeling.
-- Hybrid cryptography and crypto-agility engineering.
-- Vendor compatibility management (HSMs, core banking platforms, cloud KMS).
-- Change freeze coordination and operational downtime management.
+- NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA)
+- Cryptographic Bill of Materials (CBOM) and asset discovery
+- Harvest-Now-Decrypt-Later (HNDL) threat modeling
+- Hybrid cryptography and crypto-agility engineering
+- Vendor compatibility management (HSMs, core banking, cloud KMS)
+- Change freeze coordination and operational downtime management
+
 
 ## 4. What It Tests and Why It Matters
 
-**What it measures:** Whether a frontier AI model can produce a *technically defensible, constraint-compliant, operationally feasible* PQC migration plan under realistic enterprise conditions.
+**What it measures:** Whether a frontier AI model can produce a technically defensible, constraint-compliant, operationally feasible PQC migration plan under realistic enterprise conditions.
 
-**Who it is for:** Enterprise security architects, CISOs, and AI labs evaluating agentic planning capability. The eval is also directly usable by any organization that wants to benchmark an AI assistant before trusting it with PQC strategy work.
+**Who it is for:** Enterprise security architects, CISOs, and AI labs evaluating agentic planning capability.
 
-**Why it matters:** PQC migration is a multi-year, high-stakes engineering program that is being mandated by governments (US NSM-10, EU NIS2, UK NCSC). Organizations are increasingly tempted to use AI to draft these plans. If the AI produces a plan that schedules production changes during a change freeze, assumes a vendor's HSM supports ML-KEM when it does not, or omits the prerequisite lab-testing phase, the resulting program will fail — or worse, cause an outage. This eval exposes that gap before it reaches production.
+**Why it matters:** PQC migration is a multi-year engineering program mandated by governments (US NSM-10, EU NIS2, UK NCSC). Organizations are tempted to use AI to draft these plans. If the AI schedules production changes during a change freeze, assumes an HSM supports ML-KEM when it does not, or skips the lab-testing prerequisite, the program will fail — or cause an outage.
+
 
 ## 5. Setup and Run Instructions
 
-**Prerequisites:** Python 3.10+, a DeepSeek API key (`DEEPSEEK_API_KEY`), internet access.
+**Prerequisites:** Python 3.10+, a DeepSeek API key (DEEPSEEK_API_KEY).
 
-**One-command run from a clean environment:**
+Setup steps:
 
-```bash
-git clone https://github.com/idrismakr-png/pqc-migrate-eval.git
-cd pqc-migrate-eval
-python3 -m venv .venv
-source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-cp .env.example .env
-# Edit .env and add your DEEPSEEK_API_KEY
-python check_env.py                # verifies API key + connectivity
-python run_eval.py                 # runs all 8 tasks against the configured model(s)
+1. git clone https://github.com/idrismakr-png/pqc-migrate-eval.git
+2. cd pqc-migrate-eval
+3. python3 -m venv .venv
+4. source .venv/bin/activate
+5. pip install -r requirements.txt
+6. cp .env.example .env
+7. Add DEEPSEEK_API_KEY to .env
+8. python check_env.py
+9. python run_eval.py
+
+**Runtime:** ~5-8 minutes for all 8 tasks. **Cost:** under $0.05.
+
+**Architecture:**
+
+- tasks/task_00N.json -> run_eval.py -> DeepSeek API -> response JSON
+- response JSON -> grader.py (rules G1-G4) -> results/ (score + failures)
+- Task = scenario + question + schema + 4 grading rules
+- Grader = deterministic Python, no LLM-as-judge
+- Results = one JSON per task per model + batch_summary.json
+
+
+## 6. Models Tested and Results
+
+**Model:** deepseek-chat
+**Date:** 2026-11-03
+**Settings:** temperature = 0.0, max_tokens = 8000, 1 run per task
+
+| Task ID | Difficulty | Score | Max | Percentage | Outcome |
+|---|---|---|---|---|---|
+| PQC-001 | conventional | 0.0 | 9 | 0.00% | CRITICAL FAILURE |
+| PQC-002 | adversarial | 0.0 | 9 | 0.00% | CRITICAL FAILURE |
+| PQC-003 | constrained | 6.5 | 9 | 72.22% | G2 fail |
+| PQC-004 | constrained | 6.5 | 9 | 72.22% | G2 fail |
+| PQC-005 | adversarial | 6.5 | 9 | 72.22% | G2 fail |
+| PQC-006 | conventional | 6.5 | 9 | 72.22% | G2 fail |
+| PQC-007 | adversarial | 6.5 | 9 | 72.22% | G2 fail |
+| PQC-008 | constrained | 6.5 | 9 | 72.22% | G2 fail |
+| **Average** | | **4.88** | 9 | **54.16%** | 2 critical failures |
+
+
+## 7. Failure Analysis
+
+**G2 (blocker coverage) fails on all 8 tasks.** The model names the HSM and core banking vendor as blockers but does not explain why they block migration or what evidence would resolve them.
+
+**PQC-001 (critical):** Scheduled production changes during the change freeze, left dates as null for prohibited activities, scheduled production migration without prior lab testing, and omitted all required prerequisite confirmations.
+
+**PQC-002 (critical):** Same prerequisite failures as PQC-001. Did not identify the firmware-until-2028 blocker or the $50k budget limit as a blocker.
+
+**PQC-003 to PQC-008 (partial):** Model handled G1, G3, G4 adequately but consistently failed G2. Finding: the model can plan, but cannot diagnose.
+
+
+## 7a. Grader Validation (Positive and Negative Fixtures)
+
+Six hand-authored fixtures prove the grader is not permissive:
+
+| Fixture | Observed |
+|---|---|
+| fake_response_pass.json | 9.0 / 9, 0 failures |
+| fake_response_fail_freeze.json | 0.0 / 9, critical=True |
+| fake_response_fail_vendor_claim.json | 0.0 / 9, critical=True |
+| fake_response_fail_budget.json | 7.0 / 9, 1 failure |
+| fake_response_fail_missing_blocker.json | 8.0 / 9, 1 failure |
+| fake_response_fail_algo_swap.json | 8.0 / 9, 2 failures |
+
+Fixtures generated by make_negatives.py and validated by running the grader on each one. This proves the grader catches violations in both directions: a good response earns full credit, and every class of violation is caught by the correct rule.
+
+
+## 8. Prior Work and Sources
+
+**Prior work by author:** None. This eval was created for the micro1 Eval Hackathon 2026. Task scenarios, grading rules, and grader implementation are original.
+
+**External sources consulted (not copied):**
+- NIST FIPS 203, 204, 205
+- NSA CNSA 2.0
+- BSI TR-02102-1
+- CISA Post-Quantum Cryptography Initiative
+- Open Quantum Safe project
+
+**Existing benchmarks consulted (not used directly):**
+- SWE-bench (task design inspiration)
+- AgentBench, WebArena (agentic planning evaluation reference)
+
+**Grading methodology:** Deterministic rule-based, no LLM-as-judge. Validated against positive and negative fixtures.
+
+**Repo:** https://github.com/idrismakr-png/pqc-migrate-eval
+
