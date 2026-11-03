@@ -11,7 +11,7 @@
 
 ## 2. Video Walkthrough
 
-[VIDEO_LINK_HERE]
+https://drive.google.com/file/d/1YfTabhFnjH_0nittPGdH3iLetJl1xK92/view?usp=sharing
 
 
 ## 3. Domain and Expertise
