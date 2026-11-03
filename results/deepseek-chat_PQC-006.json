@@ -1,0 +1,317 @@
+{
+  "task_id": "PQC-006",
+  "task_file": "task_006.json",
+  "model": "deepseek-chat",
+  "status": "completed",
+  "temperature": 0.0,
+  "elapsed_seconds": 13.96,
+  "created_at_utc": "2026-11-03T08:22:52.470819+00:00",
+  "finish_reason": "stop",
+  "usage": {
+    "completion_tokens": 2889,
+    "prompt_tokens": 1010,
+    "total_tokens": 3899,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 768,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 768,
+    "prompt_cache_miss_tokens": 242
+  },
+  "structure_validation": {
+    "valid": true,
+    "missing_fields": [],
+    "type_errors": []
+  },
+  "raw_response": {
+    "migration_steps": [
+      {
+        "step_number": 1,
+        "activity": "Establish PQC migration programme governance, inventory cryptographic assets (RSA-2048 at rest, ECDSA TLS 1.3 in transit, Java/Bouncy Castle usage), and define customer-facing compliance milestones for the 9-month deadline.",
+        "activity_type": "Governance and discovery",
+        "start_date": "2025-01-06",
+        "end_date": "2025-02-14",
+        "prerequisites": [
+          "Executive sponsor appointed",
+          "Budget of $300,000 approved",
+          "Access to AWS account and KMS key inventory",
+          "Access to microservice source code and TLS configuration"
+        ]
+      },
+      {
+        "step_number": 2,
+        "activity": "Engage the demanding customer (30% revenue) to agree a phased PQC compliance definition: hybrid TLS with ML-KEM in transit and ML-DSA signatures where applicable within 9 months, with at-rest ML-KEM encryption deferred until AWS KMS support is validated.",
+        "activity_type": "Customer and contract alignment",
+        "start_date": "2025-01-13",
+        "end_date": "2025-02-28",
+        "prerequisites": [
+          "Step 1 governance established",
+          "Legal and account management involvement"
+        ]
+      },
+      {
+        "step_number": 3,
+        "activity": "Validate Bouncy Castle PQC provider versions (ML-KEM and ML-DSA) in a Java Spring Boot staging environment, including TLS 1.3 hybrid key exchange and certificate/signature integration.",
+        "activity_type": "Technical validation in staging",
+        "start_date": "2025-02-17",
+        "end_date": "2025-04-11",
+        "prerequisites": [
+          "Staging environment available without customer impact",
+          "Bouncy Castle PQC-capable release identified and licensed",
+          "Java runtime compatibility confirmed"
+        ]
+      },
+      {
+        "step_number": 4,
+        "activity": "Implement hybrid TLS 1.3 with ML-KEM key establishment (e.g., X25519MLKEM768 or equivalent supported combination) on ingress/load balancers and service-to-service mTLS in staging, retaining ECDSA during transition.",
+        "activity_type": "In-transit PQC implementation",
+        "start_date": "2025-03-03",
+        "end_date": "2025-05-09",
+        "prerequisites": [
+          "Step 3 Bouncy Castle validation complete",
+          "Load balancer and service mesh TLS configuration access",
+          "Cryptographic policy approved for hybrid mode"
+        ]
+      },
+      {
+        "step_number": 5,
+        "activity": "Implement ML-DSA digital signatures for internal service authentication and artifact signing in staging using Bouncy Castle, where signature verification endpoints can be updated.",
+        "activity_type": "Signature PQC implementation",
+        "start_date": "2025-03-17",
+        "end_date": "2025-05-23",
+        "prerequisites": [
+          "Step 3 Bouncy Castle validation complete",
+          "Inventory of signature use cases (tokens, artifacts, service auth)"
+        ]
+      },
+      {
+        "step_number": 6,
+        "activity": "Conduct performance, interoperability, and regression testing of hybrid TLS and ML-DSA in staging, including client compatibility testing with the demanding customer's environments.",
+        "activity_type": "Testing and validation",
+        "start_date": "2025-05-12",
+        "end_date": "2025-06-20",
+        "prerequisites": [
+          "Steps 4 and 5 staging implementations complete",
+          "Customer test environment access arranged"
+        ]
+      },
+      {
+        "step_number": 7,
+        "activity": "Produce customer-facing PQC compliance evidence pack: hybrid TLS with ML-KEM in transit, ML-DSA signatures where applicable, and documented roadmap for at-rest ML-KEM pending AWS KMS 2027 support.",
+        "activity_type": "Compliance evidence and customer reporting",
+        "start_date": "2025-06-02",
+        "end_date": "2025-07-11",
+        "prerequisites": [
+          "Step 6 test results",
+          "Step 2 agreed compliance definition"
+        ]
+      },
+      {
+        "step_number": 8,
+        "activity": "Deploy hybrid TLS 1.3 with ML-KEM and ML-DSA signature changes to production in a controlled rollout with rollback capability, respecting change freezes and downtime limits.",
+        "activity_type": "Production deployment (in-transit and signatures)",
+        "start_date": "2025-07-14",
+        "end_date": "2025-08-29",
+        "prerequisites": [
+          "Step 6 testing passed",
+          "Step 7 customer evidence pack accepted",
+          "Change advisory board approval",
+          "Rollback plan validated"
+        ]
+      },
+      {
+        "step_number": 9,
+        "activity": "Deliver formal PQC compliance attestation to the demanding customer covering in-transit ML-KEM hybrid TLS and ML-DSA signatures, with a signed commitment and timeline for at-rest ML-KEM once AWS KMS support is available and validated.",
+        "activity_type": "Customer compliance delivery",
+        "start_date": "2025-09-01",
+        "end_date": "2025-09-30",
+        "prerequisites": [
+          "Step 8 production deployment complete",
+          "Legal review of attestation wording"
+        ]
+      },
+      {
+        "step_number": 10,
+        "activity": "Monitor AWS KMS ML-KEM support announcements and obtain written confirmation of availability, API behaviour, regional coverage, and compliance certifications; do not treat 2027 forecast as confirmed.",
+        "activity_type": "Vendor dependency tracking",
+        "start_date": "2025-10-01",
+        "end_date": null,
+        "prerequisites": [
+          "AWS account team engagement",
+          "Step 1 inventory of KMS-protected data"
+        ]
+      },
+      {
+        "step_number": 11,
+        "activity": "Design and validate at-rest ML-KEM encryption architecture using AWS KMS once ML-KEM support is confirmed available, including envelope encryption, key policies, and data re-encryption strategy.",
+        "activity_type": "At-rest PQC design and validation",
+        "start_date": null,
+        "end_date": null,
+        "prerequisites": [
+          "Step 10 written AWS KMS ML-KEM availability confirmation",
+          "Staging environment validation of KMS ML-KEM APIs"
+        ]
+      },
+      {
+        "step_number": 12,
+        "activity": "Migrate data-at-rest encryption from RSA-2048 to ML-KEM via AWS KMS in production, including key rotation and re-encryption of stored data, after vendor support and validation are confirmed.",
+        "activity_type": "At-rest PQC production migration",
+        "start_date": null,
+        "end_date": null,
+        "prerequisites": [
+          "Step 11 design and staging validation complete",
+          "AWS KMS ML-KEM support confirmed and validated",
+          "Change advisory board approval",
+          "Data re-encryption plan approved"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "B-01",
+        "category": "Vendor dependency",
+        "blocker": "AWS KMS ML-KEM support is announced for 2027 but not currently available or validated.",
+        "reason": "Encryption at rest using RSA-2048 via AWS KMS cannot be migrated to ML-KEM until AWS provides and validates ML-KEM support in KMS; the 2027 date is a forecast, not a confirmed delivery.",
+        "resolution_required": "Written AWS confirmation of ML-KEM availability in KMS, including API documentation, regional availability, and compliance evidence; staging validation of KMS ML-KEM operations."
+      },
+      {
+        "blocker_id": "B-02",
+        "category": "Customer timeline",
+        "blocker": "Demanding customer requires PQC compliance within 9 months, but at-rest ML-KEM depends on AWS KMS support forecast for 2027.",
+        "reason": "Full PQC compliance including at-rest encryption cannot be achieved within 9 months if it depends on AWS KMS ML-KEM support that is not yet available.",
+        "resolution_required": "Negotiate a phased compliance definition with the customer: in-transit ML-KEM hybrid TLS and ML-DSA signatures within 9 months, with at-rest ML-KEM deferred to a contractually agreed date after AWS KMS support is validated."
+      },
+      {
+        "blocker_id": "B-03",
+        "category": "Technical compatibility",
+        "blocker": "Bouncy Castle PQC support must be validated for the specific Java Spring Boot runtime, TLS stack, and service mesh in use.",
+        "reason": "Library support does not guarantee end-to-end compatibility with load balancers, service mesh, and client applications; unvalidated changes risk production outages.",
+        "resolution_required": "Complete staging validation (Step 3) including interoperability testing with the customer's clients and performance benchmarking."
+      },
+      {
+        "blocker_id": "B-04",
+        "category": "Operational",
+        "blocker": "Production deployment must respect change freezes and downtime limits.",
+        "reason": "Hybrid TLS and signature changes affect all 5,000 businesses; uncontrolled rollout could cause outages and violate operational constraints.",
+        "resolution_required": "Change advisory board approval, rollback plan, and phased rollout schedule aligned with change freeze calendar."
+      },
+      {
+        "blocker_id": "B-05",
+        "category": "Standards and certification",
+        "blocker": "ML-KEM and ML-DSA algorithm parameters and hybrid combinations must align with recognised standards (e.g., NIST FIPS 203/204) and any customer certification requirements.",
+        "reason": "Use of non-standard or unapproved parameter sets may not satisfy the customer's compliance attestation.",
+        "resolution_required": "Confirm algorithm parameter sets and hybrid constructions against NIST standards and customer security requirements; document in compliance evidence pack."
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "Amazon Web Services (AWS KMS)",
+        "pqc_support_status": "Announced ML-KEM support starting 2027; not currently available or validated. Forecast only.",
+        "evidence_required": "Written AWS confirmation of ML-KEM availability in KMS, API documentation, regional coverage, compliance certifications, and staging validation results."
+      },
+      {
+        "vendor": "Bouncy Castle",
+        "pqc_support_status": "Java library with PQC support for ML-KEM and ML-DSA; specific version compatibility with Java Spring Boot and TLS stack must be validated.",
+        "evidence_required": "Release notes confirming ML-KEM and ML-DSA support, compatibility matrix, and successful staging validation results."
+      },
+      {
+        "vendor": "Load balancer / service mesh provider (e.g., AWS ALB/NLB, Envoy-based mesh)",
+        "pqc_support_status": "Hybrid TLS 1.3 with ML-KEM support depends on the specific product and version; must be confirmed and validated.",
+        "evidence_required": "Vendor documentation confirming hybrid ML-KEM key exchange support and interoperability test results."
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "Post-quantum key establishment for TLS 1.3 hybrid key exchange in transit and, once AWS KMS support is validated, for encryption at rest via KMS envelope encryption. Not used for digital signatures.",
+      "ML-DSA": "Post-quantum digital signatures for internal service authentication, artifact signing, and certificate/signature use cases where signature verification endpoints can be updated. Not used for key establishment."
+    },
+    "budget": {
+      "estimated_total_usd": 285000,
+      "budget_limit_usd": 300000,
+      "within_budget": true,
+      "cost_assumptions": [
+        {
+          "category": "Programme management and governance",
+          "estimated_cost_usd": 30000
+        },
+        {
+          "category": "Engineering (staging validation, implementation, testing)",
+          "estimated_cost_usd": 120000
+        },
+        {
+          "category": "Security architecture and compliance evidence",
+          "estimated_cost_usd": 45000
+        },
+        {
+          "category": "Customer engagement and legal (phased compliance agreement)",
+          "estimated_cost_usd": 25000
+        },
+        {
+          "category": "Staging environment and tooling",
+          "estimated_cost_usd": 20000
+        },
+        {
+          "category": "Production deployment and rollback readiness",
+          "estimated_cost_usd": 30000
+        },
+        {
+          "category": "Contingency (10%)",
+          "estimated_cost_usd": 15000
+        }
+      ]
+    },
+    "confidence": "Medium: in-transit ML-KEM hybrid TLS and ML-DSA signatures can likely be delivered within 9 months using Bouncy Castle and staging validation, subject to customer agreement on phased compliance. At-rest ML-KEM migration is blocked pending confirmed AWS KMS support (forecast 2027) and cannot be completed within the 9-month customer deadline. Vendor delivery dates and compatibility remain unconfirmed."
+  },
+  "grade_result": {
+    "score": 6.5,
+    "max_score": 9,
+    "percentage": 72.22,
+    "critical_failure": false,
+    "rule_results": [
+      {
+        "rule_id": "G1",
+        "score": 4,
+        "max_score": 4,
+        "status": "PASS"
+      },
+      {
+        "rule_id": "G2",
+        "score": 0,
+        "max_score": 2,
+        "status": "FAIL"
+      },
+      {
+        "rule_id": "G3",
+        "score": 0.5,
+        "max_score": 1,
+        "status": "PARTIAL"
+      },
+      {
+        "rule_id": "G4",
+        "score": 2,
+        "max_score": 2,
+        "status": "PASS"
+      }
+    ],
+    "successes": [
+      "G1: Freeze constraints, vendor-status constraints, and production migration prerequisites are satisfied.",
+      "G3: Migration step numbering is valid.",
+      "G3: ML-KEM is assigned to key establishment and ML-DSA is assigned to digital signatures.",
+      "G3: Risk assessment explicitly prioritises long-lived sensitive information and HNDL exposure.",
+      "G4: The $285,000.00 estimate is within the $300,000.00 limit and the numeric cost breakdown reconciles."
+    ],
+    "failures": [
+      "G2: Required blocker 'aws_kms' is missing or does not sufficiently explain its context and resolution.",
+      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): compliance evidence and customer reporting, customer and contract alignment, customer compliance delivery, governance and discovery, in-transit pqc implementation.",
+      "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
+      "G3: Required activity category 'risk_assessment' is missing.",
+      "G3: Required activity category 'vendor_engagement' is missing.",
+      "G3: Required activity category 'lab_testing' is missing.",
+      "G3: Required order 'inventory' before 'risk_assessment' is not satisfied.",
+      "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied."
+    ]
+  }
+}

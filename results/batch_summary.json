@@ -1,0 +1,220 @@
+{
+  "status": "completed",
+  "created_at_utc": "2026-11-03T08:23:24.432716+00:00",
+  "tasks_discovered": 8,
+  "models_selected": 1,
+  "total_attempts": 8,
+  "successful_evaluations": 8,
+  "failed_evaluations": 0,
+  "average_percentage_completed_runs": 54.16,
+  "results": [
+    {
+      "task_id": "PQC-001",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 0.0,
+      "max_score": 9,
+      "percentage": 0.0,
+      "critical_failure": true,
+      "elapsed_seconds": 23.15,
+      "usage": {
+        "completion_tokens": 4139,
+        "prompt_tokens": 1439,
+        "total_tokens": 5578,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1280,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 1280,
+        "prompt_cache_miss_tokens": 159
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-001.json"
+    },
+    {
+      "task_id": "PQC-002",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 0.0,
+      "max_score": 9,
+      "percentage": 0.0,
+      "critical_failure": true,
+      "elapsed_seconds": 14.8,
+      "usage": {
+        "completion_tokens": 2725,
+        "prompt_tokens": 1185,
+        "total_tokens": 3910,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 1024,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 1024,
+        "prompt_cache_miss_tokens": 161
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-002.json"
+    },
+    {
+      "task_id": "PQC-003",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 12.65,
+      "usage": {
+        "completion_tokens": 2427,
+        "prompt_tokens": 1040,
+        "total_tokens": 3467,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 896,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 896,
+        "prompt_cache_miss_tokens": 144
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-003.json"
+    },
+    {
+      "task_id": "PQC-004",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 17.16,
+      "usage": {
+        "completion_tokens": 3262,
+        "prompt_tokens": 1005,
+        "total_tokens": 4267,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 768,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 237
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-004.json"
+    },
+    {
+      "task_id": "PQC-005",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 13.63,
+      "usage": {
+        "completion_tokens": 2663,
+        "prompt_tokens": 1006,
+        "total_tokens": 3669,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 768,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 238
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-005.json"
+    },
+    {
+      "task_id": "PQC-006",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 13.96,
+      "usage": {
+        "completion_tokens": 2889,
+        "prompt_tokens": 1010,
+        "total_tokens": 3899,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 768,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 242
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-006.json"
+    },
+    {
+      "task_id": "PQC-007",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 12.21,
+      "usage": {
+        "completion_tokens": 2461,
+        "prompt_tokens": 1029,
+        "total_tokens": 3490,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 895,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 895,
+        "prompt_cache_miss_tokens": 134
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-007.json"
+    },
+    {
+      "task_id": "PQC-008",
+      "model": "deepseek-chat",
+      "status": "completed",
+      "score": 6.5,
+      "max_score": 9,
+      "percentage": 72.22,
+      "critical_failure": false,
+      "elapsed_seconds": 15.69,
+      "usage": {
+        "completion_tokens": 2860,
+        "prompt_tokens": 998,
+        "total_tokens": 3858,
+        "completion_tokens_details": null,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cache_write_tokens": null,
+          "cached_tokens": 768,
+          "image_tokens": null,
+          "text_tokens": null
+        },
+        "prompt_cache_hit_tokens": 768,
+        "prompt_cache_miss_tokens": 230
+      },
+      "result_file": "/mnt/d/i00816741/Desktop/PG ABU/MPhil/2026/2nd Semester Lectures/pqc-migrate-eval/results/deepseek-chat_PQC-008.json"
+    }
+  ]
+}

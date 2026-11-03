@@ -1,0 +1,314 @@
+{
+  "task_id": "PQC-007",
+  "task_file": "task_007.json",
+  "model": "deepseek-chat",
+  "status": "completed",
+  "temperature": 0.0,
+  "elapsed_seconds": 12.21,
+  "created_at_utc": "2026-11-03T08:23:06.707343+00:00",
+  "finish_reason": "stop",
+  "usage": {
+    "completion_tokens": 2461,
+    "prompt_tokens": 1029,
+    "total_tokens": 3490,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cache_write_tokens": null,
+      "cached_tokens": 895,
+      "image_tokens": null,
+      "text_tokens": null
+    },
+    "prompt_cache_hit_tokens": 895,
+    "prompt_cache_miss_tokens": 134
+  },
+  "structure_validation": {
+    "valid": true,
+    "missing_fields": [],
+    "type_errors": []
+  },
+  "raw_response": {
+    "migration_steps": [
+      {
+        "step_number": 1,
+        "activity": "Establish PQC migration program governance, assign a technical lead, and document the DoD mandate requirements (NIST-standardized ML-KEM and ML-DSA only) and the 2027 deadline.",
+        "activity_type": "Program Management",
+        "start_date": "2025-01-16",
+        "end_date": "2025-02-14",
+        "prerequisites": [
+          "Contractor executive sponsorship",
+          "Copy of DoD mandate and acceptance criteria"
+        ]
+      },
+      {
+        "step_number": 2,
+        "activity": "Perform cryptographic inventory of the IKEv2/IPsec VPN estate: identify all gateways, clients, firmware versions, RSA-2048 and DH Group 14 usage, certificate authorities, and PSK usage.",
+        "activity_type": "Discovery",
+        "start_date": "2025-02-17",
+        "end_date": "2025-03-28",
+        "prerequisites": [
+          "Program governance established",
+          "Network team availability"
+        ]
+      },
+      {
+        "step_number": 3,
+        "activity": "Evaluate the vendor's PSK appliance claim against DoD requirements; document that PSK with 256-bit entropy is not vulnerable to Shor's algorithm but is not a NIST-standardized PQC algorithm and does not satisfy the ML-KEM/ML-DSA mandate.",
+        "activity_type": "Assessment",
+        "start_date": "2025-03-03",
+        "end_date": "2025-03-21",
+        "prerequisites": [
+          "Cryptographic inventory completed",
+          "Vendor appliance documentation obtained"
+        ]
+      },
+      {
+        "step_number": 4,
+        "activity": "Issue formal RFI to current VPN vendor and alternative vendors requesting evidence of ML-KEM and ML-DSA support in IKEv2/IPsec, including firmware versions, interoperability statements, and certification status.",
+        "activity_type": "Procurement",
+        "start_date": "2025-03-24",
+        "end_date": "2025-04-25",
+        "prerequisites": [
+          "Vendor evaluation criteria defined",
+          "DoD algorithm requirements documented"
+        ]
+      },
+      {
+        "step_number": 5,
+        "activity": "Select a PQC-capable VPN solution that supports ML-KEM for key establishment and ML-DSA for authentication, or confirm a vendor roadmap with contractual delivery milestones before 2027.",
+        "activity_type": "Procurement",
+        "start_date": "2025-04-28",
+        "end_date": "2025-06-13",
+        "prerequisites": [
+          "RFI responses received and evaluated",
+          "Vendor evidence of ML-KEM/ML-DSA support verified"
+        ]
+      },
+      {
+        "step_number": 6,
+        "activity": "Procure PQC-capable VPN hardware/software and professional services for design, integration, and training.",
+        "activity_type": "Procurement",
+        "start_date": "2025-06-16",
+        "end_date": "2025-08-08",
+        "prerequisites": [
+          "Vendor selected with confirmed PQC support",
+          "Budget approval"
+        ]
+      },
+      {
+        "step_number": 7,
+        "activity": "Design hybrid IKEv2/IPsec configuration using ML-KEM for key establishment alongside classical DH, and ML-DSA for certificate-based authentication, with fallback and rollback procedures.",
+        "activity_type": "Design",
+        "start_date": "2025-07-14",
+        "end_date": "2025-09-05",
+        "prerequisites": [
+          "PQC-capable VPN solution procured",
+          "DoD interoperability requirements confirmed"
+        ]
+      },
+      {
+        "step_number": 8,
+        "activity": "Conduct non-production lab testing of ML-KEM and ML-DSA in IKEv2/IPsec, including interoperability with DoD endpoints, performance impact, and certificate chain validation.",
+        "activity_type": "Testing",
+        "start_date": "2025-09-08",
+        "end_date": "2025-10-31",
+        "prerequisites": [
+          "Hybrid design completed",
+          "Lab environment available",
+          "DoD test endpoints or test CA available"
+        ]
+      },
+      {
+        "step_number": 9,
+        "activity": "Train network team on PQC concepts, ML-KEM/ML-DSA roles, hybrid IKEv2 configuration, and operational procedures.",
+        "activity_type": "Training",
+        "start_date": "2025-10-06",
+        "end_date": "2025-11-14",
+        "prerequisites": [
+          "Lab testing completed",
+          "Training materials developed"
+        ]
+      },
+      {
+        "step_number": 10,
+        "activity": "Obtain DoD approval of the PQC migration design and test results, and schedule production cutover outside the Dec 1–Jan 15 change freeze.",
+        "activity_type": "Regulatory",
+        "start_date": "2025-11-03",
+        "end_date": "2025-11-28",
+        "prerequisites": [
+          "Lab testing passed",
+          "DoD acceptance criteria met"
+        ]
+      },
+      {
+        "step_number": 11,
+        "activity": "Execute production pilot migration of a limited set of VPN gateways to ML-KEM/ML-DSA hybrid configuration during an approved maintenance window after the change freeze.",
+        "activity_type": "Implementation",
+        "start_date": "2026-01-19",
+        "end_date": "2026-02-27",
+        "prerequisites": [
+          "DoD approval obtained",
+          "Change freeze ended",
+          "Rollback plan validated"
+        ]
+      },
+      {
+        "step_number": 12,
+        "activity": "Complete full production rollout of PQC-capable VPN across all contractor sites and verify DoD interoperability.",
+        "activity_type": "Implementation",
+        "start_date": "2026-03-02",
+        "end_date": "2026-06-30",
+        "prerequisites": [
+          "Pilot migration successful",
+          "Operational runbooks updated"
+        ]
+      },
+      {
+        "step_number": 13,
+        "activity": "Conduct post-migration validation, update security documentation, and establish continuous monitoring for cryptographic algorithm compliance.",
+        "activity_type": "Validation",
+        "start_date": "2026-07-01",
+        "end_date": "2026-08-14",
+        "prerequisites": [
+          "Full production rollout completed",
+          "DoD acceptance testing completed"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "BLK-001",
+        "category": "Vendor Capability",
+        "blocker": "Vendor appliance does not support ML-KEM or ML-DSA.",
+        "reason": "DoD mandate explicitly requires NIST-standardized PQC algorithms (ML-KEM, ML-DSA); PSK-only solution does not meet this requirement.",
+        "resolution_required": "Select a VPN vendor with confirmed ML-KEM and ML-DSA support, or obtain contractual commitment with delivery before 2027 and DoD acceptance."
+      },
+      {
+        "blocker_id": "BLK-002",
+        "category": "Regulatory",
+        "blocker": "DoD acceptance of PQC design and test results not yet obtained.",
+        "reason": "Production migration cannot proceed without DoD approval of the hybrid ML-KEM/ML-DSA configuration.",
+        "resolution_required": "Submit design and lab test evidence to DoD and obtain written approval."
+      },
+      {
+        "blocker_id": "BLK-003",
+        "category": "Operational",
+        "blocker": "Change freeze from 2025-12-01 to 2026-01-15 prevents production changes.",
+        "reason": "Production cutover cannot occur during freeze; pilot must be scheduled after 2026-01-15.",
+        "resolution_required": "Schedule all production changes outside the freeze window."
+      },
+      {
+        "blocker_id": "BLK-004",
+        "category": "Skills",
+        "blocker": "Network team has no PQC experience.",
+        "reason": "Design, testing, and operations require PQC knowledge; lack of skills risks misconfiguration and delays.",
+        "resolution_required": "Provide PQC training and/or engage professional services before design and testing phases."
+      },
+      {
+        "blocker_id": "BLK-005",
+        "category": "Interoperability",
+        "blocker": "DoD endpoint interoperability with ML-KEM/ML-DSA not yet validated.",
+        "reason": "The contractor must interoperate with DoD VPN endpoints; without validation, production rollout cannot be assured.",
+        "resolution_required": "Conduct lab interoperability testing with DoD-provided test endpoints or certificates."
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "Current VPN vendor (incumbent)",
+        "pqc_support_status": "Unconfirmed; no evidence of ML-KEM or ML-DSA support provided.",
+        "evidence_required": "Written statement of ML-KEM and ML-DSA support in IKEv2/IPsec, firmware version, and interoperability test results."
+      },
+      {
+        "vendor": "PSK appliance vendor",
+        "pqc_support_status": "Confirmed no ML-KEM or ML-DSA support; PSK-only solution.",
+        "evidence_required": "Not applicable; solution does not meet DoD mandate."
+      },
+      {
+        "vendor": "Alternative PQC-capable VPN vendor (to be selected)",
+        "pqc_support_status": "Unconfirmed; must be verified through RFI and lab testing.",
+        "evidence_required": "Documented ML-KEM and ML-DSA support, firmware release notes, DoD interoperability evidence, and contractual delivery milestones before 2027."
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "Post-quantum key establishment (encapsulation) for IKEv2 key exchange, replacing or hybridizing DH Group 14 to protect against Shor's algorithm.",
+      "ML-DSA": "Post-quantum digital signatures for IKEv2 authentication and certificate-based identity, replacing RSA-2048 signatures to protect against Shor's algorithm."
+    },
+    "budget": {
+      "estimated_total_usd": 385000,
+      "budget_limit_usd": 400000,
+      "within_budget": true,
+      "cost_assumptions": [
+        {
+          "category": "PQC-capable VPN hardware/software",
+          "estimated_cost_usd": 180000
+        },
+        {
+          "category": "Professional services (design, integration, testing)",
+          "estimated_cost_usd": 120000
+        },
+        {
+          "category": "Training",
+          "estimated_cost_usd": 25000
+        },
+        {
+          "category": "Lab environment and testing",
+          "estimated_cost_usd": 30000
+        },
+        {
+          "category": "Project management and contingency",
+          "estimated_cost_usd": 30000
+        }
+      ]
+    },
+    "confidence": "Medium — key dependencies on vendor PQC support, DoD interoperability validation, and regulatory approval remain unconfirmed; budget and schedule are estimates subject to procurement outcomes."
+  },
+  "grade_result": {
+    "score": 6.5,
+    "max_score": 9,
+    "percentage": 72.22,
+    "critical_failure": false,
+    "rule_results": [
+      {
+        "rule_id": "G1",
+        "score": 4,
+        "max_score": 4,
+        "status": "PASS"
+      },
+      {
+        "rule_id": "G2",
+        "score": 0,
+        "max_score": 2,
+        "status": "FAIL"
+      },
+      {
+        "rule_id": "G3",
+        "score": 0.5,
+        "max_score": 1,
+        "status": "PARTIAL"
+      },
+      {
+        "rule_id": "G4",
+        "score": 2,
+        "max_score": 2,
+        "status": "PASS"
+      }
+    ],
+    "successes": [
+      "G1: Freeze constraints, vendor-status constraints, and production migration prerequisites are satisfied.",
+      "G3: Migration step numbering is valid.",
+      "G3: ML-KEM is assigned to key establishment and ML-DSA is assigned to digital signatures.",
+      "G3: Risk assessment explicitly prioritises long-lived sensitive information and HNDL exposure.",
+      "G4: The $385,000.00 estimate is within the $400,000.00 limit and the numeric cost breakdown reconciles."
+    ],
+    "failures": [
+      "G2: Required blocker 'psk_not_nist' is missing or does not sufficiently explain its context and resolution.",
+      "G2: Required blocker 'vendor_gap' is missing or does not sufficiently explain its context and resolution.",
+      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): assessment, design, discovery, implementation, procurement.",
+      "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
+      "G3: Required activity category 'risk_assessment' is missing.",
+      "G3: Required activity category 'vendor_engagement' is missing.",
+      "G3: Required order 'inventory' before 'risk_assessment' is not satisfied.",
+      "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied."
+    ]
+  }
+}
