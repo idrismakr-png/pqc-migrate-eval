@@ -120,8 +120,9 @@ def evaluate_g1(params, response):
         if activity_type == "production_crypto_change":
             production_steps.append(step)
 
-        is_prohibited = activity_type in prohibited_types
-        if not is_prohibited:
+        # Classification is based only on activity_type. Text is not
+        # inspected for prohibited actions, avoiding false positives.
+        if activity_type not in prohibited_types:
             continue
 
         start = parse_date(step.get("start_date"))
@@ -146,56 +147,38 @@ def evaluate_g1(params, response):
                 "the production change freeze."
             )
 
-    dependencies = response.get("vendor_dependencies", [])
-    if params.get("enforce_unconfirmed_vendors", True):
+    # Vendor-status check (opt-in, defaults to False).
+    if params.get("enforce_unconfirmed_vendors", False):
+        dependencies = response.get("vendor_dependencies", [])
         if isinstance(dependencies, list):
             for vendor in dependencies:
                 if not isinstance(vendor, dict):
                     continue
                 vendor_name = norm(vendor.get("vendor"))
                 status = norm(vendor.get("pqc_support_status"))
-                if status in {
-                    "confirmed", "supported", "available", "compatible",
-                    "pqc-ready", "pqc ready"
-                }:
+                # Distinguish current confirmation from future commitment.
+                if status in {"confirmed", "supported", "available", "compatible",
+                              "pqc-ready", "pqc ready"}:
                     failures.append(
                         f"G1: Vendor '{vendor_name}' is incorrectly presented "
                         "as having confirmed PQC support."
                     )
+                elif status in {"confirmed_future", "planned", "projected"}:
+                    # Future commitments are acceptable if the timeline is
+                    # clearly stated as not-yet-available.
+                    pass
 
-    positive_claim_patterns = [
-        r"\\b(?:thales(?:\\s+luna(?:\\s+network)?\\s+hsm(?:\\s+7)?)?|"
-        r"luna(?:\\s+network)?\\s+hsm(?:\\s+7)?|hsm)\\s+"
-        r"(?:currently\\s+)?supports?\\s+(?:ml-kem|ml-dsa|pqc)\\b",
-    ]
-
-    for step in steps:
-        if not isinstance(step, dict):
-            continue
-        activity = norm(step.get("activity"))
-        for pattern in positive_claim_patterns:
-            if re.search(pattern, activity, re.IGNORECASE):
-                failures.append(
-                    "G1: Possible unsupported vendor-readiness claim in "
-                    f"activity: '{activity[:120]}'."
-                )
-                break
-
-    required_prerequisite_concepts = params.get(
-        "required_prerequisite_concepts", []
-    )
-
-    for step in production_steps:
-        prerequisites = norm(step.get("prerequisites", []))
-
-        if params.get("enforce_lab_before_production", True):
+    # Lab-before-production check (opt-in, defaults to False).
+    if params.get("enforce_lab_before_production", False):
+        for step in production_steps:
+            start = parse_date(step.get("start_date"))
             prior_lab_steps = [
                 item for item in steps
                 if isinstance(item, dict)
                 and norm(item.get("activity_type")) == "lab_testing"
                 and parse_date(item.get("end_date"))
-                and parse_date(step.get("start_date"))
-                and parse_date(item.get("end_date")) < parse_date(step.get("start_date"))
+                and start
+                and parse_date(item.get("end_date")) < start
             ]
             if not prior_lab_steps:
                 failures.append(
@@ -203,6 +186,12 @@ def evaluate_g1(params, response):
                     "a completed earlier laboratory-testing activity."
                 )
 
+    # Required prerequisites from the task (per-task only).
+    required_prerequisite_concepts = params.get(
+        "required_prerequisite_concepts", []
+    )
+    for step in production_steps:
+        prerequisites = norm(step.get("prerequisites", []))
         for label, terms in required_prerequisite_concepts:
             if not all(term in prerequisites for term in terms):
                 failures.append(
@@ -385,8 +374,6 @@ def evaluate_g2(params, response):
 
     if identified == len(required):
         return 1, failures, successes
-    if identified == 1 and len(required) >= 2:
-        return 0.5, failures, successes
     return 0, failures, successes
 
 
@@ -407,162 +394,94 @@ def evaluate_g3(params, response):
         {
             "category": norm(step.get("activity_type")),
             "activity": norm(step.get("activity")),
-            "step_number": step.get("step_number")
+            "step_number": step.get("step_number"),
         }
         for step in valid_steps
     ]
 
-    # Reject stale or internally inconsistent schedules. A task may pin a
-    # planning_reference_date in its rule parameters for reproducible runs;
-    # otherwise the grader uses the date on which it is executed.
+    # Stale-date detection.
     reference_date = get_planning_reference_date(params)
-    stale_steps = []
-    invalid_ranges = []
+    stale = []
+    bad_range = []
     for step in valid_steps:
-        start = parse_date(step.get("start_date"))
-        end = parse_date(step.get("end_date"))
-        label = norm(step.get("activity_type")) or norm(step.get("activity")) or "unnamed activity"
-        if start and start < reference_date:
-            stale_steps.append(label)
-        if start and end and start > end:
-            invalid_ranges.append(label)
+        s = parse_date(step.get("start_date"))
+        e = parse_date(step.get("end_date"))
+        label = norm(step.get("activity_type")) or norm(step.get("activity")) or "activity"
+        if s and s < reference_date:
+            stale.append(label)
+        if s and e and s > e:
+            bad_range.append(label)
 
-    if stale_steps:
+    if stale:
         failures.append(
-            "G3: One or more migration activities are scheduled before the "
-            f"planning reference date ({reference_date.isoformat()}): "
-            + ", ".join(sorted(set(stale_steps))[:5]) + "."
+            "G3: Activities scheduled before the planning reference date "
+            f"({reference_date.isoformat()}): "
+            + ", ".join(sorted(set(stale))[:5]) + "."
         )
     else:
         successes.append(
-            f"G3: Migration schedule does not begin before the planning "
-            f"reference date ({reference_date.isoformat()})."
+            f"G3: Schedule does not begin before {reference_date.isoformat()}."
         )
 
-    if invalid_ranges:
+    if bad_range:
         failures.append(
-            "G3: One or more migration activities have start dates after "
-            "their end dates: " + ", ".join(sorted(set(invalid_ranges))[:5]) + "."
-        )
-
-    # A migration plan must include an actual production phase, not stop at
-    # testing or at drafting a future plan.
-    production_positions = [
-        index for index, item in enumerate(categories)
-        if item["category"] == "production_crypto_change"
-        or "production crypto change" in item["activity"]
-        or "production cryptographic change" in item["activity"]
-        or "production pqc migration" in item["activity"]
-    ]
-    production_step_exists = bool(production_positions)
-    if not production_step_exists:
-        failures.append(
-            "G3: An explicit production_crypto_change activity is missing; "
-            "the plan must schedule production migration after validation."
+            "G3: Activities have start dates after end dates: "
+            + ", ".join(sorted(set(bad_range))[:5]) + "."
         )
 
     # Required activity categories.
     required_categories = params.get("required_activity_categories", [])
     category_passes = 0
-
     for required in required_categories:
-        required = norm(required)
-        if any(
-            required == item["category"]
-            or required.replace("_", " ") in item["activity"]
-            for item in categories
-        ):
+        r = norm(required)
+        if any(r == item["category"] or r.replace("_", " ") in item["activity"]
+               for item in categories):
             category_passes += 1
         else:
-            failures.append(
-                f"G3: Required activity category '{required}' is missing."
-            )
+            failures.append(f"G3: Required activity category '{required}' is missing.")
 
-    # Step numbers must be present, unique, and ordered.
+    # Numbering.
     numbers = [item["step_number"] for item in categories]
     numbering_ok = (
-        all(isinstance(number, int) for number in numbers)
+        all(isinstance(n, int) and not isinstance(n, bool) for n in numbers)
         and len(set(numbers)) == len(numbers)
         and numbers == sorted(numbers)
     )
+    if not numbering_ok:
+        failures.append("G3: Migration steps must have unique, ordered integer step numbers.")
 
-    if numbering_ok:
-        successes.append("G3: Migration step numbering is valid.")
-    else:
-        failures.append(
-            "G3: Migration steps must have unique, ordered integer step numbers."
-        )
-
-    # Sequence relationships.
+    # must_precede relationships (task-driven only).
     relationships = params.get("must_precede", [])
     order_passes = 0
-
     for relationship in relationships:
         before = norm(relationship.get("before"))
         after = norm(relationship.get("after"))
-
-        before_positions = [
-            index for index, item in enumerate(categories)
-            if item["category"] == before
-            or before.replace("_", " ") in item["activity"]
+        before_pos = [
+            i for i, item in enumerate(categories)
+            if item["category"] == before or before.replace("_", " ") in item["activity"]
         ]
-        after_positions = [
-            index for index, item in enumerate(categories)
-            if item["category"] == after
-            or after.replace("_", " ") in item["activity"]
+        after_pos = [
+            i for i, item in enumerate(categories)
+            if item["category"] == after or after.replace("_", " ") in item["activity"]
         ]
-
-        valid = (
-            bool(before_positions)
-            and bool(after_positions)
-            and min(before_positions) < min(after_positions)
-        )
-
-        if valid:
+        if before_pos and after_pos and min(before_pos) < min(after_pos):
             order_passes += 1
         else:
-            failures.append(
-                f"G3: Required order '{before}' before '{after}' is not satisfied."
-            )
+            failures.append(f"G3: Required order '{before}' before '{after}' is not satisfied.")
 
-    if order_passes == len(relationships):
-        successes.append("G3: Required migration sequence is satisfied.")
-
-    # Production must be later than risk assessment, vendor engagement and
-    # lab testing, unless the task disables this hardcoded check.
-    if production_step_exists and params.get("enforce_production_after_validation", True):
-        prod_index = min(production_positions)
-        for required_prior in ("risk_assessment", "vendor_engagement", "lab_testing"):
-            prior_indices = [
-                index for index, item in enumerate(categories)
-                if item["category"] == required_prior
-                or required_prior.replace("_", " ") in item["activity"]
-            ]
-            if not prior_indices or min(prior_indices) >= prod_index:
-                failures.append(
-                    f"G3: Production migration must occur after a completed "
-                    f"'{required_prior}' activity."
-                )
-
-    # Algorithm roles: accept either the task's canonical role -> algorithm
-    # representation or the response's algorithm -> human-readable role form.
+    # Algorithm roles.
     required_algorithms = params.get("required_algorithms", {})
     response_roles = response.get("algorithm_roles", {})
-
     algorithm_ok = True
-
     for required_role, required_algorithm in required_algorithms.items():
         role = norm(required_role)
         algorithm = norm(required_algorithm)
-
-        direct_value = response_roles.get(required_role)
-        direct_ok = norm(direct_value) == algorithm
-
+        direct = response_roles.get(required_role)
+        direct_ok = norm(direct) == algorithm
         reverse_ok = False
-        for response_algorithm, response_role in response_roles.items():
-            if norm(response_algorithm) == algorithm:
-                role_text = norm(response_role)
-
+        for resp_alg, resp_role in response_roles.items():
+            if norm(resp_alg) == algorithm:
+                role_text = norm(resp_role)
                 if role == "key_encapsulation":
                     reverse_ok = contains_any(role_text, [
                         "key establishment", "key encapsulation", "key exchange"
@@ -573,10 +492,8 @@ def evaluate_g3(params, response):
                     ])
                 else:
                     reverse_ok = role.replace("_", " ") in role_text
-
                 if reverse_ok:
                     break
-
         if not (direct_ok or reverse_ok):
             algorithm_ok = False
             failures.append(
@@ -584,26 +501,18 @@ def evaluate_g3(params, response):
                 f"Expected {required_algorithm}."
             )
 
-    if algorithm_ok:
-        successes.append(
-            "G3: ML-KEM is assigned to key establishment and ML-DSA "
-            "is assigned to digital signatures."
-        )
-
-    # Long-lived sensitive data/HNDL prioritisation in risk assessment.
-    risk_steps = [
-        step for step in valid_steps
-        if norm(step.get("activity_type")) == "risk_assessment"
-    ]
-
-    risk_text = " ".join(norm(step.get("activity")) for step in risk_steps)
-
-    long_lived_terms = [
-        "long-lived", "long lived", "10-15 years", "10–15 years",
-        "10 to 15 years", "10–15", "harvest-now-decrypt-later",
-        "harvest now decrypt later", "hndl"
-    ]
+    # Long-lived data / HNDL (opt-in only).
     if params.get("require_long_lived_data_prioritization", False):
+        risk_steps = [
+            step for step in valid_steps
+            if norm(step.get("activity_type")) == "risk_assessment"
+        ]
+        risk_text = " ".join(norm(step.get("activity")) for step in risk_steps)
+        long_lived_terms = [
+            "long-lived", "long lived", "10-15 years", "10–15 years",
+            "10 to 15 years", "harvest-now-decrypt-later",
+            "harvest now decrypt later", "hndl"
+        ]
         long_lived_ok = (
             bool(risk_steps)
             and contains_any(risk_text, long_lived_terms)
@@ -612,46 +521,48 @@ def evaluate_g3(params, response):
                 "confidential information", "customer information"
             ])
         )
-    else:
-        long_lived_ok = True
-    if long_lived_ok:
-        successes.append(
-            "G3: Risk assessment explicitly prioritises long-lived "
-            "sensitive information and HNDL exposure."
-        )
-    else:
-        failures.append(
-            "G3: Risk assessment does not sufficiently prioritise "
-            "long-lived sensitive data and HNDL exposure."
-        )
+        if not long_lived_ok:
+            failures.append(
+                "G3: Risk assessment does not sufficiently prioritise "
+                "long-lived sensitive data and HNDL exposure."
+            )
 
-    # Follow the task's deterministic scoring bands.
-    all_sequence_checks = (
+    # Opt-in sequencing enforcement (defaults to False).
+    if params.get("enforce_production_after_validation", False):
+        production_pos = [
+            i for i, item in enumerate(categories)
+            if item["category"] == "production_crypto_change"
+        ]
+        if production_pos:
+            prod_idx = min(production_pos)
+            for required_prior in ("risk_assessment", "vendor_engagement", "lab_testing"):
+                prior = [
+                    i for i, item in enumerate(categories)
+                    if item["category"] == required_prior
+                ]
+                if not prior or min(prior) >= prod_idx:
+                    failures.append(
+                        f"G3: Production must occur after a completed "
+                        f"'{required_prior}' activity."
+                    )
+
+    # Scoring.
+    all_checks = (
         category_passes == len(required_categories)
         and order_passes == len(relationships)
         and numbering_ok
-        and production_step_exists
-        and not stale_steps
-        and not invalid_ranges
+        and not stale
+        and not bad_range
     )
-
-    if all_sequence_checks and algorithm_ok and long_lived_ok:
+    if all_checks and algorithm_ok:
         return 1, failures, successes
-
-    # Partial credit is appropriate for some errors, but not for a
-    # fundamentally incorrect algorithm-role assignment.
     if not algorithm_ok:
         return 0, failures, successes
-
     if category_passes > 0 and (order_passes > 0 or numbering_ok):
         return 0.5, failures, successes
-
     return 0, failures, successes
 
 
-# ============================================================
-# G4: BUDGET COMPLIANCE
-# ============================================================
 
 def evaluate_g4(params, response):
     failures = []

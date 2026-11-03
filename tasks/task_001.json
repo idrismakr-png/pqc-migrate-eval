@@ -121,7 +121,9 @@
               "approval"
             ]
           ]
-        ]
+        ],
+        "enforce_unconfirmed_vendors": true,
+        "enforce_lab_before_production": true
       }
     },
     {
@@ -238,7 +240,8 @@
           "correct_sequence_and_algorithm_roles": 1,
           "partial_sequence_or_algorithm_errors": 0.5,
           "fundamental_sequence_or_algorithm_errors": 0
-        }
+        },
+        "enforce_production_after_validation": true
       }
     },
     {

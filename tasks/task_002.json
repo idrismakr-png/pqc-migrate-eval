@@ -92,7 +92,9 @@
               "validation"
             ]
           ]
-        ]
+        ],
+        "enforce_unconfirmed_vendors": true,
+        "enforce_lab_before_production": true
       }
     },
     {
@@ -168,7 +170,8 @@
           "digital_signature": "ML-DSA"
         },
         "require_correct_algorithm_roles": true,
-        "require_long_lived_data_prioritization": false
+        "require_long_lived_data_prioritization": false,
+        "enforce_production_after_validation": true
       }
     },
     {
