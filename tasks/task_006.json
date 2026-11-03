@@ -4,45 +4,157 @@
   "scenario": "A cloud SaaS provider offers a CRM platform used by 5,000 businesses. They use AWS KMS for key management, with RSA-2048 for encryption at rest and TLS 1.3 with ECDSA for data in transit. AWS has announced support for ML-KEM in their KMS service starting in 2027. The SaaS provider uses a microservices architecture with Java Spring Boot, and the development team is familiar with Bouncy Castle (a Java crypto library) which already supports PQC. The provider has a budget of $300,000 for migration and can test in a staging environment without affecting customers. However, the provider's biggest customer (representing 30% of revenue) is demanding PQC compliance within 9 months.",
   "question": "Develop a PQC migration plan for the SaaS provider. Identify which parts of the stack can be migrated using existing libraries, what must wait for AWS KMS support, and how to satisfy the demanding customer. Return an ordered list of steps, blockers, vendor dependencies, algorithm roles, and budget.",
   "expected_output_schema": {
-    "migration_steps": [{"step_number": "Integer", "activity": "String", "activity_type": "String", "start_date": "String", "end_date": "String", "prerequisites": ["String"]}],
-    "blockers": [{"blocker_id": "String", "category": "String", "blocker": "String", "reason": "String", "resolution_required": "String"}],
-    "vendor_dependencies": [{"vendor": "String", "pqc_support_status": "String", "evidence_required": "String"}],
-    "algorithm_roles": {"ML-KEM": "String", "ML-DSA": "String"},
-    "budget": {"estimated_total_usd": "Number", "budget_limit_usd": 300000, "within_budget": "Boolean", "cost_assumptions": [{"category": "String", "estimated_cost_usd": "Number"}]},
+    "migration_steps": [
+      {
+        "step_number": "Integer",
+        "activity": "String",
+        "activity_type": "String",
+        "start_date": "String",
+        "end_date": "String",
+        "prerequisites": [
+          "String"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "String",
+        "category": "String",
+        "blocker": "String",
+        "reason": "String",
+        "resolution_required": "String"
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "String",
+        "pqc_support_status": "String",
+        "evidence_required": "String"
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "String",
+      "ML-DSA": "String"
+    },
+    "budget": {
+      "estimated_total_usd": "Number",
+      "budget_limit_usd": 300000,
+      "within_budget": "Boolean",
+      "cost_assumptions": [
+        {
+          "category": "String",
+          "estimated_cost_usd": "Number"
+        }
+      ]
+    },
     "confidence": "String"
   },
   "grading_rules": [
     {
-      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "id": "G1",
+      "type": "hard_constraint",
+      "weight": "critical",
       "parameters": {
-        "freeze_start": "2026-11-01", "freeze_end": "2027-01-15",
-        "prohibited_activity_types": ["production_crypto_change"],
+        "freeze_start": "2026-11-01",
+        "freeze_end": "2027-01-15",
+        "prohibited_activity_types": [
+          "production_crypto_change"
+        ],
         "budget_limit_usd": 300000,
-        "failure_conditions": ["Assumes AWS KMS supports PQC before 2027"]
+        "failure_conditions": [
+          "Assumes AWS KMS supports PQC before 2027"
+        ],
+        "required_prerequisite_concepts": [
+          [
+            "completed lab testing",
+            [
+              "lab",
+              "testing"
+            ]
+          ],
+          [
+            "written HSM compatibility confirmation",
+            [
+              "written",
+              "hsm",
+              "compatibility confirmation"
+            ]
+          ],
+          [
+            "security validation",
+            [
+              "security",
+              "validation"
+            ]
+          ]
+        ]
       }
     },
     {
-      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "id": "G2",
+      "type": "blocker_coverage",
+      "weight": "high",
       "parameters": {
         "required_blockers": [
-          {"id": "AWS_KMS", "category": "TECHNICAL", "accepted_terms": ["AWS KMS", "KMS", "cloud"], "required_context": ["AWS dependency"], "resolution_required": ["Wait for AWS", "Use client-side encryption"]}
+          {
+            "id": "AWS_KMS",
+            "category": "TECHNICAL",
+            "accepted_terms": [
+              "AWS KMS",
+              "KMS",
+              "cloud"
+            ],
+            "required_context": [
+              "AWS dependency"
+            ],
+            "resolution_required": [
+              "Wait for AWS",
+              "Use client-side encryption"
+            ]
+          }
         ],
         "require_blocker_reason": true,
         "require_resolution_action": true
       }
     },
     {
-      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "id": "G3",
+      "type": "sequence_order",
+      "weight": "medium",
       "parameters": {
-        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
-        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
-        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
-        "require_correct_algorithm_roles": true
+        "required_activity_categories": [
+          "inventory",
+          "risk_assessment",
+          "vendor_engagement",
+          "lab_testing"
+        ],
+        "must_precede": [
+          {
+            "before": "inventory",
+            "after": "risk_assessment"
+          },
+          {
+            "before": "risk_assessment",
+            "after": "production_crypto_change"
+          }
+        ],
+        "required_algorithms": {
+          "key_encapsulation": "ML-KEM",
+          "digital_signature": "ML-DSA"
+        },
+        "require_correct_algorithm_roles": true,
+        "require_long_lived_data_prioritization": false
       }
     },
     {
-      "id": "G4", "type": "budget_compliance", "weight": "high",
-      "parameters": {"maximum_budget_usd": 300000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+      "id": "G4",
+      "type": "budget_compliance",
+      "weight": "high",
+      "parameters": {
+        "maximum_budget_usd": 300000,
+        "require_numeric_estimate": true,
+        "require_cost_assumptions": true
+      }
     }
   ],
   "expert_notes": "The model might propose using AWS KMS before 2027. An expert will use client-side PQC libraries (Bouncy Castle) for some workloads while waiting for AWS KMS. It must also recognize that the biggest customer's 9-month timeline conflicts with AWS KMS support in 2027."

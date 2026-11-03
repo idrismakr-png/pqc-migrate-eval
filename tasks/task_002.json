@@ -11,7 +11,9 @@
         "activity_type": "inventory | risk_assessment | vendor_engagement | procurement | planning | lab_testing | production_crypto_change | hsm_firmware_upgrade | major_application_deployment",
         "start_date": "YYYY-MM-DD or null",
         "end_date": "YYYY-MM-DD or null",
-        "prerequisites": ["List of strings"]
+        "prerequisites": [
+          "List of strings"
+        ]
       }
     ],
     "blockers": [
@@ -39,48 +41,145 @@
       "budget_limit_usd": 50000,
       "within_budget": "true | false",
       "cost_assumptions": [
-        {"category": "String", "estimated_cost_usd": "Number"}
+        {
+          "category": "String",
+          "estimated_cost_usd": "Number"
+        }
       ]
     },
     "confidence": "low | medium | high"
   },
   "grading_rules": [
     {
-      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "id": "G1",
+      "type": "hard_constraint",
+      "weight": "critical",
       "parameters": {
-        "freeze_start": "2026-11-01", "freeze_end": "2027-04-30",
-        "prohibited_activity_types": ["production_crypto_change", "hsm_firmware_upgrade", "major_application_deployment"],
-        "budget_limit_usd": 50000, "max_downtime_hours": 2,
+        "freeze_start": "2026-11-01",
+        "freeze_end": "2027-04-30",
+        "prohibited_activity_types": [
+          "production_crypto_change",
+          "hsm_firmware_upgrade",
+          "major_application_deployment"
+        ],
+        "budget_limit_usd": 50000,
+        "max_downtime_hours": 2,
         "failure_conditions": [
           "Claims HSM firmware is available before 2028-07-01",
           "Schedules production activity requiring >2 hours downtime",
           "Exceeds $50,000 budget"
+        ],
+        "required_prerequisite_concepts": [
+          [
+            "completed lab testing",
+            [
+              "lab",
+              "testing"
+            ]
+          ],
+          [
+            "written HSM compatibility confirmation",
+            [
+              "written",
+              "hsm",
+              "compatibility confirmation"
+            ]
+          ],
+          [
+            "security validation",
+            [
+              "security",
+              "validation"
+            ]
+          ]
         ]
       }
     },
     {
-      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "id": "G2",
+      "type": "blocker_coverage",
+      "weight": "high",
       "parameters": {
         "required_blockers": [
-          {"id": "HSM_FIRMWARE", "category": "HSM_VENDOR", "accepted_terms": ["SafeNet Luna 8", "firmware", "PQC-ready", "Q3 2028"], "required_context": ["firmware availability", "PQC support"], "resolution_required": ["Wait for firmware", "Alternative HSM", "Software PQC"]},
-          {"id": "BUDGET", "category": "PROCUREMENT", "accepted_terms": ["budget", "$50,000", "cost", "insufficient"], "required_context": ["budget limitation"], "resolution_required": ["Reduce scope", "Additional funding"]}
+          {
+            "id": "HSM_FIRMWARE",
+            "category": "HSM_VENDOR",
+            "accepted_terms": [
+              "SafeNet Luna 8",
+              "firmware",
+              "PQC-ready",
+              "Q3 2028"
+            ],
+            "required_context": [
+              "firmware availability",
+              "PQC support"
+            ],
+            "resolution_required": [
+              "Wait for firmware",
+              "Alternative HSM",
+              "Software PQC"
+            ]
+          },
+          {
+            "id": "BUDGET",
+            "category": "PROCUREMENT",
+            "accepted_terms": [
+              "budget",
+              "$50,000",
+              "cost",
+              "insufficient"
+            ],
+            "required_context": [
+              "budget limitation"
+            ],
+            "resolution_required": [
+              "Reduce scope",
+              "Additional funding"
+            ]
+          }
         ],
         "require_blocker_reason": true,
         "require_resolution_action": true
       }
     },
     {
-      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "id": "G3",
+      "type": "sequence_order",
+      "weight": "medium",
       "parameters": {
-        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
-        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
-        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
-        "require_correct_algorithm_roles": true
+        "required_activity_categories": [
+          "inventory",
+          "risk_assessment",
+          "vendor_engagement",
+          "lab_testing"
+        ],
+        "must_precede": [
+          {
+            "before": "inventory",
+            "after": "risk_assessment"
+          },
+          {
+            "before": "risk_assessment",
+            "after": "production_crypto_change"
+          }
+        ],
+        "required_algorithms": {
+          "key_encapsulation": "ML-KEM",
+          "digital_signature": "ML-DSA"
+        },
+        "require_correct_algorithm_roles": true,
+        "require_long_lived_data_prioritization": false
       }
     },
     {
-      "id": "G4", "type": "budget_compliance", "weight": "high",
-      "parameters": {"maximum_budget_usd": 50000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+      "id": "G4",
+      "type": "budget_compliance",
+      "weight": "high",
+      "parameters": {
+        "maximum_budget_usd": 50000,
+        "require_numeric_estimate": true,
+        "require_cost_assumptions": true
+      }
     }
   ],
   "expert_notes": "A naive model will recommend buying the new HSM immediately. An expert recognizes the firmware is unavailable until Q3 2028 and the budget is insufficient. The model must recommend software-based PQC or wait for firmware."

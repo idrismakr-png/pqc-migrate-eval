@@ -4,46 +4,178 @@
   "scenario": "A federal agency must transition its internal secure communications (VPNs, email, and document signing) to PQC. They use a mix of hardware (Cisco routers with RSA-4096) and software (Microsoft Exchange with ECDSA). The agency is mandated by executive order to use only NIST-standardized algorithms (FIPS 203, 204, 205) by 2030. They have a budget of $2,000,000 and a change freeze from Nov 15 to Jan 15. The agency's technical team has zero PQC experience, and the Cisco routers do not support firmware upgrades for PQC. The Microsoft Exchange servers will require a software update from Microsoft, which has not yet released a PQC plugin. The agency's cryptographic inventory is outdated and incomplete.",
   "question": "Develop a migration plan for the federal agency. Identify how to address the outdated inventory, the lack of vendor support, and the mandate. Return an ordered list of steps, blockers, vendor dependencies, algorithm roles, and budget.",
   "expected_output_schema": {
-    "migration_steps": [{"step_number": "Integer", "activity": "String", "activity_type": "String", "start_date": "String", "end_date": "String", "prerequisites": ["String"]}],
-    "blockers": [{"blocker_id": "String", "category": "String", "blocker": "String", "reason": "String", "resolution_required": "String"}],
-    "vendor_dependencies": [{"vendor": "String", "pqc_support_status": "String", "evidence_required": "String"}],
-    "algorithm_roles": {"ML-KEM": "String", "ML-DSA": "String"},
-    "budget": {"estimated_total_usd": "Number", "budget_limit_usd": 2000000, "within_budget": "Boolean", "cost_assumptions": [{"category": "String", "estimated_cost_usd": "Number"}]},
+    "migration_steps": [
+      {
+        "step_number": "Integer",
+        "activity": "String",
+        "activity_type": "String",
+        "start_date": "String",
+        "end_date": "String",
+        "prerequisites": [
+          "String"
+        ]
+      }
+    ],
+    "blockers": [
+      {
+        "blocker_id": "String",
+        "category": "String",
+        "blocker": "String",
+        "reason": "String",
+        "resolution_required": "String"
+      }
+    ],
+    "vendor_dependencies": [
+      {
+        "vendor": "String",
+        "pqc_support_status": "String",
+        "evidence_required": "String"
+      }
+    ],
+    "algorithm_roles": {
+      "ML-KEM": "String",
+      "ML-DSA": "String"
+    },
+    "budget": {
+      "estimated_total_usd": "Number",
+      "budget_limit_usd": 2000000,
+      "within_budget": "Boolean",
+      "cost_assumptions": [
+        {
+          "category": "String",
+          "estimated_cost_usd": "Number"
+        }
+      ]
+    },
     "confidence": "String"
   },
   "grading_rules": [
     {
-      "id": "G1", "type": "hard_constraint", "weight": "critical",
+      "id": "G1",
+      "type": "hard_constraint",
+      "weight": "critical",
       "parameters": {
-        "freeze_start": "2026-11-15", "freeze_end": "2027-01-15",
-        "prohibited_activity_types": ["production_crypto_change", "hsm_firmware_upgrade", "major_application_deployment"],
+        "freeze_start": "2026-11-15",
+        "freeze_end": "2027-01-15",
+        "prohibited_activity_types": [
+          "production_crypto_change",
+          "hsm_firmware_upgrade",
+          "major_application_deployment"
+        ],
         "budget_limit_usd": 2000000,
-        "failure_conditions": ["Schedules changes during freeze", "Assumes Cisco hardware supports PQC without firmware", "Uses non-NIST algorithms"]
+        "failure_conditions": [
+          "Schedules changes during freeze",
+          "Assumes Cisco hardware supports PQC without firmware",
+          "Uses non-NIST algorithms"
+        ],
+        "required_prerequisite_concepts": [
+          [
+            "completed lab testing",
+            [
+              "lab",
+              "testing"
+            ]
+          ],
+          [
+            "written HSM compatibility confirmation",
+            [
+              "written",
+              "hsm",
+              "compatibility confirmation"
+            ]
+          ],
+          [
+            "security validation",
+            [
+              "security",
+              "validation"
+            ]
+          ]
+        ]
       }
     },
     {
-      "id": "G2", "type": "blocker_coverage", "weight": "high",
+      "id": "G2",
+      "type": "blocker_coverage",
+      "weight": "high",
       "parameters": {
         "required_blockers": [
-          {"id": "CISCO_HARDWARE", "category": "TECHNICAL", "accepted_terms": ["Cisco", "router", "firmware", "no support"], "required_context": ["hardware limitation"], "resolution_required": ["Hardware replacement", "Compensating controls"]},
-          {"id": "OUTDATED_INVENTORY", "category": "OPERATIONAL", "accepted_terms": ["inventory", "outdated", "incomplete"], "required_context": ["inventory gap"], "resolution_required": ["Perform discovery", "Update CBOM"]}
+          {
+            "id": "CISCO_HARDWARE",
+            "category": "TECHNICAL",
+            "accepted_terms": [
+              "Cisco",
+              "router",
+              "firmware",
+              "no support"
+            ],
+            "required_context": [
+              "hardware limitation"
+            ],
+            "resolution_required": [
+              "Hardware replacement",
+              "Compensating controls"
+            ]
+          },
+          {
+            "id": "OUTDATED_INVENTORY",
+            "category": "OPERATIONAL",
+            "accepted_terms": [
+              "inventory",
+              "outdated",
+              "incomplete"
+            ],
+            "required_context": [
+              "inventory gap"
+            ],
+            "resolution_required": [
+              "Perform discovery",
+              "Update CBOM"
+            ]
+          }
         ],
         "require_blocker_reason": true,
         "require_resolution_action": true
       }
     },
     {
-      "id": "G3", "type": "sequence_order", "weight": "medium",
+      "id": "G3",
+      "type": "sequence_order",
+      "weight": "medium",
       "parameters": {
-        "required_activity_categories": ["inventory", "risk_assessment", "vendor_engagement", "lab_testing"],
-        "must_precede": [{"before": "inventory", "after": "risk_assessment"}, {"before": "risk_assessment", "after": "production_crypto_change"}],
-        "required_algorithms": {"key_encapsulation": "ML-KEM", "digital_signature": "ML-DSA"},
-        "require_correct_algorithm_roles": true
+        "required_activity_categories": [
+          "inventory",
+          "risk_assessment",
+          "vendor_engagement",
+          "lab_testing"
+        ],
+        "must_precede": [
+          {
+            "before": "inventory",
+            "after": "risk_assessment"
+          },
+          {
+            "before": "risk_assessment",
+            "after": "production_crypto_change"
+          }
+        ],
+        "required_algorithms": {
+          "key_encapsulation": "ML-KEM",
+          "digital_signature": "ML-DSA"
+        },
+        "require_correct_algorithm_roles": true,
+        "require_long_lived_data_prioritization": false
       }
     },
     {
-      "id": "G4", "type": "budget_compliance", "weight": "high",
-      "parameters": {"maximum_budget_usd": 2000000, "require_numeric_estimate": true, "require_cost_assumptions": true}
+      "id": "G4",
+      "type": "budget_compliance",
+      "weight": "high",
+      "parameters": {
+        "maximum_budget_usd": 2000000,
+        "require_numeric_estimate": true,
+        "require_cost_assumptions": true
+      }
     }
   ],
   "expert_notes": "The model might ignore the outdated inventory, assuming the agency knows its assets. A strong plan must begin with a comprehensive discovery phase. It must also recognize that Cisco routers may require hardware replacement, which is a major budget item."

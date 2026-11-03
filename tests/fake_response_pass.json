@@ -1,4 +1,3 @@
-
 {
   "migration_steps": [
     {
@@ -61,23 +60,16 @@
     {
       "blocker_id": "B1",
       "category": "HSM_VENDOR",
-      "blocker": "Thales Luna Network HSM 7 has no confirmed production support for ML-KEM or ML-DSA.",
-      "reason": "The bank cannot safely deploy PQC algorithms through its existing HSM infrastructure without confirmation of supported firmware, cryptographic capabilities, and production compatibility.",
-      "resolution_required": "Obtain written Thales confirmation, supported firmware and software versions, implementation documentation, and a delivery timeline. Evaluate procurement or alternative supported implementations if necessary."
+      "blocker": "Thales Luna Network HSM 7 has not confirmed PQC compatibility, firmware support, or delivery timeline for ML-KEM and ML-DSA.",
+      "reason": "Production PQC migration cannot proceed without confirmed HSM firmware compatibility and validated ML-KEM and ML-DSA support in the hardware security module.",
+      "resolution_required": "Obtain written Thales vendor confirmation, supported firmware and software versions, production compatibility information, and implementation and delivery timeline."
     },
     {
       "blocker_id": "B2",
       "category": "CORE_BANKING_VENDOR",
-      "blocker": "The third-party core banking platform has no confirmed PQC compatibility or migration roadmap.",
-      "reason": "Application cryptographic dependencies may be embedded in vendor-controlled software and interfaces. Changing cryptographic libraries without vendor support could compromise interoperability, security, and service availability.",
-      "resolution_required": "Obtain written PQC compatibility confirmation, a migration roadmap, supported software versions, integration requirements, and vendor implementation commitments."
-    },
-    {
-      "blocker_id": "B3",
-      "category": "PROCUREMENT",
-      "blocker": "Potential additional HSM licensing, firmware, software, and integration costs remain unconfirmed.",
-      "reason": "The approved first-phase budget is USD 250,000, but final implementation costs depend on vendor quotations and compatibility requirements.",
-      "resolution_required": "Obtain formal vendor quotations, evaluate procurement alternatives, and maintain contingency within the approved budget."
+      "blocker": "The third-party core banking platform vendor has not confirmed PQC compatibility or provided a migration roadmap.",
+      "reason": "Application-layer PQC migration is blocked until the core banking vendor provides software support, PQC compatibility confirmation, and a migration roadmap for its platform.",
+      "resolution_required": "Obtain written compatibility confirmation, vendor migration roadmap, supported implementation options, and integration and testing requirements."
     }
   ],
   "vendor_dependencies": [

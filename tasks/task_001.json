@@ -1,11 +1,8 @@
-
 {
   "task_id": "PQC-001",
   "difficulty": "conventional",
   "scenario": "Meridian Trust Bank is a fictional commercial bank planning its migration to post-quantum cryptography (PQC). Its current cryptographic environment contains four major assets: (1) RSA-2048 certificates used for TLS connections between customer-facing applications and backend services; (2) ECDSA P-256 digital signatures used for internal API authentication; (3) RSA-3072 key wrapping used to protect selected database encryption keys; and (4) ECDH P-256 key exchange used in several internal secure communication channels. The bank operates a Thales Luna Network HSM 7 appliance that currently supports its existing RSA and ECC workloads. The HSM vendor has not yet confirmed production support, firmware compatibility, or a delivery timeline for NIST-standardized ML-KEM and ML-DSA. The bank also depends on a third-party core banking platform whose vendor has not provided written confirmation of PQC compatibility or a migration roadmap. The bank has an approved migration budget of USD 250,000 for the first phase. A mandatory infrastructure change freeze will run from 1 December 2026 through 15 January 2027 inclusive. During this period, production cryptographic changes, HSM firmware upgrades, and major application deployments are prohibited. Planning, documentation, vendor engagement, and non-production laboratory activities may continue where permitted by internal policies. The bank must protect sensitive customer information that may remain confidential for 10 to 15 years, creating exposure to harvest-now-decrypt-later attacks. Management wants a practical migration roadmap that reduces exposure to future quantum attacks without compromising current security, regulatory obligations, or service availability.",
-
   "question": "Develop an ordered and technically defensible first-phase PQC migration plan for Meridian Trust Bank. Identify which cryptographic assets should be prioritized and explain the recommended migration approach. Explicitly identify all blockers that cannot be resolved without further confirmation, procurement, or third-party action. Respect the USD 250,000 budget and the production change freeze from 1 December 2026 through 15 January 2027 inclusive. Do not assume that the HSM or core banking vendor supports PQC unless written confirmation is provided. Distinguish activities that can proceed immediately, activities permitted during the change freeze, and activities that must wait until dependencies and operational approvals are resolved. Prioritize long-lived sensitive data and explain the exposure to harvest-now-decrypt-later attacks. Distinguish ML-KEM for key establishment from ML-DSA for digital signatures. Return structured migration steps, blockers with reasons, an overall confidence assessment, identified vendor dependencies, and an estimated first-phase budget.",
-
   "expected_output_schema": {
     "migration_steps": [
       {
@@ -49,7 +46,6 @@
     },
     "confidence": "low | medium | high"
   },
-
   "grading_rules": [
     {
       "id": "G1",
@@ -87,10 +83,47 @@
           "pass": 1,
           "fail": 0,
           "critical_failure_effect": "Overall evaluation cannot receive a passing result"
-        }
+        },
+        "required_prerequisite_concepts": [
+          [
+            "completed lab testing",
+            [
+              "lab",
+              "testing"
+            ]
+          ],
+          [
+            "written HSM compatibility confirmation",
+            [
+              "written",
+              "hsm",
+              "compatibility confirmation"
+            ]
+          ],
+          [
+            "written core banking compatibility confirmation",
+            [
+              "written",
+              "core banking",
+              "compatibility confirmation"
+            ]
+          ],
+          [
+            "security validation",
+            [
+              "security",
+              "validation"
+            ]
+          ],
+          [
+            "formal approval",
+            [
+              "approval"
+            ]
+          ]
+        ]
       }
     },
-
     {
       "id": "G2",
       "type": "blocker_coverage",
@@ -154,7 +187,6 @@
         }
       }
     },
-
     {
       "id": "G3",
       "type": "sequence_order",
@@ -209,7 +241,6 @@
         }
       }
     },
-
     {
       "id": "G4",
       "type": "budget_compliance",
@@ -229,6 +260,5 @@
       }
     }
   ],
-
   "expert_notes": "This task evaluates whether frontier AI models can develop a realistic post-quantum cryptography migration strategy under competing technical, financial, and operational constraints. It targets several known weaknesses in AI-generated technical recommendations: hallucinating vendor readiness, confusing cryptographic algorithm roles, overlooking implementation dependencies, ignoring change freezes, and producing unrealistic migration budgets. The scenario deliberately distinguishes between the existence of a cryptographic algorithm and the operational readiness of the infrastructure required to deploy it. ML-KEM, standardized in NIST FIPS 203, is intended for key establishment, while ML-DSA, standardized in NIST FIPS 204, is intended for digital signatures. Models must also recognize that replacing RSA key wrapping and ECDH key exchange may require application and protocol changes, not simply an algorithm substitution. Long-lived sensitive information deserves particular attention because of harvest-now-decrypt-later exposure. A strong response should prioritize cryptographic inventory, risk assessment, vendor engagement, procurement planning, controlled laboratory validation, and appropriately approved production migration. It must not invent HSM or core banking vendor capabilities, violate the change freeze, or exceed the approved budget. The grading rules are designed to support deterministic checks through structured output, dates, activity categories, required blocker identifiers, algorithm roles, and numeric budget estimates. Natural-language keyword matching alone is insufficient to establish that a model has genuinely satisfied a technical requirement."
 }

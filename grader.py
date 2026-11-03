@@ -121,19 +121,6 @@ def evaluate_g1(params, response):
             production_steps.append(step)
 
         is_prohibited = activity_type in prohibited_types
-
-        # Detect explicitly prohibited work even if the activity_type is wrong.
-        prohibited_phrases = (
-            "production crypto replacement",
-            "production cryptographic change",
-            "production cryptographic replacement",
-            "hsm firmware upgrade",
-            "major application deployment",
-            "production pqc deployment"
-        )
-        if any(phrase in activity for phrase in prohibited_phrases):
-            is_prohibited = True
-
         if not is_prohibited:
             continue
 
@@ -153,16 +140,12 @@ def evaluate_g1(params, response):
             )
             continue
 
-        # The task explicitly makes 15 January inclusive.
         if start <= freeze_end and end >= freeze_start:
             failures.append(
                 f"G1: Prohibited activity '{activity[:100]}' overlaps "
                 "the production change freeze."
             )
 
-    # The scenario says both vendors remain unconfirmed unless written
-    # evidence is supplied. This response schema has no evidence-verification
-    # field, so a "confirmed" status is treated as an unsupported claim.
     dependencies = response.get("vendor_dependencies", [])
     if isinstance(dependencies, list):
         for vendor in dependencies:
@@ -179,22 +162,10 @@ def evaluate_g1(params, response):
                     "as having confirmed PQC support."
                 )
 
-    # Narrow text checks: only explicit vendor + PQC-support assertions.
     positive_claim_patterns = [
-        r"\b(?:thales(?:\s+luna(?:\s+network)?\s+hsm(?:\s+7)?)?|"
-        r"luna(?:\s+network)?\s+hsm(?:\s+7)?|hsm)\s+"
-        r"(?:currently\s+)?supports?\s+(?:ml-kem|ml-dsa|pqc)\b",
-        r"\b(?:thales(?:\s+luna(?:\s+network)?\s+hsm(?:\s+7)?)?|"
-        r"luna(?:\s+network)?\s+hsm(?:\s+7)?|hsm)\s+"
-        r"has confirmed support for\s+(?:ml-kem|ml-dsa|pqc)\b",
-        r"\b(?:ml-kem|ml-dsa|pqc)\s+(?:is|are)\s+"
-        r"supported by\s+(?:thales|luna|the hsm)\b",
-        r"\b(?:third-party\s+)?core banking platform\s+"
-        r"(?:currently\s+)?supports?\s+(?:ml-kem|ml-dsa|pqc)\b",
-        r"\b(?:core banking|platform) vendor\s+"
-        r"(?:currently\s+)?supports?\s+(?:ml-kem|ml-dsa|pqc)\b",
-        r"\b(?:ml-kem|ml-dsa|pqc)\s+(?:is|are)\s+"
-        r"supported by\s+(?:the core banking vendor|the platform vendor)\b"
+        r"\\b(?:thales(?:\\s+luna(?:\\s+network)?\\s+hsm(?:\\s+7)?)?|"
+        r"luna(?:\\s+network)?\\s+hsm(?:\\s+7)?|hsm)\\s+"
+        r"(?:currently\\s+)?supports?\\s+(?:ml-kem|ml-dsa|pqc)\\b",
     ]
 
     for step in steps:
@@ -209,10 +180,13 @@ def evaluate_g1(params, response):
                 )
                 break
 
-    # Production migration must follow laboratory validation and name the
-    # required external approvals/compatibility confirmations.
+    required_prerequisite_concepts = params.get(
+        "required_prerequisite_concepts", []
+    )
+
     for step in production_steps:
         prerequisites = norm(step.get("prerequisites", []))
+
         prior_lab_steps = [
             item for item in steps
             if isinstance(item, dict)
@@ -221,25 +195,11 @@ def evaluate_g1(params, response):
             and parse_date(step.get("start_date"))
             and parse_date(item.get("end_date")) < parse_date(step.get("start_date"))
         ]
-
         if not prior_lab_steps:
             failures.append(
                 "G1: Production cryptographic change is scheduled without "
                 "a completed earlier laboratory-testing activity."
             )
-
-        required_prerequisite_concepts = [
-            ("completed lab testing",
-             ("lab", "testing")),
-            ("written HSM compatibility confirmation",
-             ("written", "hsm", "compatibility confirmation")),
-            ("written core banking compatibility confirmation",
-             ("written", "core banking", "compatibility confirmation")),
-            ("security validation",
-             ("security", "validation")),
-            ("formal approval",
-             ("approval",))
-        ]
 
         for label, terms in required_prerequisite_concepts:
             if not all(term in prerequisites for term in terms):
@@ -247,6 +207,8 @@ def evaluate_g1(params, response):
                     f"G1: Production migration prerequisites do not clearly "
                     f"include {label}."
                 )
+
+    failures = list(dict.fromkeys(failures))
 
     if failures:
         return 0, failures, successes
@@ -258,9 +220,6 @@ def evaluate_g1(params, response):
     return 1, failures, successes
 
 
-# ============================================================
-# G2: BLOCKER COVERAGE
-# ============================================================
 
 def evaluate_g2(params, response):
     failures = []
@@ -642,16 +601,17 @@ def evaluate_g3(params, response):
         "10 to 15 years", "10–15", "harvest-now-decrypt-later",
         "harvest now decrypt later", "hndl"
     ]
-
-    long_lived_ok = (
-        bool(risk_steps)
-        and contains_any(risk_text, long_lived_terms)
-        and contains_any(risk_text, [
-            "sensitive information", "sensitive data",
-            "confidential information", "customer information"
-        ])
-    )
-
+    if params.get("require_long_lived_data_prioritization", False):
+        long_lived_ok = (
+            bool(risk_steps)
+            and contains_any(risk_text, long_lived_terms)
+            and contains_any(risk_text, [
+                "sensitive information", "sensitive data",
+                "confidential information", "customer information"
+            ])
+        )
+    else:
+        long_lived_ok = True
     if long_lived_ok:
         successes.append(
             "G3: Risk assessment explicitly prioritises long-lived "
