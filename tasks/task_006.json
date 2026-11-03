@@ -73,11 +73,10 @@
             ]
           ],
           [
-            "written HSM compatibility confirmation",
+            "AWS KMS PQC compatibility",
             [
-              "written",
-              "hsm",
-              "compatibility confirmation"
+              "aws",
+              "kms"
             ]
           ],
           [

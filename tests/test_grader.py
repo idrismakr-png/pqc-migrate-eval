@@ -59,16 +59,16 @@ def test_3_non_production_during_freeze_pass():
 
 
 def test_4_missing_hsm_blocker_fail():
-    """Removing the HSM blocker should fail G2."""
+    """Removing one of two required blockers should result in PARTIAL credit."""
     r = load_fixture("fake_response_pass.json")
     r = json.loads(json.dumps(r))
     r["blockers"] = [b for b in r["blockers"]
                      if b.get("category") != "HSM_VENDOR"]
     g = grade_response(TASK, r)
     g2_result = [x for x in g["rule_results"] if x["rule_id"] == "G2"][0]
-    assert g2_result["status"] == "FAIL", \
-        f"Expected G2 fail, got {g2_result['status']}"
-    print("PASS: 4. Missing HSM blocker -> G2 fail")
+    assert g2_result["status"] == "PARTIAL", \
+        f"Expected G2 PARTIAL (partial_credit_ratio=0.5), got {g2_result['status']}"
+    print("PASS: 4. Missing one of two blockers -> G2 PARTIAL (0.5 credit)")
 
 
 def test_5_missing_irrelevant_blocker_pass():

@@ -76,19 +76,17 @@
             ]
           ],
           [
-            "written HSM compatibility confirmation",
+            "FIPS 140-3 validation",
             [
-              "written",
-              "hsm",
-              "compatibility confirmation"
+              "fips",
+              "140"
             ]
           ],
           [
-            "written core banking compatibility confirmation",
+            "EHR vendor certification",
             [
-              "written",
-              "core banking",
-              "compatibility confirmation"
+              "ehr",
+              "certification"
             ]
           ],
           [
@@ -96,12 +94,6 @@
             [
               "security",
               "validation"
-            ]
-          ],
-          [
-            "formal approval",
-            [
-              "approval"
             ]
           ]
         ],

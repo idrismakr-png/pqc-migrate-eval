@@ -77,11 +77,17 @@
             ]
           ],
           [
-            "written HSM compatibility confirmation",
+            "Cisco firmware compatibility confirmation",
             [
-              "written",
-              "hsm",
-              "compatibility confirmation"
+              "cisco",
+              "firmware"
+            ]
+          ],
+          [
+            "Microsoft Exchange PQC plugin confirmation",
+            [
+              "microsoft",
+              "exchange"
             ]
           ],
           [

@@ -186,7 +186,8 @@
           "both_blockers_correctly_identified": 1,
           "one_blocker_identified": 0.5,
           "neither_identified": 0
-        }
+        },
+        "partial_credit_ratio": 0.5
       }
     },
     {

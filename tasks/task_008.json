@@ -74,11 +74,17 @@
             ]
           ],
           [
-            "written HSM compatibility confirmation",
+            "device memory constraint validation",
             [
-              "written",
-              "hsm",
-              "compatibility confirmation"
+              "memory",
+              "constraint"
+            ]
+          ],
+          [
+            "AWS KMS PQC compatibility",
+            [
+              "aws",
+              "kms"
             ]
           ],
           [

@@ -538,7 +538,7 @@ def print_and_save_summary(results, task_count, model_count):
     print("========================================")
 
     summary_data = {
-        "status": "completed",
+        "status": ("completed" if not failed else "completed_with_errors"),
         "created_at_utc": utc_now(),
         "tasks_discovered": task_count,
         "models_selected": model_count,

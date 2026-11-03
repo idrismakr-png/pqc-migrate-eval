@@ -74,11 +74,17 @@
             ]
           ],
           [
-            "written HSM compatibility confirmation",
+            "DoD NIST algorithm approval",
             [
-              "written",
-              "hsm",
-              "compatibility confirmation"
+              "dod",
+              "nist"
+            ]
+          ],
+          [
+            "VPN appliance PQC compatibility",
+            [
+              "vpn",
+              "appliance"
             ]
           ],
           [

@@ -151,7 +151,11 @@ def evaluate_g1(params, response):
             )
 
     # Vendor-status check (opt-in, defaults to False).
-    if params.get("enforce_unconfirmed_vendors", False):
+    enforce_vendors = (
+        params.get("enforce_unconfirmed_vendors", False)
+        or params.get("vendor_support_must_remain_unconfirmed_without_written_evidence", False)
+    )
+    if enforce_vendors:
         dependencies = response.get("vendor_dependencies", [])
         if isinstance(dependencies, list):
             for vendor in dependencies:
@@ -201,6 +205,41 @@ def evaluate_g1(params, response):
                     f"G1: Production migration prerequisites do not clearly "
                     f"include {label}."
                 )
+
+    # Enforce task-defined failure_conditions (Defect 2).
+    failure_conditions = params.get("failure_conditions", [])
+    for condition in failure_conditions:
+        cond_lower = condition.lower()
+        # Firmware availability claim check
+        if "firmware" in cond_lower and "available" in cond_lower:
+            firmware_early_claim = re.compile(
+                r"firmware.{0,80}(available|released|shipping).{0,20}(2026|2027)",
+                re.IGNORECASE,
+            )
+            for step in steps:
+                if isinstance(step, dict):
+                    text = norm(step.get("activity"))
+                    if firmware_early_claim.search(text):
+                        failures.append(
+                            f"G1: Firmware claimed available before "
+                            f"expected release: {condition}"
+                        )
+                        break
+        # Downtime limit check
+        if "downtime" in cond_lower and "exceed" in cond_lower:
+            max_hours = params.get("max_downtime_hours")
+            if max_hours:
+                for step in steps:
+                    if not isinstance(step, dict):
+                        continue
+                    text = norm(step.get("activity"))
+                    m = re.search(r"(\d+(?:\.\d+)?)\s*(?:hours|hrs|h)", text)
+                    if m and float(m.group(1)) > max_hours:
+                        failures.append(
+                            f"G1: Activity exceeds {max_hours}h downtime: "
+                            f"{text[:100]}"
+                        )
+                        break
 
     failures = list(dict.fromkeys(failures))
 
@@ -377,6 +416,10 @@ def evaluate_g2(params, response):
 
     if identified == len(required):
         return 1, failures, successes
+    # Partial credit if task configured (Defect 5)
+    partial_ratio = params.get("partial_credit_ratio")
+    if partial_ratio is not None and identified > 0:
+        return float(partial_ratio), failures, successes
     return 0, failures, successes
 
 
@@ -505,6 +548,7 @@ def evaluate_g3(params, response):
             )
 
     # Long-lived data / HNDL (opt-in only).
+    long_lived_ok = True
     if params.get("require_long_lived_data_prioritization", False):
         risk_steps = [
             step for step in valid_steps
@@ -556,6 +600,7 @@ def evaluate_g3(params, response):
         and numbering_ok
         and not stale
         and not bad_range
+        and long_lived_ok
     )
     if all_checks and algorithm_ok:
         return 1, failures, successes
