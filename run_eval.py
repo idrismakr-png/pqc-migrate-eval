@@ -16,6 +16,7 @@ from grader import grade_response
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
 TASKS_DIR = BASE_DIR / "tasks"
 RESULTS_DIR = BASE_DIR / "results"
 SUMMARY_PATH = RESULTS_DIR / "batch_summary.json"
@@ -39,7 +40,6 @@ DELAY_BETWEEN_MODELS = float(os.getenv("DELAY_BETWEEN_MODELS", "2"))
 # 2. ENVIRONMENT AND API CONFIGURATION
 # ============================================================
 
-load_dotenv(BASE_DIR / ".env")
 
 API_KEY = os.getenv("DEEPSEEK_API_KEY")
 

@@ -4,13 +4,13 @@
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 17.16,
-  "created_at_utc": "2026-11-03T08:22:20.830544+00:00",
+  "elapsed_seconds": 11.66,
+  "created_at_utc": "2026-11-03T08:46:29.601308+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 3262,
+    "completion_tokens": 2505,
     "prompt_tokens": 1005,
-    "total_tokens": 4267,
+    "total_tokens": 3510,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -31,251 +31,200 @@
     "migration_steps": [
       {
         "step_number": 1,
-        "activity": "Establish PQC program office, governance, and executive sponsorship; define scope for VPN, email, and document signing; allocate budget and assign accountable owners.",
-        "activity_type": "Program Management",
+        "activity": "Establish PQC program office, governance, and executive sponsorship; define scope for VPN, email, and document signing; assign roles and RACI.",
+        "activity_type": "Governance",
         "start_date": "2025-01-06",
-        "end_date": "2025-02-28",
+        "end_date": "2025-02-14",
         "prerequisites": [
           "Executive order mandate acknowledged",
-          "Budget authority confirmed",
-          "Agency CIO/CISO sponsorship"
+          "Budget authority confirmed"
         ]
       },
       {
         "step_number": 2,
-        "activity": "Conduct comprehensive cryptographic discovery and inventory refresh using automated network scanning, endpoint agents, and configuration management database reconciliation; identify all RSA-4096 and ECDSA usage across VPN, email, and document signing.",
-        "activity_type": "Discovery and Inventory",
-        "start_date": "2025-02-03",
+        "activity": "Conduct comprehensive cryptographic discovery and inventory refresh using automated network scanning, endpoint agents, and configuration management database (CMDB) reconciliation; include hardware, software, certificates, keys, and protocols.",
+        "activity_type": "Discovery",
+        "start_date": "2025-02-17",
         "end_date": "2025-05-30",
         "prerequisites": [
           "Program office established",
           "Scanning tools procured or licensed",
-          "Network access and change approval for discovery scans"
+          "Change freeze window avoided (Nov 15–Jan 15)"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Perform cryptographic risk assessment and data classification; map inventory findings to business functions, data sensitivity, and regulatory requirements; prioritize migration candidates.",
-        "activity_type": "Risk Assessment",
+        "activity": "Perform risk assessment and gap analysis against FIPS 203/204/205; classify systems by criticality and PQC readiness; produce migration priority matrix.",
+        "activity_type": "Assessment",
         "start_date": "2025-06-02",
-        "end_date": "2025-07-31",
+        "end_date": "2025-07-11",
         "prerequisites": [
-          "Completed cryptographic inventory",
-          "Data classification policy available",
-          "Business impact analysis inputs"
+          "Cryptographic inventory completed",
+          "NIST standards documentation available"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Develop PQC migration architecture and target-state design using NIST FIPS 203 (ML-KEM) for key establishment and FIPS 204 (ML-DSA) for digital signatures; define hybrid transition modes and crypto-agility requirements.",
-        "activity_type": "Architecture and Design",
-        "start_date": "2025-07-01",
-        "end_date": "2025-09-30",
+        "activity": "Engage Cisco and Microsoft for formal PQC roadmap commitments, firmware/software release dates, and FIPS validation evidence; issue RFI for PQC-capable alternatives for unsupported hardware.",
+        "activity_type": "Vendor Engagement",
+        "start_date": "2025-06-02",
+        "end_date": "2025-08-29",
         "prerequisites": [
-          "Risk assessment completed",
-          "NIST FIPS 203/204/205 standards reviewed",
-          "Agency security architecture board engagement"
+          "Gap analysis completed",
+          "Procurement authority identified"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Engage Cisco and Microsoft formally to obtain PQC roadmaps, firmware/software support commitments, FIPS validation status, and delivery timelines; issue requests for information and contractual change requests.",
-        "activity_type": "Vendor Engagement",
-        "start_date": "2025-08-01",
-        "end_date": "2025-10-31",
+        "activity": "Develop PQC migration architecture and reference designs: hybrid key establishment (ML-KEM + classical) for VPN, ML-DSA for document signing, and email signing/encryption strategy; include crypto-agility requirements.",
+        "activity_type": "Architecture",
+        "start_date": "2025-07-14",
+        "end_date": "2025-09-26",
         "prerequisites": [
-          "Target architecture defined",
-          "Procurement and legal review",
-          "Vendor account management contacts established"
+          "Risk assessment completed",
+          "Vendor roadmap inputs received (or documented as unavailable)"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Build PQC skills through training and hiring: NIST PQC standards, hybrid key exchange, ML-KEM/ML-DSA implementation, and crypto-agility operations; establish lab environment for testing.",
-        "activity_type": "Workforce and Lab",
+        "activity": "Procure PQC-capable test equipment, software licenses, and professional services for lab environment; initiate training program for technical team on PQC fundamentals and FIPS 203/204/205.",
+        "activity_type": "Procurement & Training",
         "start_date": "2025-09-01",
-        "end_date": "2026-01-31",
+        "end_date": "2025-10-31",
         "prerequisites": [
-          "Program office established",
-          "Training budget allocated",
-          "Lab infrastructure available"
+          "Architecture reference designs approved",
+          "Budget allocation approved"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Evaluate and select PQC-capable replacement or overlay solutions for Cisco routers that cannot be firmware-upgraded; assess hardware refresh, external crypto modules, or network redesign options.",
-        "activity_type": "Solution Evaluation",
+        "activity": "Build non-production lab environment and conduct interoperability testing of ML-KEM and ML-DSA implementations with existing VPN, email, and signing workflows; validate performance and security.",
+        "activity_type": "Lab Testing",
         "start_date": "2025-11-03",
         "end_date": "2026-02-27",
         "prerequisites": [
-          "Vendor roadmap responses received",
-          "Target architecture defined",
-          "Budget reallocation approved"
+          "Test equipment procured",
+          "Training completed",
+          "Change freeze observed (no production changes Nov 15–Jan 15)"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Conduct non-production lab testing of ML-KEM and ML-DSA in VPN, email, and document signing workflows using available software libraries and vendor previews; validate interoperability and performance.",
-        "activity_type": "Lab Testing",
-        "start_date": "2026-02-02",
-        "end_date": "2026-06-30",
+        "activity": "Obtain FIPS validation evidence for selected PQC implementations; conduct independent security assessment and certification readiness review.",
+        "activity_type": "Validation",
+        "start_date": "2026-03-02",
+        "end_date": "2026-05-29",
         "prerequisites": [
-          "Lab environment operational",
-          "PQC libraries available (e.g., OpenSSL 3.5+ with ML-KEM/ML-DSA)",
-          "Vendor preview or test builds obtained where available"
+          "Lab testing completed successfully",
+          "Vendor FIPS documentation available"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Procure PQC-capable hardware and software based on evaluation results; execute contracts with vendors that have confirmed FIPS-validated PQC support.",
-        "activity_type": "Procurement",
-        "start_date": "2026-03-02",
-        "end_date": "2026-08-31",
+        "activity": "Develop detailed migration runbooks, rollback procedures, and operational training for production cutover; update incident response and key management procedures.",
+        "activity_type": "Operational Readiness",
+        "start_date": "2026-06-01",
+        "end_date": "2026-08-28",
         "prerequisites": [
-          "Solution evaluation completed",
-          "Vendor PQC support confirmed with evidence",
-          "Budget approved and procurement vehicles in place"
+          "Validation completed",
+          "Architecture updated with test results"
         ]
       },
       {
         "step_number": 10,
-        "activity": "Pilot PQC migration in a limited production segment (e.g., one VPN concentrator pair and a small user group) during approved change windows outside the Nov 15–Jan 15 freeze; measure performance and operational impact.",
-        "activity_type": "Pilot Deployment",
+        "activity": "Execute phased production migration: pilot group for VPN and document signing using ML-KEM and ML-DSA; monitor and stabilize before broader rollout.",
+        "activity_type": "Production Migration",
         "start_date": "2026-09-01",
-        "end_date": "2026-11-13",
+        "end_date": "2027-03-31",
         "prerequisites": [
-          "Procurement completed",
-          "Lab testing successful",
-          "Change advisory board approval",
-          "Rollback plan validated"
+          "Operational readiness completed",
+          "Change freeze avoided (Nov 15–Jan 15)",
+          "Vendor PQC support confirmed for pilot systems"
         ]
       },
       {
         "step_number": 11,
-        "activity": "Deploy PQC for VPN key establishment using ML-KEM in hybrid mode across production Cisco infrastructure (or replacements) in phased waves during approved change windows.",
-        "activity_type": "Production Deployment - VPN",
-        "start_date": "2027-01-18",
-        "end_date": "2027-06-30",
+        "activity": "Full production rollout for VPN and document signing; email migration contingent on Microsoft PQC plugin availability and validation.",
+        "activity_type": "Production Migration",
+        "start_date": "2027-04-01",
+        "end_date": "2028-12-29",
         "prerequisites": [
-          "Pilot successful",
-          "Vendor PQC firmware/hardware validated and FIPS certified",
-          "Change freeze lifted",
-          "Operational runbooks updated"
+          "Pilot migration successful",
+          "Microsoft PQC plugin released and FIPS validated",
+          "Cisco router replacement or firmware PQC support confirmed"
         ]
       },
       {
         "step_number": 12,
-        "activity": "Deploy PQC for document signing using ML-DSA via updated signing applications and certificate authority integration; migrate signing workflows in phases.",
-        "activity_type": "Production Deployment - Document Signing",
-        "start_date": "2027-03-01",
-        "end_date": "2027-09-30",
-        "prerequisites": [
-          "ML-DSA library and CA support validated",
-          "Application vendor support confirmed",
-          "User training completed"
-        ]
-      },
-      {
-        "step_number": 13,
-        "activity": "Deploy PQC for email signing and encryption using ML-DSA and ML-KEM once Microsoft releases and validates PQC plugin for Exchange; phased rollout across user base.",
-        "activity_type": "Production Deployment - Email",
-        "start_date": null,
-        "end_date": null,
-        "prerequisites": [
-          "Microsoft PQC plugin released and FIPS validated",
-          "Exchange compatibility testing completed",
-          "Change advisory board approval"
-        ]
-      },
-      {
-        "step_number": 14,
-        "activity": "Decommission legacy RSA-4096 and ECDSA cryptographic configurations; update policies, procedures, and inventory; conduct final compliance audit against executive order mandate.",
-        "activity_type": "Decommission and Audit",
+        "activity": "Decommission legacy RSA-4096 and ECDSA systems; final compliance audit and closeout reporting to mandate authority.",
+        "activity_type": "Decommission & Audit",
         "start_date": "2029-01-02",
         "end_date": "2029-12-31",
         "prerequisites": [
-          "All production PQC deployments complete",
-          "Legacy systems migrated or retired",
-          "Audit team engaged"
+          "Full migration completed",
+          "All systems validated against FIPS 203/204/205"
         ]
       }
     ],
     "blockers": [
       {
-        "blocker_id": "BLK-001",
+        "blocker_id": "BLK-01",
         "category": "Inventory",
-        "blocker": "Cryptographic inventory is outdated and incomplete.",
-        "reason": "Without an accurate inventory, migration scope, risk prioritization, and vendor requirements cannot be reliably defined; unknown cryptographic dependencies may cause migration failures or missed systems.",
-        "resolution_required": "Deploy automated cryptographic discovery tools, reconcile with CMDB, conduct manual surveys of all business units, and validate findings through network scans and endpoint agents."
+        "blocker": "Outdated and incomplete cryptographic inventory",
+        "reason": "Cannot accurately scope migration, prioritize systems, or identify all RSA-4096 and ECDSA dependencies without a complete inventory.",
+        "resolution_required": "Deploy automated discovery tools, reconcile with CMDB, and conduct manual verification for critical systems; complete by 2025-05-30."
       },
       {
-        "blocker_id": "BLK-002",
+        "blocker_id": "BLK-02",
         "category": "Vendor Support",
-        "blocker": "Cisco routers do not support firmware upgrades for PQC.",
-        "reason": "The existing hardware cannot run PQC algorithms, so VPN key establishment using ML-KEM cannot be deployed on current infrastructure without hardware replacement or overlay solutions.",
-        "resolution_required": "Obtain Cisco official statement on PQC roadmap and hardware compatibility; evaluate replacement models or external crypto modules; budget for hardware refresh; confirm FIPS validation of replacement platforms."
+        "blocker": "Cisco routers do not support firmware upgrades for PQC",
+        "reason": "Hardware cannot run ML-KEM or ML-DSA without replacement or vendor-provided PQC-capable firmware, which is not available.",
+        "resolution_required": "Obtain formal Cisco roadmap commitment with dates and FIPS validation plan; if unavailable, procure PQC-capable replacement routers and schedule replacement during allowed windows."
       },
       {
-        "blocker_id": "BLK-003",
+        "blocker_id": "BLK-03",
         "category": "Vendor Support",
-        "blocker": "Microsoft has not released a PQC plugin for Exchange.",
-        "reason": "Email signing and encryption using ML-DSA and ML-KEM cannot be deployed in Exchange until Microsoft provides and validates PQC support; no confirmed delivery date exists.",
-        "resolution_required": "Obtain Microsoft roadmap commitment with dates; monitor release; require FIPS validation evidence; plan email migration as a later phase dependent on vendor delivery."
+        "blocker": "Microsoft Exchange PQC plugin not yet released",
+        "reason": "Email signing and encryption cannot migrate to ML-DSA/ML-KEM until Microsoft releases and validates a PQC plugin.",
+        "resolution_required": "Obtain Microsoft release timeline and FIPS validation evidence; plan email migration only after plugin availability is confirmed and tested."
       },
       {
-        "blocker_id": "BLK-004",
-        "category": "Workforce",
-        "blocker": "Technical team has zero PQC experience.",
-        "reason": "Lack of PQC knowledge risks design errors, insecure hybrid configurations, and failed deployments; training and hiring are prerequisites for safe implementation.",
-        "resolution_required": "Fund training on NIST FIPS 203/204/205, hybrid key exchange, and crypto-agility; hire or contract PQC specialists; establish lab for hands-on learning."
+        "blocker_id": "BLK-04",
+        "category": "Skills",
+        "blocker": "Technical team has zero PQC experience",
+        "reason": "Lack of expertise risks misconfiguration, insecure hybrid implementations, and failed validation.",
+        "resolution_required": "Implement training program, hire contractor support, and complete lab-based hands-on training before production changes."
       },
       {
-        "blocker_id": "BLK-005",
-        "category": "Schedule",
-        "blocker": "Change freeze from November 15 to January 15 restricts production changes.",
-        "reason": "Production cutovers cannot occur during the freeze, compressing available deployment windows and requiring careful scheduling of phased rollouts.",
-        "resolution_required": "Plan all production changes outside freeze windows; obtain exception approval only if critical; use freeze periods for planning, testing, and documentation."
-      },
-      {
-        "blocker_id": "BLK-006",
+        "blocker_id": "BLK-05",
         "category": "Regulatory",
-        "blocker": "Mandate requires only NIST-standardized algorithms (FIPS 203, 204, 205) by 2030.",
-        "reason": "Any interim or hybrid solution must ultimately converge on FIPS-validated ML-KEM and ML-DSA; non-standard or unvalidated algorithms cannot be used in production.",
-        "resolution_required": "Ensure all procured solutions have FIPS validation or a clear validation path; track NIST validation status; design hybrid modes that use only standardized algorithms."
+        "blocker": "Mandate requires only NIST-standardized algorithms (FIPS 203/204/205) by 2030",
+        "reason": "Any use of non-standardized or hybrid schemes must be justified and phased out; FIPS validation evidence is required.",
+        "resolution_required": "Ensure all selected implementations have FIPS validation or are on a validated path; document compliance in architecture and audit."
       },
       {
-        "blocker_id": "BLK-007",
-        "category": "Budget",
-        "blocker": "Budget of $2,000,000 may be insufficient for full hardware refresh and software licensing.",
-        "reason": "Replacing Cisco routers and licensing PQC-capable software across the enterprise could exceed available funds, especially with training and testing costs.",
-        "resolution_required": "Conduct detailed cost analysis; prioritize highest-risk systems; seek supplemental funding or phased procurement; consider overlay solutions to reduce hardware costs."
+        "blocker_id": "BLK-06",
+        "category": "Operational",
+        "blocker": "Change freeze from Nov 15 to Jan 15",
+        "reason": "Production changes cannot occur during freeze, limiting migration windows and requiring careful scheduling.",
+        "resolution_required": "Schedule all production cutovers outside freeze windows; use freeze periods for planning, training, and non-production testing only if permitted."
       }
     ],
     "vendor_dependencies": [
       {
         "vendor": "Cisco",
-        "pqc_support_status": "Unconfirmed. No public confirmation of PQC firmware support for existing routers; hardware replacement likely required. Roadmap and FIPS validation status must be obtained.",
-        "evidence_required": "Official Cisco PQC roadmap with dates, hardware compatibility matrix, FIPS 140-3 validation certificates for PQC-capable firmware, and contractual commitment."
+        "pqc_support_status": "Unconfirmed; no firmware upgrade path for PQC on existing routers per scenario. Future PQC-capable firmware or hardware replacement not confirmed.",
+        "evidence_required": "Formal roadmap with release dates, FIPS 203/204/205 validation certificates, and interoperability test results."
       },
       {
         "vendor": "Microsoft",
-        "pqc_support_status": "Not available. No PQC plugin for Exchange has been released; delivery date unconfirmed.",
-        "evidence_required": "Official Microsoft announcement of PQC plugin release, FIPS validation evidence, Exchange compatibility documentation, and support lifecycle commitment."
-      },
-      {
-        "vendor": "Certificate Authority / PKI Vendor",
-        "pqc_support_status": "Unconfirmed. ML-DSA certificate issuance and management support must be verified.",
-        "evidence_required": "Vendor statement on ML-DSA support, FIPS validation, and integration documentation for document signing workflows."
-      },
-      {
-        "vendor": "VPN / Network Security Vendor",
-        "pqc_support_status": "Unconfirmed. ML-KEM support in VPN concentrators and clients must be validated.",
-        "evidence_required": "FIPS validation certificates, interoperability test results, and confirmed release dates for ML-KEM hybrid mode."
+        "pqc_support_status": "PQC plugin for Exchange not yet released; no confirmed date or FIPS validation.",
+        "evidence_required": "Release announcement, FIPS validation certificates for ML-KEM and ML-DSA, and compatibility documentation for Exchange versions in use."
       }
     ],
     "algorithm_roles": {
-      "ML-KEM": "Post-quantum key establishment (FIPS 203) for VPN key exchange and email encryption key transport; used in hybrid mode with classical algorithms during transition.",
-      "ML-DSA": "Post-quantum digital signatures (FIPS 204) for document signing, email signing, and authentication; used for integrity and non-repudiation."
+      "ML-KEM": "Post-quantum key establishment (key encapsulation) for VPN tunnels and email encryption; used in hybrid mode with classical algorithms during transition.",
+      "ML-DSA": "Post-quantum digital signatures for document signing and email signing; used for authentication and integrity."
     },
     "budget": {
       "estimated_total_usd": 1850000,
@@ -283,36 +232,32 @@
       "within_budget": true,
       "cost_assumptions": [
         {
-          "category": "Program Management and Governance",
+          "category": "Program management and governance",
           "estimated_cost_usd": 150000
         },
         {
-          "category": "Cryptographic Discovery and Inventory Tools",
-          "estimated_cost_usd": 120000
+          "category": "Cryptographic discovery tools and services",
+          "estimated_cost_usd": 200000
         },
         {
-          "category": "Training and Workforce Development",
+          "category": "Training and skills development",
           "estimated_cost_usd": 100000
         },
         {
-          "category": "Lab Environment and Testing",
-          "estimated_cost_usd": 80000
-        },
-        {
-          "category": "Cisco Hardware Replacement / Overlay Solutions",
-          "estimated_cost_usd": 700000
-        },
-        {
-          "category": "Microsoft Exchange PQC Plugin Licensing and Integration",
+          "category": "Lab equipment and software licenses",
           "estimated_cost_usd": 250000
         },
         {
-          "category": "Document Signing and PKI Upgrades",
-          "estimated_cost_usd": 150000
+          "category": "Professional services (architecture, testing, integration)",
+          "estimated_cost_usd": 400000
         },
         {
-          "category": "Professional Services and Integration",
-          "estimated_cost_usd": 200000
+          "category": "Hardware replacement (PQC-capable routers if needed)",
+          "estimated_cost_usd": 500000
+        },
+        {
+          "category": "FIPS validation and security assessment",
+          "estimated_cost_usd": 150000
         },
         {
           "category": "Contingency (10%)",
@@ -320,7 +265,7 @@
         }
       ]
     },
-    "confidence": "Low to Medium: High uncertainty due to unconfirmed vendor PQC support, incomplete inventory, zero in-house PQC experience, and potential budget constraints. Timeline is contingent on vendor deliveries and FIPS validation."
+    "confidence": "Medium-low: high uncertainty due to unconfirmed vendor PQC support, incomplete inventory, and zero in-house PQC experience. Timeline and budget are contingent on vendor deliverables and successful validation."
   },
   "grade_result": {
     "score": 6.5,
@@ -363,9 +308,10 @@
     "failures": [
       "G2: Required blocker 'cisco_hardware' is missing or does not sufficiently explain its context and resolution.",
       "G2: Required blocker 'outdated_inventory' is missing or does not sufficiently explain its context and resolution.",
-      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): architecture and design, discovery and inventory, lab testing, pilot deployment, procurement.",
+      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): architecture, assessment, discovery, governance, lab testing.",
       "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
       "G3: Required activity category 'vendor_engagement' is missing.",
+      "G3: Required activity category 'lab_testing' is missing.",
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied."
     ]
   }

@@ -4,13 +4,13 @@
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 23.15,
-  "created_at_utc": "2026-11-03T08:21:30.152521+00:00",
+  "elapsed_seconds": 18.61,
+  "created_at_utc": "2026-11-03T08:45:40.509633+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 4139,
+    "completion_tokens": 3232,
     "prompt_tokens": 1439,
-    "total_tokens": 5578,
+    "total_tokens": 4671,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -31,283 +31,205 @@
     "migration_steps": [
       {
         "step_number": 1,
-        "activity": "Establish PQC migration programme governance: appoint programme lead, define RACI, secure executive sponsorship, and document scope covering the four cryptographic assets (RSA-2048 TLS, ECDSA P-256 API auth, RSA-3072 key wrapping, ECDH P-256 key exchange).",
+        "activity": "Establish PQC migration programme governance: appoint an accountable owner, define scope covering the four cryptographic assets, agree risk appetite for harvest-now-decrypt-later exposure, and set up a cross-functional working group including cryptography, infrastructure, applications, HSM operations, procurement, legal/compliance, and the core banking platform owner.",
         "activity_type": "planning",
-        "start_date": "2026-02-02",
-        "end_date": "2026-02-27",
+        "start_date": "2026-01-05",
+        "end_date": "2026-02-13",
         "prerequisites": [
-          "Executive approval of programme mandate",
-          "Budget allocation confirmation of USD 250,000"
+          "Executive sponsorship and named programme owner",
+          "Approved first-phase budget of USD 250,000",
+          "Access to current architecture and cryptographic inventory records"
         ]
       },
       {
         "step_number": 2,
-        "activity": "Perform comprehensive cryptographic inventory and CBOM (Cryptography Bill of Materials) discovery across all applications, services, certificates, keys, and protocols; classify data sensitivity and retention periods to identify 10-15 year confidentiality requirements.",
+        "activity": "Perform a complete cryptographic inventory and data-flow mapping: enumerate all RSA-2048 TLS certificates, ECDSA P-256 internal API authentication keys, RSA-3072 key-wrapping keys protecting database encryption keys, and ECDH P-256 internal secure channels. Record key owners, certificate expiry dates, data classification, data retention periods, and whether each asset protects data with a confidentiality lifetime of 10 to 15 years.",
         "activity_type": "inventory",
-        "start_date": "2026-02-16",
-        "end_date": "2026-04-10",
+        "start_date": "2026-01-19",
+        "end_date": "2026-03-13",
         "prerequisites": [
           "Programme governance established (step 1)",
-          "Access to configuration management databases and certificate inventories",
-          "Application owner cooperation for discovery"
+          "Read access to certificate stores, HSM key inventory, API gateway configuration, and database encryption key metadata",
+          "Data classification and retention schedule from data owners"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Conduct quantum risk assessment and harvest-now-decrypt-later (HNDL) exposure analysis: map long-lived sensitive data flows, identify which assets protect data with 10-15 year confidentiality requirements, and rank assets by HNDL risk and migration complexity.",
+        "activity": "Conduct a quantum risk assessment and prioritisation: classify each asset by harvest-now-decrypt-later exposure based on data confidentiality lifetime, classify ML-KEM as the target for key establishment and ML-DSA as the target for digital signatures, and rank assets. Prioritise RSA-3072 key wrapping protecting long-lived database encryption keys and ECDH P-256 channels carrying long-lived sensitive data first, because traffic or wrapped keys captured today could be decrypted once a cryptographically relevant quantum computer exists.",
         "activity_type": "risk_assessment",
-        "start_date": "2026-03-16",
-        "end_date": "2026-04-24",
+        "start_date": "2026-03-02",
+        "end_date": "2026-04-10",
         "prerequisites": [
-          "Cryptographic inventory completed (step 2)",
-          "Data classification and retention policy documentation",
-          "Regulatory obligations mapping (e.g., data protection, banking secrecy)"
+          "Completed cryptographic inventory (step 2)",
+          "Agreed data retention and confidentiality periods",
+          "Documented risk appetite from step 1"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Engage Thales in writing to obtain confirmed PQC support status for Luna Network HSM 7: request written confirmation of ML-KEM and ML-DSA support, firmware version requirements, FIPS validation status, delivery timeline, and upgrade path. Do not assume support until written confirmation is received.",
+        "activity": "Engage the Thales Luna Network HSM 7 vendor in writing to obtain confirmed production support status, firmware compatibility matrix, certification status, and delivery timeline for ML-KEM and ML-DSA. Do not treat any roadmap statement as confirmed capability until written evidence is received.",
         "activity_type": "vendor_engagement",
-        "start_date": "2026-02-09",
-        "end_date": "2026-03-31",
+        "start_date": "2026-01-12",
+        "end_date": "2026-04-30",
         "prerequisites": [
           "Programme governance established (step 1)",
-          "Defined technical requirements for HSM PQC capabilities"
+          "Current HSM model, firmware version, and support contract details available"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Engage third-party core banking platform vendor in writing to obtain PQC compatibility confirmation and migration roadmap: request written statement on ML-KEM/ML-DSA support, TLS/crypto library versions, API authentication mechanisms, key wrapping capabilities, and timeline for PQC-ready releases.",
+        "activity": "Engage the third-party core banking platform vendor in writing to obtain a PQC compatibility statement, supported cryptographic libraries, migration roadmap, and any contractual constraints on cryptographic changes. Request written confirmation before any production dependency is assumed.",
         "activity_type": "vendor_engagement",
-        "start_date": "2026-02-09",
-        "end_date": "2026-03-31",
+        "start_date": "2026-01-12",
+        "end_date": "2026-04-30",
         "prerequisites": [
           "Programme governance established (step 1)",
-          "Defined integration requirements for core banking platform"
+          "Current core banking platform version and contract details available"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Develop hybrid cryptography strategy and target architecture: define hybrid ML-KEM+ECDH for key establishment and hybrid ML-DSA+ECDSA for signatures, specify crypto-agility requirements, and produce architecture decision records. Align with NIST and industry guidance (e.g., NSA CNSA 2.0, ETSI).",
+        "activity": "Define target PQC architecture and hybrid transition strategy: specify ML-KEM for key establishment (including hybrid X25519/ML-KEM or ECDH/ML-KEM where supported) and ML-DSA for digital signatures (including hybrid ECDSA/ML-DSA where supported). Document crypto-agility requirements, key lifecycle changes, certificate profile changes, and fallback behaviour. Do not commit to production designs that depend on unconfirmed HSM or core banking capabilities.",
         "activity_type": "planning",
-        "start_date": "2026-04-06",
-        "end_date": "2026-05-15",
+        "start_date": "2026-04-13",
+        "end_date": "2026-06-12",
         "prerequisites": [
-          "Risk assessment completed (step 3)",
-          "Initial vendor responses received (steps 4 and 5)"
+          "Risk assessment and prioritisation complete (step 3)",
+          "Initial written responses from HSM and core banking vendors (steps 4 and 5)",
+          "Regulatory and compliance review of cryptographic change obligations"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Procure non-production laboratory environment for PQC testing: acquire software-based PQC libraries (e.g., OpenSSL 3.x with ML-KEM/ML-DSA, BoringSSL, or equivalent), test HSM simulator if available, and set up isolated lab network. Do not procure production HSM firmware until vendor confirmation.",
+        "activity": "Procure non-production laboratory capability for PQC testing: software cryptographic libraries supporting ML-KEM and ML-DSA, test certificates, and a non-production HSM or HSM simulator only if the vendor confirms availability and compatibility in writing. Budget allocation must remain within the USD 250,000 first-phase limit.",
         "activity_type": "procurement",
-        "start_date": "2026-04-20",
-        "end_date": "2026-05-29",
+        "start_date": "2026-05-04",
+        "end_date": "2026-07-31",
         "prerequisites": [
-          "Budget approval for lab procurement",
-          "Architecture strategy defined (step 6)",
-          "Procurement policy compliance"
+          "Target architecture defined (step 6)",
+          "Written vendor confirmation of non-production compatibility",
+          "Procurement approval within first-phase budget"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Conduct non-production lab testing of ML-KEM for key establishment: test hybrid ML-KEM+ECDH handshakes for TLS and internal secure channels, measure performance, validate interoperability with software libraries, and document results. ML-KEM is used for key establishment only.",
+        "activity": "Build and run non-production laboratory tests: validate ML-KEM key establishment and ML-DSA signature operations in software, test hybrid modes, measure performance and interoperability, and test TLS and API authentication flows in a lab environment. Do not perform production cryptographic changes or HSM firmware upgrades.",
         "activity_type": "lab_testing",
-        "start_date": "2026-06-01",
-        "end_date": "2026-07-10",
+        "start_date": "2026-08-03",
+        "end_date": "2026-11-27",
         "prerequisites": [
-          "Lab environment operational (step 7)",
-          "Hybrid strategy defined (step 6)"
+          "Laboratory capability procured (step 7)",
+          "Target architecture and test plan approved (step 6)",
+          "Non-production environment available and permitted by internal policy"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Conduct non-production lab testing of ML-DSA for digital signatures: test hybrid ML-DSA+ECDSA for internal API authentication, validate signature generation/verification performance, and assess integration with API gateways. ML-DSA is used for digital signatures only.",
-        "activity_type": "lab_testing",
-        "start_date": "2026-06-15",
-        "end_date": "2026-07-24",
+        "activity": "Prepare production migration runbooks, rollback plans, change records, and regulatory notifications for the first production PQC changes, scheduled only after the change freeze ends on 15 January 2027 and only for assets whose HSM and core banking dependencies are confirmed in writing.",
+        "activity_type": "planning",
+        "start_date": "2026-11-02",
+        "end_date": "2027-01-15",
         "prerequisites": [
-          "Lab environment operational (step 7)",
-          "Hybrid strategy defined (step 6)"
+          "Laboratory testing results accepted (step 8)",
+          "Written HSM and core banking confirmations for the specific assets in scope",
+          "Operational approval and change advisory board scheduling after the freeze"
         ]
       },
       {
         "step_number": 10,
-        "activity": "Evaluate HSM PQC readiness based on Thales written response: if confirmed, plan firmware upgrade and lab validation; if unconfirmed, document blocker and develop interim software-based key establishment/signature strategy for non-HSM-dependent channels. Do not schedule production HSM firmware upgrade without written confirmation and validated firmware.",
-        "activity_type": "planning",
-        "start_date": "2026-07-13",
-        "end_date": "2026-08-07",
+        "activity": "Execute first production cryptographic change after the change freeze: migrate the highest-priority long-lived data protection asset that has confirmed vendor support, using hybrid ML-KEM key establishment where the HSM and platform support it in writing. If no written confirmation exists, defer this step and continue planning and lab work only.",
+        "activity_type": "production_crypto_change",
+        "start_date": "2027-01-18",
+        "end_date": null,
         "prerequisites": [
-          "Thales written response received (step 4)",
-          "Lab testing results available (steps 8 and 9)"
+          "Change freeze ended (15 January 2027 inclusive)",
+          "Written HSM vendor confirmation of production ML-KEM support and firmware compatibility",
+          "Written core banking vendor confirmation where the asset depends on that platform",
+          "Approved change record, rollback plan, and operational approval",
+          "Successful laboratory validation (step 8)"
         ]
       },
       {
         "step_number": 11,
-        "activity": "Develop detailed migration runbooks and rollback plans for prioritized assets: focus first on RSA-3072 key wrapping protecting long-lived database encryption keys (highest HNDL exposure), then ECDH P-256 internal channels, then RSA-2048 TLS, then ECDSA P-256 API auth. Include hybrid transition states and crypto-agility mechanisms.",
-        "activity_type": "planning",
-        "start_date": "2026-08-03",
-        "end_date": "2026-09-11",
+        "activity": "Plan and schedule HSM firmware upgrade to a PQC-capable release only after the vendor provides written confirmation of production support, compatibility, certification, and a delivery timeline. The upgrade must occur outside the change freeze and after operational approval.",
+        "activity_type": "hsm_firmware_upgrade",
+        "start_date": null,
+        "end_date": null,
         "prerequisites": [
-          "Lab testing completed (steps 8 and 9)",
-          "HSM readiness evaluation completed (step 10)",
-          "Core banking vendor response received (step 5)"
+          "Written Thales confirmation of PQC-capable firmware release and production support",
+          "Compatibility validation in non-production laboratory",
+          "Change freeze ended and operational approval obtained",
+          "Rollback and recovery plan approved"
         ]
       },
       {
         "step_number": 12,
-        "activity": "Obtain operational approvals and change management sign-off for production migration plan, including risk acceptance for hybrid cryptography, regulatory notification if required, and confirmation that no production changes will occur during the change freeze (2026-12-01 to 2027-01-15).",
-        "activity_type": "planning",
-        "start_date": "2026-09-14",
-        "end_date": "2026-10-09",
-        "prerequisites": [
-          "Migration runbooks completed (step 11)",
-          "Vendor confirmations received or blockers formally documented",
-          "Regulatory review completed"
-        ]
-      },
-      {
-        "step_number": 13,
-        "activity": "Execute non-production integration testing of prioritized migration approach for RSA-3072 key wrapping replacement: test hybrid ML-KEM+ECDH or ML-KEM-based key encapsulation for database encryption key protection in lab/staging environment. This is non-production and permitted during freeze if lab policies allow.",
-        "activity_type": "lab_testing",
-        "start_date": "2026-10-12",
-        "end_date": "2026-11-20",
-        "prerequisites": [
-          "Migration runbooks completed (step 11)",
-          "Operational approvals obtained (step 12)",
-          "Lab environment available"
-        ]
-      },
-      {
-        "step_number": 14,
-        "activity": "During change freeze (2026-12-01 to 2027-01-15): continue permitted non-production activities only — vendor engagement follow-ups, documentation updates, lab testing where internal policies permit, and planning for post-freeze production changes. No production cryptographic changes, HSM firmware upgrades, or major application deployments.",
-        "activity_type": "planning",
-        "start_date": "2026-12-01",
-        "end_date": "2027-01-15",
-        "prerequisites": [
-          "Change freeze policy acknowledged",
-          "Non-production lab activities approved by internal policy"
-        ]
-      },
-      {
-        "step_number": 15,
-        "activity": "Post-freeze: execute production migration of highest-priority asset (RSA-3072 key wrapping for long-lived database encryption keys) using hybrid ML-KEM approach, contingent on HSM vendor written confirmation and validated firmware, or approved software-based alternative. This step must not begin until all prerequisites are satisfied.",
-        "activity_type": "production_crypto_change",
+        "activity": "Deploy major application changes for ML-DSA digital signatures in internal API authentication and for ML-KEM key establishment in internal secure channels, only after core banking vendor written confirmation and HSM production support are obtained and validated.",
+        "activity_type": "major_application_deployment",
         "start_date": null,
         "end_date": null,
         "prerequisites": [
-          "Change freeze ended (after 2027-01-15)",
-          "Thales written confirmation of PQC support and validated firmware (or approved alternative)",
-          "Core banking vendor written confirmation of compatibility (if applicable)",
-          "Production change approval",
-          "Successful lab and staging validation",
-          "Rollback plan tested"
-        ]
-      },
-      {
-        "step_number": 16,
-        "activity": "Post-freeze: execute production migration of ECDH P-256 internal secure communication channels to hybrid ML-KEM+ECDH, contingent on HSM and application readiness.",
-        "activity_type": "production_crypto_change",
-        "start_date": null,
-        "end_date": null,
-        "prerequisites": [
-          "Step 15 completed successfully",
-          "HSM PQC support confirmed and validated",
-          "Application compatibility confirmed",
-          "Production change approval"
-        ]
-      },
-      {
-        "step_number": 17,
-        "activity": "Post-freeze: execute production migration of RSA-2048 TLS certificates to hybrid ML-KEM for key establishment and ML-DSA for signatures (as applicable), contingent on certificate authority and application support.",
-        "activity_type": "production_crypto_change",
-        "start_date": null,
-        "end_date": null,
-        "prerequisites": [
-          "Steps 15 and 16 completed",
-          "CA support for PQC certificates confirmed",
-          "Application and load balancer compatibility validated",
-          "Production change approval"
-        ]
-      },
-      {
-        "step_number": 18,
-        "activity": "Post-freeze: execute production migration of ECDSA P-256 internal API authentication to hybrid ML-DSA+ECDSA, contingent on API gateway and core banking platform support.",
-        "activity_type": "production_crypto_change",
-        "start_date": null,
-        "end_date": null,
-        "prerequisites": [
-          "Steps 15-17 completed",
-          "Core banking vendor written confirmation of ML-DSA support",
-          "API gateway compatibility validated",
-          "Production change approval"
+          "Written core banking vendor PQC compatibility confirmation",
+          "Written HSM production support confirmation for ML-DSA and ML-KEM",
+          "Successful laboratory and pilot validation",
+          "Change freeze ended and operational approval obtained"
         ]
       }
     ],
     "blockers": [
       {
-        "blocker_id": "BLK-001",
+        "blocker_id": "BLK-HSM-001",
         "category": "HSM_VENDOR",
-        "blocker": "Thales has not confirmed production support, firmware compatibility, or delivery timeline for NIST-standardized ML-KEM and ML-DSA on Luna Network HSM 7.",
-        "reason": "Without written confirmation, the bank cannot plan or execute production HSM firmware upgrades or rely on the HSM for PQC key establishment or signatures. This blocks production migration of any asset that depends on HSM-backed keys, including RSA-3072 key wrapping and ECDH P-256 channels.",
-        "resolution_required": "Obtain written confirmation from Thales including: supported firmware version(s), ML-KEM and ML-DSA algorithm support, FIPS 140-3 validation status, delivery timeline, upgrade procedure, and compatibility with existing Luna 7 hardware. Validate in non-production lab before production scheduling."
+        "blocker": "Thales Luna Network HSM 7 production support, firmware compatibility, certification status, and delivery timeline for ML-KEM and ML-DSA are unconfirmed.",
+        "reason": "Production PQC key establishment and digital signature operations that rely on HSM-protected keys cannot be safely deployed without confirmed firmware support and compatibility. Assuming support would risk service availability and regulatory non-compliance.",
+        "resolution_required": "Obtain written confirmation from Thales of production support, firmware version compatibility, certification status, and delivery timeline for ML-KEM and ML-DSA, followed by non-production validation."
       },
       {
-        "blocker_id": "BLK-002",
+        "blocker_id": "BLK-CORE-001",
         "category": "CORE_BANKING_VENDOR",
         "blocker": "Third-party core banking platform vendor has not provided written confirmation of PQC compatibility or a migration roadmap.",
-        "reason": "The core banking platform likely integrates with TLS, API authentication, and key wrapping. Without vendor confirmation, the bank cannot safely migrate these assets without risking service disruption or unsupported configurations. This blocks production changes for any asset touching the core banking platform.",
-        "resolution_required": "Obtain written confirmation from core banking vendor including: PQC roadmap, supported crypto libraries, ML-KEM/ML-DSA support timeline, API authentication compatibility, and migration guidance. If unavailable, document as accepted risk and plan compensating controls."
+        "reason": "Cryptographic changes in applications that depend on the core banking platform cannot be validated or deployed without vendor confirmation. The bank cannot assume compatibility or modify vendor-controlled components.",
+        "resolution_required": "Obtain written PQC compatibility statement, supported cryptographic libraries, migration roadmap, and contractual constraints from the core banking vendor."
       },
       {
-        "blocker_id": "BLK-003",
+        "blocker_id": "BLK-PROC-001",
         "category": "PROCUREMENT",
-        "blocker": "Production HSM firmware upgrade and any PQC-capable HSM hardware cannot be procured until vendor confirmation and budget approval for post-first-phase costs.",
-        "reason": "The USD 250,000 first-phase budget is allocated to planning, lab testing, and vendor engagement. Production HSM firmware or hardware procurement may exceed this budget and cannot proceed without confirmed vendor support and additional funding approval.",
-        "resolution_required": "Confirm vendor support (BLK-001), obtain cost estimate for production HSM upgrade, and secure additional budget approval if needed. Defer procurement until first-phase results are available."
+        "blocker": "PQC-capable non-production HSM or HSM simulator availability and cost are unconfirmed.",
+        "reason": "Laboratory testing of HSM-backed ML-KEM and ML-DSA operations requires compatible non-production hardware or simulation. Without it, HSM-dependent migration steps cannot be validated within budget.",
+        "resolution_required": "Confirm availability, compatibility, and cost of non-production HSM capability with the vendor and complete procurement within the USD 250,000 first-phase budget."
       },
       {
-        "blocker_id": "BLK-004",
+        "blocker_id": "BLK-TECH-001",
         "category": "TECHNICAL",
-        "blocker": "Hybrid PQC interoperability and performance in the bank's specific environment (TLS terminators, load balancers, API gateways, database encryption) has not been validated.",
-        "reason": "Lab testing in first phase will reduce but not eliminate uncertainty. Production migration requires validated interoperability and performance characteristics for each asset.",
-        "resolution_required": "Complete lab and staging validation (steps 8, 9, 13) and obtain performance benchmarks. Confirm application and network device support for hybrid algorithms."
+        "blocker": "Interoperability and performance of hybrid ML-KEM and ML-DSA modes across TLS, API authentication, and database key wrapping are unvalidated in the bank's environment.",
+        "reason": "Hybrid and PQC algorithms may affect latency, certificate sizes, protocol negotiation, and application behaviour. Production changes cannot proceed without laboratory validation.",
+        "resolution_required": "Complete non-production laboratory testing and performance benchmarking, and document accepted results before production scheduling."
       },
       {
-        "blocker_id": "BLK-005",
-        "category": "OPERATIONAL",
-        "blocker": "Mandatory infrastructure change freeze from 2026-12-01 through 2027-01-15 prohibits production cryptographic changes, HSM firmware upgrades, and major application deployments.",
-        "reason": "No production migration steps can occur during this period. Only planning, documentation, vendor engagement, and permitted non-production lab activities may continue.",
-        "resolution_required": "Schedule all production changes after 2027-01-15. Use freeze period for permitted non-production activities and planning."
-      },
-      {
-        "blocker_id": "BLK-006",
+        "blocker_id": "BLK-REG-001",
         "category": "REGULATORY",
-        "blocker": "Regulatory approval or notification requirements for PQC migration have not been confirmed with banking regulators.",
-        "reason": "Banking regulators may require notification or approval for cryptographic changes affecting customer data protection. Unconfirmed regulatory position could delay production migration.",
-        "resolution_required": "Engage compliance and legal teams to determine regulatory notification requirements. Obtain any necessary approvals before production changes."
+        "blocker": "Regulatory notification and approval requirements for cryptographic changes affecting customer data protection are not yet confirmed.",
+        "reason": "Banking regulators may require notification or approval before changes to cryptographic controls protecting sensitive customer information. Proceeding without confirmation risks non-compliance.",
+        "resolution_required": "Obtain legal and compliance confirmation of notification and approval obligations, and complete any required regulatory engagement before production changes."
+      },
+      {
+        "blocker_id": "BLK-OPS-001",
+        "category": "OPERATIONAL",
+        "blocker": "Production change freeze from 1 December 2026 through 15 January 2027 inclusive prohibits production cryptographic changes, HSM firmware upgrades, and major application deployments.",
+        "reason": "No production migration activity can be scheduled during the freeze. Only planning, documentation, vendor engagement, and permitted non-production laboratory activities may continue.",
+        "resolution_required": "Schedule all production changes after 15 January 2027 and obtain operational approval and change advisory board approval for post-freeze windows."
       }
     ],
     "vendor_dependencies": [
       {
-        "vendor": "Thales (Luna Network HSM 7)",
+        "vendor": "Thales Luna Network HSM 7",
         "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of ML-KEM and ML-DSA support, firmware version, FIPS 140-3 validation certificate, delivery timeline, upgrade procedure, and compatibility with existing Luna 7 hardware. Lab validation of PQC operations on HSM."
+        "evidence_required": "Written confirmation of production support, firmware compatibility matrix, certification status, and delivery timeline for ML-KEM and ML-DSA, plus non-production validation results."
       },
       {
-        "vendor": "Third-party core banking platform vendor",
+        "vendor": "Third-party core banking platform",
         "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of PQC roadmap, supported crypto libraries, ML-KEM/ML-DSA support timeline, API authentication compatibility, TLS configuration support, and migration guidance. Evidence of testing in comparable environments."
-      },
-      {
-        "vendor": "Certificate Authority (for TLS certificates)",
-        "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of support for PQC certificates (ML-DSA or hybrid), issuance timeline, and compatibility with bank's TLS terminators."
-      },
-      {
-        "vendor": "Software library providers (e.g., OpenSSL, BoringSSL)",
-        "pqc_support_status": "confirmed",
-        "evidence_required": "Documentation of ML-KEM and ML-DSA support in stable releases, with validation testing in bank lab. Note: confirmed for lab use only; production use requires validation."
+        "evidence_required": "Written PQC compatibility statement, supported cryptographic libraries, migration roadmap, and contractual constraints on cryptographic changes."
       }
     ],
     "algorithm_roles": {
@@ -319,19 +241,18 @@
       "budget_limit_usd": 250000,
       "within_budget": "true",
       "cost_assumptions": [
-        "Programme management and governance: USD 30,000 (internal staff time allocation, 0.5 FTE for 6 months)",
-        "Cryptographic inventory and CBOM tooling: USD 25,000 (commercial discovery tool licenses and integration)",
-        "Risk assessment and HNDL analysis: USD 20,000 (internal security team and external consultant review)",
-        "Vendor engagement and travel: USD 10,000 (meetings, documentation review, possible site visits)",
-        "Lab environment procurement: USD 40,000 (software licenses, test hardware, isolated network setup)",
-        "Lab testing and validation (ML-KEM and ML-DSA): USD 50,000 (internal engineering time, 1.5 FTE for 4 months, plus external testing support)",
-        "Migration planning and runbook development: USD 30,000 (internal architects and engineers)",
-        "Operational approvals and regulatory review: USD 15,000 (compliance and legal review)",
-        "Contingency (10%): USD 15,000",
-        "Total: USD 235,000, within USD 250,000 limit. Production HSM firmware upgrade and production migration costs are excluded from first phase and require separate budget approval."
+        "Programme management and governance: USD 35,000 for internal and contracted programme staff over the first phase.",
+        "Cryptographic inventory and data-flow mapping: USD 30,000 for tooling, contractor support, and data owner workshops.",
+        "Risk assessment and architecture planning: USD 25,000 for specialist cryptography consultancy and compliance review.",
+        "Vendor engagement and contractual review: USD 15,000 for legal, procurement, and technical liaison effort.",
+        "Non-production laboratory capability: USD 60,000 for software PQC libraries, test certificates, and non-production HSM or simulator only if confirmed available and compatible.",
+        "Laboratory testing and validation: USD 45,000 for engineering effort, performance testing, and interoperability validation.",
+        "Production runbooks, change preparation, and regulatory engagement: USD 25,000 for documentation, change management, and compliance support.",
+        "Contingency: USD 0 allocated within the estimate; the USD 15,000 headroom below the USD 250,000 limit is retained as unallocated reserve and is not committed.",
+        "No production HSM firmware upgrade or major application deployment costs are included in the first-phase estimate because those activities are blocked pending written vendor confirmation and are scheduled after the change freeze."
       ]
     },
-    "confidence": "medium"
+    "confidence": "low"
   },
   "grade_result": {
     "score": 0.0,
@@ -371,12 +292,9 @@
       "G3: Risk assessment explicitly prioritises long-lived sensitive information and HNDL exposure."
     ],
     "failures": [
-      "G1: Prohibited activity 'post-freeze: execute production migration of highest-priority asset (rsa-3072 key wrapping for long-' has missing or invalid dates.",
-      "G1: Prohibited activity 'post-freeze: execute production migration of ecdh p-256 internal secure communication channels to hy' has missing or invalid dates.",
-      "G1: Prohibited activity 'post-freeze: execute production migration of rsa-2048 tls certificates to hybrid ml-kem for key esta' has missing or invalid dates.",
-      "G1: Prohibited activity 'post-freeze: execute production migration of ecdsa p-256 internal api authentication to hybrid ml-ds' has missing or invalid dates.",
-      "G1: Vendor 'software library providers (e.g., openssl, boringssl)' is incorrectly presented as having confirmed PQC support.",
-      "G1: Production cryptographic change is scheduled without a completed earlier laboratory-testing activity.",
+      "G1: Prohibited activity 'execute first production cryptographic change after the change freeze: migrate the highest-priority ' has missing or invalid dates.",
+      "G1: Prohibited activity 'plan and schedule hsm firmware upgrade to a pqc-capable release only after the vendor provides writt' has missing or invalid dates.",
+      "G1: Prohibited activity 'deploy major application changes for ml-dsa digital signatures in internal api authentication and fo' has missing or invalid dates.",
       "G1: Production migration prerequisites do not clearly include completed lab testing.",
       "G1: Production migration prerequisites do not clearly include written HSM compatibility confirmation.",
       "G1: Production migration prerequisites do not clearly include written core banking compatibility confirmation.",
@@ -384,7 +302,8 @@
       "G2: Required blocker 'hsm' is missing or does not sufficiently explain its context and resolution.",
       "G2: Required blocker 'core_banking' is missing or does not sufficiently explain its context and resolution.",
       "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): inventory, lab_testing, planning, procurement, risk_assessment.",
-      "G4: Cost breakdown totals $720,000.00, but estimated_total_usd is $235,000.00."
+      "G3: Production migration must occur after a completed 'lab_testing' activity.",
+      "G4: Cost breakdown totals $500,000.00, but estimated_total_usd is $235,000.00."
     ]
   }
 }

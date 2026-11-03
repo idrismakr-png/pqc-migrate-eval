@@ -1,6 +1,6 @@
 {
   "status": "completed",
-  "created_at_utc": "2026-11-03T08:23:24.432716+00:00",
+  "created_at_utc": "2026-11-03T08:47:37.969981+00:00",
   "tasks_discovered": 8,
   "models_selected": 1,
   "total_attempts": 8,
@@ -16,11 +16,11 @@
       "max_score": 9,
       "percentage": 0.0,
       "critical_failure": true,
-      "elapsed_seconds": 23.15,
+      "elapsed_seconds": 18.61,
       "usage": {
-        "completion_tokens": 4139,
+        "completion_tokens": 3232,
         "prompt_tokens": 1439,
-        "total_tokens": 5578,
+        "total_tokens": 4671,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -42,11 +42,11 @@
       "max_score": 9,
       "percentage": 0.0,
       "critical_failure": true,
-      "elapsed_seconds": 14.8,
+      "elapsed_seconds": 18.09,
       "usage": {
-        "completion_tokens": 2725,
+        "completion_tokens": 3214,
         "prompt_tokens": 1185,
-        "total_tokens": 3910,
+        "total_tokens": 4399,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -68,11 +68,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 12.65,
+      "elapsed_seconds": 13.27,
       "usage": {
-        "completion_tokens": 2427,
+        "completion_tokens": 2653,
         "prompt_tokens": 1040,
-        "total_tokens": 3467,
+        "total_tokens": 3693,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -94,11 +94,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 17.16,
+      "elapsed_seconds": 11.66,
       "usage": {
-        "completion_tokens": 3262,
+        "completion_tokens": 2505,
         "prompt_tokens": 1005,
-        "total_tokens": 4267,
+        "total_tokens": 3510,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -120,11 +120,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 13.63,
+      "elapsed_seconds": 13.85,
       "usage": {
-        "completion_tokens": 2663,
+        "completion_tokens": 2652,
         "prompt_tokens": 1006,
-        "total_tokens": 3669,
+        "total_tokens": 3658,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -146,11 +146,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 13.96,
+      "elapsed_seconds": 15.17,
       "usage": {
-        "completion_tokens": 2889,
+        "completion_tokens": 2328,
         "prompt_tokens": 1010,
-        "total_tokens": 3899,
+        "total_tokens": 3338,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -172,11 +172,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 12.21,
+      "elapsed_seconds": 12.87,
       "usage": {
-        "completion_tokens": 2461,
+        "completion_tokens": 2600,
         "prompt_tokens": 1029,
-        "total_tokens": 3490,
+        "total_tokens": 3629,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,
@@ -198,11 +198,11 @@
       "max_score": 9,
       "percentage": 72.22,
       "critical_failure": false,
-      "elapsed_seconds": 15.69,
+      "elapsed_seconds": 18.38,
       "usage": {
-        "completion_tokens": 2860,
+        "completion_tokens": 3062,
         "prompt_tokens": 998,
-        "total_tokens": 3858,
+        "total_tokens": 4060,
         "completion_tokens_details": null,
         "prompt_tokens_details": {
           "audio_tokens": null,

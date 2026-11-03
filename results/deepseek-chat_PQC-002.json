@@ -4,13 +4,13 @@
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 14.8,
-  "created_at_utc": "2026-11-03T08:21:46.971025+00:00",
+  "elapsed_seconds": 18.09,
+  "created_at_utc": "2026-11-03T08:46:00.629118+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 2725,
+    "completion_tokens": 3214,
     "prompt_tokens": 1185,
-    "total_tokens": 3910,
+    "total_tokens": 4399,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -31,130 +31,147 @@
     "migration_steps": [
       {
         "step_number": 1,
-        "activity": "Establish PQC migration program governance: appoint technical lead, define scope, document assumptions, and create a risk register covering HSM EOL, government contract deadline, and customer PQC plan requirement.",
-        "activity_type": "planning",
+        "activity": "Inventory all cryptographic assets: TLS endpoints, API signing keys, HSM key objects, certificate authorities, key lifetimes, data flows, and merchant-facing interfaces. Record RSA-2048 and ECDSA P-256 usage locations.",
+        "activity_type": "inventory",
         "start_date": "2025-01-06",
-        "end_date": "2025-01-17",
+        "end_date": "2025-01-24",
         "prerequisites": [
-          "CTO sponsorship and named program owner",
-          "Access to current architecture and vendor contract documentation"
+          "CTO authorizes cross-team access to configuration repositories and HSM audit logs",
+          "Engineers allocated part-time (max 3 engineers, no PQC experience)"
         ]
       },
       {
         "step_number": 2,
-        "activity": "Perform cryptographic asset inventory: enumerate all TLS endpoints, API signing keys, certificate authorities, HSM key objects, key lifetimes, and data flows. Classify assets by exposure, lifetime, and quantum risk.",
-        "activity_type": "inventory",
-        "start_date": "2025-01-13",
+        "activity": "Perform risk assessment and crypto-agility gap analysis: classify assets by quantum risk (harvest-now-decrypt-later vs signature forgery), identify hard-coded algorithms, and document current HSM Luna SA 5 constraints.",
+        "activity_type": "risk_assessment",
+        "start_date": "2025-01-27",
         "end_date": "2025-02-07",
         "prerequisites": [
-          "Program governance established",
-          "Read access to HSM audit logs, TLS configuration, and API gateway configuration"
+          "Step 1 inventory complete",
+          "Access to Luna SA 5 firmware version and capability documentation"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Conduct risk assessment and prioritization: map inventoried assets to harvest-now-decrypt-later exposure, contract obligations, and customer requirements. Prioritize TLS key establishment (ML-KEM role) and API signature (ML-DSA role) assets.",
-        "activity_type": "risk_assessment",
+        "activity": "Engage HSM vendor (Thales/SafeNet) to obtain written confirmation of Luna 8 PQC firmware roadmap, ML-KEM/ML-DSA support status, FIPS certification timeline, and migration tooling. Request evidence, not marketing claims.",
+        "activity_type": "vendor_engagement",
         "start_date": "2025-02-03",
         "end_date": "2025-02-21",
         "prerequisites": [
-          "Cryptographic asset inventory completed",
-          "Customer PQC plan requirement documented"
+          "Step 2 identifies HSM-dependent assets",
+          "Procurement/legal contact established with vendor account manager"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Engage HSM vendor (Thales/SafeNet) to obtain written confirmation of Luna 8 PQC firmware roadmap, supported algorithms (ML-KEM, ML-DSA), certification status (FIPS 140-3), migration tooling, and Luna SA 5 key export/migration constraints.",
+        "activity": "Engage TLS/API software vendors and open-source maintainers to confirm PQC algorithm support (ML-KEM for key establishment, ML-DSA for signatures) and hybrid mode availability in current stack.",
         "activity_type": "vendor_engagement",
-        "start_date": "2025-01-20",
+        "start_date": "2025-02-10",
         "end_date": "2025-02-28",
         "prerequisites": [
-          "Program governance established",
-          "Asset inventory scope known"
+          "Step 1 inventory lists all software components and versions",
+          "Step 2 identifies which components terminate TLS or sign API requests"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Engage TLS/API software vendors and open-source maintainers to confirm PQC algorithm support (ML-KEM for key establishment, ML-DSA for signatures), hybrid mode support, and HSM integration compatibility.",
-        "activity_type": "vendor_engagement",
-        "start_date": "2025-02-03",
+        "activity": "Procure Luna 8 HSM(s) for non-production lab and production replacement, including support contract and migration services quote. Confirm delivery lead time and whether PQC firmware is included or separately licensed.",
+        "activity_type": "procurement",
+        "start_date": "2025-02-24",
         "end_date": "2025-03-14",
         "prerequisites": [
-          "Asset inventory identifies TLS and API software stack",
-          "HSM vendor engagement initiated"
+          "Step 3 vendor engagement confirms Luna 8 availability and PQC roadmap in writing",
+          "Budget approval for HSM hardware and support within $50,000 cap"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Procure Luna 8 HSM hardware and required licenses for non-production lab environment, subject to written vendor confirmation of PQC roadmap and migration path.",
-        "activity_type": "procurement",
+        "activity": "Develop detailed migration plan and architecture: define hybrid PQC transition strategy (classical + ML-KEM/ML-DSA where supported), key ceremony procedures, rollback plan, and downtime schedule respecting 2-hour quarterly limit.",
+        "activity_type": "planning",
         "start_date": "2025-03-03",
-        "end_date": "2025-03-28",
+        "end_date": "2025-03-21",
         "prerequisites": [
-          "HSM vendor written confirmation of PQC firmware roadmap and Luna SA 5 migration constraints",
-          "Budget approval for hardware and licenses"
+          "Step 2 risk assessment complete",
+          "Step 3 and Step 4 vendor responses received",
+          "Step 5 procurement initiated"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Build non-production lab: install Luna 8 HSM, configure TLS and API test environments, and validate current RSA-2048/ECDSA P-256 operations as a baseline. Do not attempt ML-KEM or ML-DSA production use until firmware is available and validated.",
+        "activity": "Stand up non-production lab with Luna 8 HSM and test classical algorithm migration (RSA/ECDSA key import/generation), HA configuration, backup/restore, and application integration. Do NOT assume PQC algorithms are available.",
         "activity_type": "lab_testing",
-        "start_date": "2025-03-31",
-        "end_date": "2025-04-25",
+        "start_date": "2025-03-24",
+        "end_date": "2025-04-18",
         "prerequisites": [
-          "Luna 8 hardware and licenses delivered",
-          "Lab environment provisioned"
+          "Step 5 Luna 8 hardware delivered",
+          "Step 6 migration plan approved by CTO",
+          "Lab environment isolated from production; no production downtime required"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Develop and document the PQC migration plan and target architecture, including hybrid TLS (classical + ML-KEM when available), ML-DSA signature roadmap, HSM firmware dependency, rollback procedures, and explicit statement of what is not yet achievable.",
-        "activity_type": "planning",
+        "activity": "Test software-only PQC/hybrid capabilities outside the HSM where feasible (e.g., TLS termination in load balancer or application using ML-KEM hybrid key exchange, ML-DSA signatures in non-HSM code paths) to validate interoperability and performance.",
+        "activity_type": "lab_testing",
         "start_date": "2025-04-07",
-        "end_date": "2025-05-09",
+        "end_date": "2025-05-02",
         "prerequisites": [
-          "Risk assessment completed",
-          "Vendor engagement responses received",
-          "Lab baseline established"
+          "Step 4 software vendor confirmations received",
+          "Step 7 lab environment operational",
+          "No production impact; uses non-production certificates and test merchants"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Deliver documented PQC migration plan to largest customer and government contract evaluators, clearly distinguishing confirmed capabilities from vendor forecasts and stating that ML-KEM/ML-DSA production enablement depends on Luna 8 firmware availability (vendor-stated Q3 2028).",
+        "activity": "Produce documented PQC migration plan and roadmap for customer/regulatory review, explicitly stating current capabilities, vendor dependencies, and that ML-KEM/ML-DSA HSM firmware is not available until Q3 2028 per vendor forecast.",
         "activity_type": "planning",
-        "start_date": "2025-05-12",
+        "start_date": "2025-05-05",
         "end_date": "2025-05-23",
         "prerequisites": [
-          "PQC migration plan documented and internally approved",
-          "Customer requirement terms reviewed"
+          "Step 6 migration plan complete",
+          "Step 7 and Step 8 lab results documented",
+          "Step 3 vendor written roadmap evidence available"
         ]
       },
       {
         "step_number": 10,
-        "activity": "Execute Luna SA 5 to Luna 8 production migration for existing classical algorithms (RSA-2048 TLS, ECDSA P-256 API signatures) within a quarterly 2-hour maintenance window, using vendor-supported key migration procedures. This addresses HSM EOL but does not deliver PQC algorithms.",
+        "activity": "Execute production HSM replacement from Luna SA 5 to Luna 8 using classical algorithms only (RSA-2048 TLS, ECDSA P-256 API signatures), within a single 2-hour quarterly maintenance window. PQC algorithms remain unavailable in HSM.",
         "activity_type": "production_crypto_change",
-        "start_date": "2025-06-02",
-        "end_date": "2025-06-27",
+        "start_date": "2025-06-14",
+        "end_date": "2025-06-14",
         "prerequisites": [
-          "Luna 8 lab validation of classical algorithm parity completed",
-          "Vendor-supported key migration procedure confirmed",
-          "Rollback plan tested",
-          "Quarterly maintenance window approved",
-          "Change advisory board approval"
+          "Step 7 lab testing passed for classical algorithms",
+          "Step 6 rollback plan approved",
+          "Change advisory board approval",
+          "Downtime window scheduled within 2-hour quarterly limit",
+          "Merchant notification completed",
+          "Luna 8 production configuration validated in lab"
         ]
       },
       {
         "step_number": 11,
-        "activity": "Plan and schedule Luna 8 PQC firmware upgrade and ML-KEM/ML-DSA enablement for after vendor firmware availability (earliest vendor-stated Q3 2028), contingent on written confirmation, FIPS validation, and lab testing. No production PQC crypto change is scheduled within the 6-month window.",
+        "activity": "Deploy software-layer hybrid PQC where vendor-supported and validated in lab (e.g., hybrid TLS key establishment using ML-KEM in load balancer/application, if confirmed available), without HSM-based PQC. Schedule within quarterly downtime if required.",
+        "activity_type": "major_application_deployment",
+        "start_date": null,
+        "end_date": null,
+        "prerequisites": [
+          "Step 8 lab testing confirms production-ready software PQC/hybrid support",
+          "Step 10 production HSM replacement stable for at least one quarter",
+          "Vendor confirms no HSM dependency for selected PQC path",
+          "Change advisory board approval and downtime window within 2-hour quarterly limit"
+        ]
+      },
+      {
+        "step_number": 12,
+        "activity": "Plan and schedule HSM firmware upgrade enabling ML-KEM and ML-DSA only after vendor delivers production firmware, FIPS validation evidence, and migration tooling. Earliest forecast Q3 2028; not achievable within 6 months.",
         "activity_type": "hsm_firmware_upgrade",
         "start_date": null,
         "end_date": null,
         "prerequisites": [
-          "Vendor releases PQC-enabled firmware with written confirmation",
-          "Firmware certification status confirmed",
-          "Lab testing of ML-KEM and ML-DSA completed",
-          "Application and TLS stack PQC support validated",
-          "Change advisory board approval"
+          "Vendor releases production PQC firmware (forecast Q3 2028, unconfirmed)",
+          "Vendor provides FIPS 140-3 validation certificate for PQC algorithms",
+          "Lab testing of PQC firmware completed",
+          "Step 6 migration plan updated with PQC key ceremonies",
+          "Change advisory board approval and downtime window"
         ]
       }
     ],
@@ -162,68 +179,73 @@
       {
         "blocker_id": "B-001",
         "category": "HSM_VENDOR",
-        "blocker": "Luna 8 PQC firmware enabling ML-KEM and ML-DSA is not available until vendor-stated Q3 2028.",
-        "reason": "Without PQC-enabled firmware, the HSM cannot perform ML-KEM key establishment or ML-DSA signing in production. Marketing 'PQC-ready' claims are not a validated capability.",
-        "resolution_required": "Obtain written vendor commitment with firmware release date, supported algorithm list, and certification status. Re-plan PQC production enablement after firmware availability and validation."
+        "blocker": "Luna 8 PQC firmware enabling ML-KEM and ML-DSA is not available until Q3 2028 (vendor forecast, unconfirmed).",
+        "reason": "The HSM cannot perform post-quantum key establishment or signatures until firmware is delivered and validated. Marketing 'PQC-ready' claim does not constitute available capability.",
+        "resolution_required": "Obtain written vendor commitment with delivery date, FIPS validation plan, and migration tooling. Plan HSM-based PQC for post-Q3 2028; use software-layer PQC where possible in interim."
       },
       {
         "blocker_id": "B-002",
         "category": "TECHNICAL",
-        "blocker": "No engineer on staff has PQC experience.",
-        "reason": "PQC algorithm selection, hybrid mode configuration, and HSM integration require specialized knowledge; errors could cause outages or security weaknesses.",
-        "resolution_required": "Engage external PQC consultant or training provider within budget; require knowledge transfer and documented runbooks."
+        "blocker": "No PQC experience among 3 engineers; PQC algorithm integration, key ceremonies, and hybrid modes require specialist knowledge.",
+        "reason": "ML-KEM and ML-DSA integration into TLS and API signing requires understanding of hybrid key exchange, parameter sets, and HSM key attributes. Inexperience increases misconfiguration risk.",
+        "resolution_required": "Budget for external PQC consultant or training; allocate engineer time for vendor-led workshops; use vendor professional services for lab testing."
       },
       {
         "blocker_id": "B-003",
         "category": "PROCUREMENT",
-        "blocker": "Luna 8 hardware and licenses must be procured within a $50,000 total migration budget.",
-        "reason": "Hardware, licenses, consulting, and testing costs compete for limited budget; procurement lead times may exceed plan.",
-        "resolution_required": "Obtain formal quotes, confirm budget allocation, and place order only after vendor written PQC roadmap confirmation."
+        "blocker": "Luna 8 hardware procurement lead time and cost may exceed budget or timeline if PQC firmware is separately licensed.",
+        "reason": "Budget is capped at $50,000; HSM hardware, support, and migration services may consume most of it. Delivery lead time could delay lab testing.",
+        "resolution_required": "Obtain fixed quote including PQC firmware licensing terms; confirm delivery date; prioritize single production HSM plus lab unit if budget allows."
       },
       {
         "blocker_id": "B-004",
         "category": "TECHNICAL",
-        "blocker": "Luna SA 5 key export and migration constraints to Luna 8 are unconfirmed.",
-        "reason": "Legacy HSM key migration may be restricted by firmware or licensing, risking inability to migrate existing keys within the 2-hour downtime limit.",
-        "resolution_required": "Obtain vendor-written migration procedure and test in lab before production cutover."
+        "blocker": "Software stack (TLS termination, API signing libraries) may not support ML-KEM or ML-DSA in production-ready form.",
+        "reason": "Even if HSM firmware were available, applications must support PQC algorithms and hybrid modes. Vendor confirmations are pending.",
+        "resolution_required": "Complete vendor engagement (Step 4); test software-only PQC in lab (Step 8); document unsupported components as residual risk."
       },
       {
         "blocker_id": "B-005",
         "category": "OPERATIONAL",
-        "blocker": "Only 2 hours of downtime per quarter is tolerated.",
-        "reason": "HSM replacement and key migration may exceed 2 hours if not fully rehearsed; production PQC changes cannot be rushed.",
-        "resolution_required": "Rehearse migration in lab, design blue/green or parallel-run cutover, and schedule within approved quarterly maintenance window."
+        "blocker": "Only 2 hours downtime per quarter limits ability to perform HSM replacement and application changes in a single window.",
+        "reason": "HSM replacement, key migration, and application reconfiguration may exceed 2 hours if not carefully rehearsed. Multiple changes cannot be bundled.",
+        "resolution_required": "Rehearse cutover in lab; design blue/green or rolling migration where possible; split changes across quarterly windows; obtain merchant agreement for extended window only if absolutely necessary."
       },
       {
         "blocker_id": "B-006",
         "category": "REGULATORY",
-        "blocker": "Government contract requires 'quantum-resistant' cryptography, but PQC algorithms cannot be production-enabled within 6 months.",
-        "reason": "Contract requirement may not be satisfiable with current HSM firmware timeline; misrepresenting capabilities creates compliance and legal risk.",
-        "resolution_required": "Negotiate contract language accepting a documented migration plan with milestone dates, or defer PQC-dependent contract acceptance until firmware is validated."
+        "blocker": "Government contract requires 'quantum-resistant' cryptography; no formal certification or standard defines this for payment processors yet.",
+        "reason": "The requirement may be interpreted strictly (ML-KEM/ML-DSA in production) which is not achievable within 6 months due to HSM firmware. Ambiguity creates contractual risk.",
+        "resolution_required": "Engage contracting authority to clarify acceptance criteria; propose documented migration plan with hybrid/software PQC milestones as interim compliance; obtain written acceptance of roadmap."
       },
       {
         "blocker_id": "B-007",
-        "category": "TECHNICAL",
-        "blocker": "TLS and API software stack PQC support (ML-KEM hybrid key establishment, ML-DSA signatures) is unconfirmed.",
-        "reason": "Even with PQC HSM firmware, applications must support PQC algorithms and hybrid modes; lack of support blocks end-to-end PQC.",
-        "resolution_required": "Obtain written confirmation from software vendors/maintainers and validate in lab."
+        "category": "CORE_BANKING_VENDOR",
+        "blocker": "Payment processing upstream/downstream dependencies (card networks, acquiring banks) may not support PQC algorithms, limiting end-to-end quantum resistance.",
+        "reason": "QuantumLeap can only control its own endpoints; merchant and network interfaces may require classical algorithms for interoperability.",
+        "resolution_required": "Survey merchant and network PQC readiness; implement hybrid modes where supported; document scope of quantum resistance as boundary-limited."
       }
     ],
     "vendor_dependencies": [
       {
         "vendor": "Thales/SafeNet (Luna 8 HSM)",
         "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of PQC firmware release date (vendor-stated Q3 2028), supported algorithms (ML-KEM, ML-DSA), FIPS 140-3 certification status, and Luna SA 5 to Luna 8 key migration procedure."
+        "evidence_required": "Written statement of ML-KEM and ML-DSA firmware availability date (forecast Q3 2028), FIPS 140-3 validation certificate for PQC algorithms, migration tooling documentation, and licensing terms for PQC firmware."
       },
       {
-        "vendor": "TLS termination software vendor",
+        "vendor": "TLS/load balancer software vendor",
         "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of ML-KEM hybrid key establishment support and HSM integration compatibility."
+        "evidence_required": "Confirmation of ML-KEM hybrid key exchange support in production release, version number, and interoperability test results."
       },
       {
-        "vendor": "API gateway/signing software vendor",
+        "vendor": "API signing library/framework vendor",
         "pqc_support_status": "unconfirmed",
-        "evidence_required": "Written confirmation of ML-DSA signature support and HSM integration compatibility."
+        "evidence_required": "Confirmation of ML-DSA signature support, version number, and performance benchmarks."
+      },
+      {
+        "vendor": "Certificate authority (public/private)",
+        "pqc_support_status": "unconfirmed",
+        "evidence_required": "Confirmation of ML-DSA certificate issuance capability and hybrid certificate chain support."
       }
     ],
     "algorithm_roles": {
@@ -236,24 +258,28 @@
       "within_budget": true,
       "cost_assumptions": [
         {
-          "category": "Luna 8 HSM hardware and licenses (non-production lab plus production unit)",
-          "estimated_cost_usd": 28000
+          "category": "Luna 8 HSM hardware (1 production + 1 lab unit, entry configuration)",
+          "estimated_cost_usd": 22000
         },
         {
-          "category": "External PQC consultant (training, architecture review, lab testing support)",
+          "category": "HSM support contract (1 year)",
+          "estimated_cost_usd": 6000
+        },
+        {
+          "category": "External PQC consultant (10 days)",
           "estimated_cost_usd": 12000
         },
         {
-          "category": "Lab environment and testing infrastructure",
-          "estimated_cost_usd": 3500
+          "category": "Vendor professional services for migration lab and cutover",
+          "estimated_cost_usd": 5000
         },
         {
-          "category": "Training and certification for 3 engineers",
-          "estimated_cost_usd": 3000
+          "category": "Engineer training (PQC fundamentals and HSM administration)",
+          "estimated_cost_usd": 2500
         },
         {
-          "category": "Contingency (approximately 4%)",
-          "estimated_cost_usd": 2000
+          "category": "Contingency (approx 4%)",
+          "estimated_cost_usd": 1000
         }
       ]
     },
@@ -298,8 +324,8 @@
       "G4: The $48,500.00 estimate is within the $50,000.00 limit and the numeric cost breakdown reconciles."
     ],
     "failures": [
-      "G1: Prohibited activity 'plan and schedule luna 8 pqc firmware upgrade and ml-kem/ml-dsa enablement for after vendor firmware' has missing or invalid dates.",
-      "G1: Production migration prerequisites do not clearly include completed lab testing.",
+      "G1: Prohibited activity 'deploy software-layer hybrid pqc where vendor-supported and validated in lab (e.g., hybrid tls key e' has missing or invalid dates.",
+      "G1: Prohibited activity 'plan and schedule hsm firmware upgrade enabling ml-kem and ml-dsa only after vendor delivers product' has missing or invalid dates.",
       "G1: Production migration prerequisites do not clearly include written HSM compatibility confirmation.",
       "G1: Production migration prerequisites do not clearly include security validation.",
       "G2: Required blocker 'hsm_firmware' is missing or does not sufficiently explain its context and resolution.",

@@ -147,20 +147,21 @@ def evaluate_g1(params, response):
             )
 
     dependencies = response.get("vendor_dependencies", [])
-    if isinstance(dependencies, list):
-        for vendor in dependencies:
-            if not isinstance(vendor, dict):
-                continue
-            vendor_name = norm(vendor.get("vendor"))
-            status = norm(vendor.get("pqc_support_status"))
-            if status in {
-                "confirmed", "supported", "available", "compatible",
-                "pqc-ready", "pqc ready"
-            }:
-                failures.append(
-                    f"G1: Vendor '{vendor_name}' is incorrectly presented "
-                    "as having confirmed PQC support."
-                )
+    if params.get("enforce_unconfirmed_vendors", True):
+        if isinstance(dependencies, list):
+            for vendor in dependencies:
+                if not isinstance(vendor, dict):
+                    continue
+                vendor_name = norm(vendor.get("vendor"))
+                status = norm(vendor.get("pqc_support_status"))
+                if status in {
+                    "confirmed", "supported", "available", "compatible",
+                    "pqc-ready", "pqc ready"
+                }:
+                    failures.append(
+                        f"G1: Vendor '{vendor_name}' is incorrectly presented "
+                        "as having confirmed PQC support."
+                    )
 
     positive_claim_patterns = [
         r"\\b(?:thales(?:\\s+luna(?:\\s+network)?\\s+hsm(?:\\s+7)?)?|"
@@ -187,19 +188,20 @@ def evaluate_g1(params, response):
     for step in production_steps:
         prerequisites = norm(step.get("prerequisites", []))
 
-        prior_lab_steps = [
-            item for item in steps
-            if isinstance(item, dict)
-            and norm(item.get("activity_type")) == "lab_testing"
-            and parse_date(item.get("end_date"))
-            and parse_date(step.get("start_date"))
-            and parse_date(item.get("end_date")) < parse_date(step.get("start_date"))
-        ]
-        if not prior_lab_steps:
-            failures.append(
-                "G1: Production cryptographic change is scheduled without "
-                "a completed earlier laboratory-testing activity."
-            )
+        if params.get("enforce_lab_before_production", True):
+            prior_lab_steps = [
+                item for item in steps
+                if isinstance(item, dict)
+                and norm(item.get("activity_type")) == "lab_testing"
+                and parse_date(item.get("end_date"))
+                and parse_date(step.get("start_date"))
+                and parse_date(item.get("end_date")) < parse_date(step.get("start_date"))
+            ]
+            if not prior_lab_steps:
+                failures.append(
+                    "G1: Production cryptographic change is scheduled without "
+                    "a completed earlier laboratory-testing activity."
+                )
 
         for label, terms in required_prerequisite_concepts:
             if not all(term in prerequisites for term in terms):
@@ -527,8 +529,8 @@ def evaluate_g3(params, response):
         successes.append("G3: Required migration sequence is satisfied.")
 
     # Production must be later than risk assessment, vendor engagement and
-    # lab testing, even if a task configuration omits one of these relations.
-    if production_step_exists:
+    # lab testing, unless the task disables this hardcoded check.
+    if production_step_exists and params.get("enforce_production_after_validation", True):
         prod_index = min(production_positions)
         for required_prior in ("risk_assessment", "vendor_engagement", "lab_testing"):
             prior_indices = [

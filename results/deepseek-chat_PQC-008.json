@@ -4,13 +4,13 @@
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 15.69,
-  "created_at_utc": "2026-11-03T08:23:24.423105+00:00",
+  "elapsed_seconds": 18.38,
+  "created_at_utc": "2026-11-03T08:47:37.956217+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 2860,
+    "completion_tokens": 3062,
     "prompt_tokens": 998,
-    "total_tokens": 3858,
+    "total_tokens": 4060,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -32,7 +32,7 @@
       {
         "step_number": 1,
         "activity": "Establish PQC migration programme governance, inventory all device models, firmware versions, cryptographic libraries, and cloud endpoints; define cryptographic bill of materials (CBOM).",
-        "activity_type": "Discovery and governance",
+        "activity_type": "Discovery and Governance",
         "start_date": "2025-01-06",
         "end_date": "2025-02-28",
         "prerequisites": [
@@ -43,129 +43,152 @@
       },
       {
         "step_number": 2,
-        "activity": "Profile memory, flash, CPU, and power budgets on representative devices (thermostat, camera, door lock) for ECC P-256 baseline and candidate PQC algorithms; measure ML-KEM and ML-DSA stack/heap and code size using reference implementations.",
-        "activity_type": "Technical assessment",
-        "start_date": "2025-02-03",
-        "end_date": "2025-04-11",
+        "activity": "Benchmark ML-KEM and ML-DSA memory/CPU footprints on representative device hardware (64KB RAM, 256KB flash) using reference implementations; measure secure boot and TLS handshake impact.",
+        "activity_type": "Technical Feasibility Assessment",
+        "start_date": "2025-03-03",
+        "end_date": "2025-04-25",
         "prerequisites": [
-          "Step 1 CBOM complete",
-          "Hardware development kits and debug probes available",
-          "Reference PQC implementations (e.g., NIST FIPS 203/204 reference code) obtained"
+          "Step 1 CBOM completed",
+          "Development hardware and debug probes available",
+          "NIST FIPS 203/204 reference code obtained"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Evaluate hybrid and PQC-only TLS 1.2/1.3 options for constrained devices; assess ML-KEM-512/768 and ML-DSA-44/65 memory footprints against 64KB RAM and 256KB flash; determine feasibility of secure boot with ML-DSA versus hybrid ECDSA+ML-DSA.",
-        "activity_type": "Architecture and feasibility",
-        "start_date": "2025-03-03",
-        "end_date": "2025-05-09",
+        "activity": "Evaluate hybrid and pure-PQC TLS 1.3 profiles for constrained devices; assess whether TLS 1.2 can be retained with hybrid key exchange or must be upgraded to TLS 1.3.",
+        "activity_type": "Protocol Architecture Design",
+        "start_date": "2025-04-28",
+        "end_date": "2025-06-06",
         "prerequisites": [
-          "Step 2 profiling results",
-          "TLS library vendor roadmaps (e.g., mbedTLS, wolfSSL) obtained",
-          "AWS PQC roadmap documentation reviewed"
+          "Step 2 benchmark results",
+          "Cloud backend TLS termination capabilities documented"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Select target cryptographic architecture: hybrid key establishment (ECDHE P-256 + ML-KEM) for TLS, and hybrid or ML-DSA-only secure boot depending on flash budget; document algorithm roles and fallback policy.",
-        "activity_type": "Design decision",
-        "start_date": "2025-05-12",
-        "end_date": "2025-05-30",
+        "activity": "Select candidate PQC algorithms and parameter sets: ML-KEM-512/768 for key establishment, ML-DSA-44/65 for secure boot signatures; define hybrid fallback (ECC P-256 + ML-KEM) for transition period.",
+        "activity_type": "Algorithm Selection",
+        "start_date": "2025-06-09",
+        "end_date": "2025-07-04",
         "prerequisites": [
-          "Step 3 feasibility report",
-          "Risk acceptance criteria approved by product security board"
+          "Step 3 protocol architecture design",
+          "NIST FIPS 203/204 final standards reviewed"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Engage silicon vendor, TLS library vendor, and AWS to confirm PQC support timelines, memory requirements, and certification implications; obtain written roadmaps and support statements.",
-        "activity_type": "Vendor engagement",
-        "start_date": "2025-04-14",
-        "end_date": "2025-06-13",
+        "activity": "Engage silicon and crypto-library vendors (MCU vendor, TLS stack vendor, secure element vendor) to obtain PQC roadmap, memory footprint data, and hardware acceleration availability; request written evidence.",
+        "activity_type": "Vendor Engagement",
+        "start_date": "2025-03-03",
+        "end_date": "2025-07-31",
         "prerequisites": [
-          "Step 3 preliminary architecture",
-          "NDAs in place with vendors"
+          "Step 1 CBOM completed",
+          "Procurement and legal review process initiated"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Develop and unit-test PQC integration in a non-production firmware branch: integrate ML-KEM and ML-DSA into TLS stack and secure boot chain; run on emulator and hardware development kits.",
-        "activity_type": "Prototype development",
-        "start_date": "2025-06-02",
-        "end_date": "2025-08-22",
+        "activity": "Develop firmware prototype with hybrid key exchange and PQC secure boot on constrained hardware; validate RAM/flash budget and boot-time impact.",
+        "activity_type": "Prototype Development",
+        "start_date": "2025-07-07",
+        "end_date": "2025-09-26",
         "prerequisites": [
-          "Step 4 architecture decision",
-          "Step 5 vendor support confirmations for library versions",
-          "Development environment isolated from production"
+          "Step 4 algorithm selection",
+          "Step 5 vendor library availability (at least beta)",
+          "Development hardware available"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Conduct performance, memory, and power regression testing on all device classes; validate secure boot with PQC signatures and TLS handshake with hybrid key exchange; document resource headroom.",
-        "activity_type": "Validation and testing",
-        "start_date": "2025-08-25",
-        "end_date": "2025-10-10",
+        "activity": "Design cloud-side PQC readiness: plan AWS KMS/ACM/ALB support for ML-KEM (forecast 2027), define hybrid certificate strategy, and prepare backend RSA-2048 deprecation path.",
+        "activity_type": "Cloud Architecture Design",
+        "start_date": "2025-07-07",
+        "end_date": "2025-09-26",
         "prerequisites": [
-          "Step 6 prototype build",
-          "Test harness and device farm available"
+          "Step 3 protocol architecture design",
+          "AWS PQC roadmap documentation obtained"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Perform security review and threat modelling of PQC integration; assess side-channel resistance, key storage, and downgrade attack resistance; obtain internal security sign-off.",
-        "activity_type": "Security assurance",
-        "start_date": "2025-09-15",
-        "end_date": "2025-10-31",
+        "activity": "Conduct security review and threat model update for PQC migration, including hybrid transition risks, downgrade attacks, and firmware update integrity.",
+        "activity_type": "Security Review",
+        "start_date": "2025-09-29",
+        "end_date": "2025-10-24",
         "prerequisites": [
-          "Step 7 test results",
-          "Independent cryptographic review resource allocated"
+          "Step 6 prototype results",
+          "Step 7 cloud architecture design"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Prepare cloud backend for PQC: enable hybrid TLS termination on AWS load balancers/CloudFront where supported; plan for ML-KEM support expected in 2027; implement crypto-agility in backend services.",
-        "activity_type": "Cloud readiness",
-        "start_date": "2025-07-01",
-        "end_date": "2026-12-31",
+        "activity": "Prepare change management plan and schedule production rollout windows outside the Nov 15–Jan 15 change freeze; define rollback and recovery procedures.",
+        "activity_type": "Change Management Planning",
+        "start_date": "2025-10-27",
+        "end_date": "2025-11-14",
         "prerequisites": [
-          "Step 5 AWS roadmap confirmation",
-          "Backend change approval outside freeze windows"
+          "Step 8 security review completed",
+          "Operations team availability confirmed"
         ]
       },
       {
         "step_number": 10,
-        "activity": "Plan and execute pilot deployment to a limited fleet (e.g., internal test devices and beta customers) during allowed change windows, avoiding Nov 15–Jan 15 freeze; monitor for interoperability and performance issues.",
-        "activity_type": "Pilot deployment",
-        "start_date": "2026-02-02",
-        "end_date": "2026-04-30",
+        "activity": "Execute non-production staging validation of hybrid PQC firmware and cloud configuration; complete interoperability testing with AWS endpoints.",
+        "activity_type": "Staging Validation",
+        "start_date": "2026-01-19",
+        "end_date": "2026-03-13",
         "prerequisites": [
-          "Step 8 security sign-off",
-          "Step 9 cloud hybrid TLS enabled in staging",
-          "Change advisory board approval"
+          "Change freeze ended (2026-01-15)",
+          "Step 9 change management plan approved",
+          "Vendor production-grade PQC libraries available"
         ]
       },
       {
         "step_number": 11,
-        "activity": "Stage production firmware rollout in phases across device models, respecting change freeze; maintain ECC fallback for legacy cloud endpoints until AWS ML-KEM support is confirmed and validated.",
-        "activity_type": "Production rollout",
-        "start_date": "2026-05-04",
-        "end_date": "2027-06-30",
+        "activity": "Pilot production rollout to a limited device cohort (e.g., 1% of fleet) with hybrid PQC; monitor stability, performance, and cloud interoperability.",
+        "activity_type": "Pilot Deployment",
+        "start_date": "2026-03-16",
+        "end_date": "2026-05-08",
         "prerequisites": [
-          "Step 10 pilot success criteria met",
-          "AWS ML-KEM production support confirmed and tested (expected 2027, unconfirmed)",
-          "Rollback plan approved"
+          "Step 10 staging validation passed",
+          "Rollback procedures tested",
+          "Customer support briefed"
         ]
       },
       {
         "step_number": 12,
-        "activity": "Complete migration to ML-KEM for key establishment and ML-DSA for secure boot where feasible; decommission ECC-only paths after validation; update CBOM and documentation.",
-        "activity_type": "Final migration and decommission",
-        "start_date": "2027-07-01",
-        "end_date": "2028-06-30",
+        "activity": "Full production rollout of hybrid PQC firmware via OTA updates, phased by device model; maintain ECC fallback for legacy devices.",
+        "activity_type": "Production Rollout",
+        "start_date": "2026-05-11",
+        "end_date": "2026-12-18",
         "prerequisites": [
-          "Step 11 full fleet rollout",
-          "AWS ML-KEM support validated in production",
-          "Regulatory and certification closure"
+          "Step 11 pilot success criteria met",
+          "OTA infrastructure capacity validated",
+          "Change freeze windows respected (no rollout Nov 15–Jan 15)"
+        ]
+      },
+      {
+        "step_number": 13,
+        "activity": "Migrate cloud backend from RSA-2048 to hybrid PQC certificates and ML-KEM key establishment once AWS confirms production support (forecast 2027); validate end-to-end.",
+        "activity_type": "Cloud PQC Migration",
+        "start_date": "2027-01-04",
+        "end_date": "2027-06-30",
+        "prerequisites": [
+          "AWS ML-KEM production support confirmed and documented",
+          "Step 12 device fleet hybrid-capable",
+          "Change freeze windows respected"
+        ]
+      },
+      {
+        "step_number": 14,
+        "activity": "Transition from hybrid to pure PQC where feasible; deprecate ECC P-256 and RSA-2048 after device lifetime and regulatory review.",
+        "activity_type": "Algorithm Deprecation",
+        "start_date": "2028-01-03",
+        "end_date": "2029-12-31",
+        "prerequisites": [
+          "Step 13 cloud migration complete",
+          "All devices updated to PQC-capable firmware",
+          "Regulatory guidance on PQC transition reviewed"
         ]
       }
     ],
@@ -173,71 +196,71 @@
       {
         "blocker_id": "BLK-01",
         "category": "Technical",
-        "blocker": "ML-KEM and ML-DSA memory footprint may exceed 64KB RAM / 256KB flash on constrained devices.",
-        "reason": "NIST PQC algorithms require larger keys, ciphertexts, and code size than ECC P-256; secure boot with ML-DSA may not fit alongside application firmware.",
-        "resolution_required": "Complete Step 2 profiling; if infeasible, adopt hybrid approach with ML-KEM only for TLS and retain ECDSA for secure boot until hardware refresh, or select devices with larger memory for PQC-capable firmware."
+        "blocker": "ML-KEM and ML-DSA memory footprint may exceed 64KB RAM / 256KB flash on current MCU.",
+        "reason": "NIST PQC algorithms require larger keys, ciphertexts, and working memory than ECC P-256; secure boot and TLS stacks may not fit without optimization or hardware acceleration.",
+        "resolution_required": "Benchmark results from Step 2; vendor-provided optimized libraries; possible MCU upgrade or hardware crypto accelerator; written confirmation of memory footprint from silicon vendor."
       },
       {
         "blocker_id": "BLK-02",
-        "category": "Vendor dependency",
-        "blocker": "AWS ML-KEM support is forecast for 2027 but not confirmed as available or validated.",
-        "reason": "Cloud backend cannot negotiate ML-KEM until AWS provides production support; presenting it as available would be an unconfirmed dependency.",
-        "resolution_required": "Obtain written AWS roadmap and support commitment; validate in staging once available; maintain hybrid ECDHE fallback until confirmed."
+        "category": "Vendor",
+        "blocker": "AWS ML-KEM production support is forecast for 2027, not currently available.",
+        "reason": "Cloud backend cannot terminate hybrid or pure ML-KEM TLS until AWS provides production support; device-cloud interoperability depends on this.",
+        "resolution_required": "Written AWS roadmap commitment with dates; preview/beta access for testing; confirmation of supported TLS versions and cipher suites."
       },
       {
         "blocker_id": "BLK-03",
-        "category": "Vendor dependency",
-        "blocker": "TLS library and silicon vendor PQC support status unconfirmed.",
-        "reason": "Embedded TLS stacks (e.g., mbedTLS, wolfSSL) and hardware crypto accelerators may not yet support ML-KEM/ML-DSA with acceptable memory footprint.",
-        "resolution_required": "Obtain vendor roadmaps and support statements (Step 5); require evidence of tested PQC builds for the specific MCU family."
+        "category": "Vendor",
+        "blocker": "MCU and crypto-library vendors have not confirmed production-grade PQC support for the specific device platform.",
+        "reason": "Without vendor-validated PQC libraries and hardware acceleration, firmware cannot be certified or reliably deployed.",
+        "resolution_required": "Vendor PQC roadmap with delivery dates; evidence of FIPS 140-3 validation or equivalent; memory footprint data; support commitment for 10-year device lifetime."
       },
       {
         "blocker_id": "BLK-04",
         "category": "Operational",
-        "blocker": "Change freeze from Nov 15 to Jan 15 restricts production changes.",
-        "reason": "Production firmware and cloud changes cannot be deployed during freeze; scheduling must avoid this window.",
-        "resolution_required": "Schedule all production changes outside freeze; use freeze period for non-production testing and planning only if permitted by change policy."
+        "blocker": "Change freeze from Nov 15 to Jan 15 prevents production changes during that period.",
+        "reason": "Production rollout and cloud migration cannot occur during freeze; scheduling must avoid this window.",
+        "resolution_required": "Change management plan with rollout windows outside freeze; approval from operations governance."
       },
       {
         "blocker_id": "BLK-05",
-        "category": "Certification",
-        "blocker": "Secure boot and TLS changes may require recertification (e.g., PSA Certified, FCC, industry compliance).",
-        "reason": "PQC algorithm changes alter cryptographic module boundaries and may invalidate existing certifications.",
-        "resolution_required": "Identify certification impact in Step 3; engage certification bodies early; budget for recertification."
+        "category": "Regulatory",
+        "blocker": "Uncertainty on regulatory requirements for PQC in IoT devices over 10-year lifetime.",
+        "reason": "Future regulations may mandate specific algorithms, certifications, or deprecation timelines not yet known.",
+        "resolution_required": "Legal and compliance review; monitoring of NIST, ENISA, and regional IoT security regulations; design for crypto agility."
       },
       {
         "blocker_id": "BLK-06",
-        "category": "Budget",
-        "blocker": "Budget of $150,000 may be insufficient for full PQC migration including hardware refresh and certification.",
-        "reason": "PQC integration, testing, certification, and potential hardware changes can exceed budget.",
-        "resolution_required": "Prioritise hybrid TLS and secure boot feasibility; defer full ML-DSA secure boot if memory-constrained; seek additional budget if certification costs exceed allocation."
+        "category": "Technical",
+        "blocker": "TLS 1.2 may not support ML-KEM; upgrade to TLS 1.3 required.",
+        "reason": "ML-KEM key establishment is defined for TLS 1.3; TLS 1.2 lacks standardized PQC cipher suites.",
+        "resolution_required": "Protocol architecture decision from Step 3; confirmation that device TLS stack can support TLS 1.3 within memory constraints."
       }
     ],
     "vendor_dependencies": [
       {
         "vendor": "AWS",
-        "pqc_support_status": "Forecast: ML-KEM support expected in 2027; not confirmed as available or validated.",
-        "evidence_required": "Written AWS roadmap and service-specific support statement; staging validation results for hybrid TLS with ML-KEM."
+        "pqc_support_status": "Forecast: ML-KEM support in 2027 (not confirmed for production). Currently no production ML-KEM TLS termination.",
+        "evidence_required": "Written roadmap with committed dates; preview access; documentation of supported TLS versions and cipher suites; SLA for PQC endpoints."
       },
       {
-        "vendor": "TLS library vendor (e.g., mbedTLS, wolfSSL)",
-        "pqc_support_status": "Unconfirmed; PQC support may be in development or limited to larger platforms.",
-        "evidence_required": "Vendor roadmap, memory footprint benchmarks for ML-KEM/ML-DSA on target MCU, and test reports."
+        "vendor": "MCU silicon vendor (device platform)",
+        "pqc_support_status": "Unconfirmed. No public commitment to PQC hardware acceleration or optimized libraries for the specific MCU.",
+        "evidence_required": "PQC roadmap; memory footprint data for ML-KEM/ML-DSA; hardware crypto accelerator specifications; FIPS validation status; 10-year longevity commitment."
       },
       {
-        "vendor": "Silicon/MCU vendor",
-        "pqc_support_status": "Unconfirmed; hardware crypto acceleration for PQC may not be available.",
-        "evidence_required": "Datasheet or support statement confirming PQC acceleration or sufficient resources; reference implementation performance data."
+        "vendor": "TLS/crypto library vendor (embedded)",
+        "pqc_support_status": "Unconfirmed. PQC support may be in beta or unavailable for constrained devices.",
+        "evidence_required": "Production-grade ML-KEM/ML-DSA library with memory footprint benchmarks; TLS 1.3 support; certification evidence; support terms."
       },
       {
-        "vendor": "Certification body (e.g., PSA Certified, FCC)",
-        "pqc_support_status": "Unconfirmed; PQC algorithm changes may require new certification.",
-        "evidence_required": "Certification requirements and timeline for PQC-modified firmware; formal approval."
+        "vendor": "Secure boot / secure element vendor",
+        "pqc_support_status": "Unconfirmed. ML-DSA signature verification for secure boot may require firmware or hardware updates.",
+        "evidence_required": "ML-DSA verification support in ROM/bootloader; update mechanism; security certification."
       }
     ],
     "algorithm_roles": {
-      "ML-KEM": "Post-quantum key establishment for TLS 1.2/1.3 between devices and cloud; used in hybrid mode with ECDHE P-256 during transition; not used for digital signatures.",
-      "ML-DSA": "Post-quantum digital signatures for secure boot and firmware authentication; used where flash memory permits; may be deferred or hybridised with ECDSA on constrained devices."
+      "ML-KEM": "Post-quantum key establishment for TLS 1.3 between devices and cloud; hybrid with ECC P-256 during transition; ML-KEM-512/768 selected based on memory constraints.",
+      "ML-DSA": "Post-quantum digital signatures for secure boot firmware verification and firmware update authentication; ML-DSA-44/65 selected based on flash constraints."
     },
     "budget": {
       "estimated_total_usd": 142000,
@@ -245,28 +268,32 @@
       "within_budget": true,
       "cost_assumptions": [
         {
-          "category": "Engineering labour (cryptography, embedded, cloud)",
-          "estimated_cost_usd": 85000
+          "category": "Engineering labour (internal, 1.5 FTE for 18 months)",
+          "estimated_cost_usd": 90000
         },
         {
-          "category": "Testing hardware and device farm",
-          "estimated_cost_usd": 12000
+          "category": "Hardware and development kits",
+          "estimated_cost_usd": 8000
         },
         {
-          "category": "Vendor support and licensing (TLS library, tools)",
+          "category": "Vendor evaluation and licensing (crypto libraries, tools)",
           "estimated_cost_usd": 15000
         },
         {
-          "category": "Certification and security review",
-          "estimated_cost_usd": 20000
+          "category": "Cloud testing and staging environments",
+          "estimated_cost_usd": 6000
         },
         {
-          "category": "Contingency (10%)",
-          "estimated_cost_usd": 10000
+          "category": "Security assessment and certification support",
+          "estimated_cost_usd": 12000
+        },
+        {
+          "category": "Contingency (approx. 8%)",
+          "estimated_cost_usd": 11000
         }
       ]
     },
-    "confidence": "Medium: technical feasibility and vendor timelines (especially AWS ML-KEM in 2027) are unconfirmed; memory constraints may force hybrid or deferred ML-DSA secure boot; budget is tight but within limit under stated assumptions."
+    "confidence": "Medium-low: technical feasibility on 64KB/256KB devices is unproven; AWS ML-KEM support is forecast for 2027 and not confirmed; vendor PQC support for the specific MCU and libraries is unconfirmed; regulatory requirements uncertain. Plan is structured to resolve these dependencies before production changes."
   },
   "grade_result": {
     "score": 6.5,
@@ -308,7 +335,7 @@
     "failures": [
       "G2: Required blocker 'memory' is missing or does not sufficiently explain its context and resolution.",
       "G2: Required blocker 'aws_dependency' is missing or does not sufficiently explain its context and resolution.",
-      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): architecture and feasibility, cloud readiness, design decision, discovery and governance, pilot deployment.",
+      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): algorithm selection, change management planning, cloud architecture design, discovery and governance, pilot deployment.",
       "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
       "G3: Required activity category 'risk_assessment' is missing.",
       "G3: Required activity category 'vendor_engagement' is missing.",
