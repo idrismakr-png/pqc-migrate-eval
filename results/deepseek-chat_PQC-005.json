@@ -1,16 +1,19 @@
 {
+  "grader_version": "3.0.0",
+  "prompt_hash": "98174db7ec8e0cec",
+  "task_file_hash": "9c20a99e423d71f7",
   "task_id": "PQC-005",
   "task_file": "task_005.json",
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 13.85,
-  "created_at_utc": "2026-11-03T08:46:45.477536+00:00",
+  "elapsed_seconds": 12.96,
+  "created_at_utc": "2026-11-03T11:14:55.092851+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 2652,
+    "completion_tokens": 2299,
     "prompt_tokens": 1006,
-    "total_tokens": 3658,
+    "total_tokens": 3305,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -31,205 +34,179 @@
     "migration_steps": [
       {
         "step_number": 1,
-        "activity": "Emergency containment and forensic validation of compromised RSA-1024 certificate scope; inventory all TLS endpoints, certificate stores, and dependent services.",
+        "activity": "Emergency containment and cryptographic inventory: revoke all RSA-1024 certificates, identify every TLS endpoint and dependent system, and freeze further use of the compromised legacy configuration.",
         "activity_type": "Incident response / discovery",
         "start_date": "2025-01-06",
         "end_date": "2025-01-17",
         "prerequisites": [
-          "Incident response team engaged (already committed)",
-          "Access to certificate inventory and CMDB",
-          "Forensic evidence preservation completed"
+          "Incident response team engaged",
+          "Certificate authority and internal PKI access confirmed",
+          "Asset inventory sources available"
         ]
       },
       {
         "step_number": 2,
-        "activity": "Immediate replacement of compromised RSA-1024 certificates with RSA-2048/3072 or ECDSA P-256 certificates as an interim secure baseline; revoke all RSA-1024 certificates.",
-        "activity_type": "Emergency remediation",
+        "activity": "Immediate replacement of compromised RSA-1024 certificates with RSA-2048 or ECDSA P-256 certificates from an approved CA, using existing TLS stacks, to restore secure service without waiting for PQC.",
+        "activity_type": "Remediation",
         "start_date": "2025-01-13",
         "end_date": "2025-02-07",
         "prerequisites": [
           "Step 1 inventory complete",
-          "Certificate authority (CA) able to issue RSA-2048/3072 or ECDSA P-256 certificates",
-          "Change advisory board emergency approval",
-          "Revocation infrastructure (CRL/OCSP) operational"
+          "Approved CA and certificate profiles defined",
+          "Change advisory board emergency approval"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Establish PQC migration governance: CISO steering committee, cryptographic inventory, risk register, and formal rejection of non-standard vendor algorithm pending independent review.",
-        "activity_type": "Governance / risk management",
+        "activity": "Define PQC migration architecture and policy: target algorithm roles (ML-KEM for key establishment, ML-DSA for signatures), hybrid transition approach, crypto-agility requirements, and acceptance criteria for any vendor solution.",
+        "activity_type": "Architecture / governance",
         "start_date": "2025-01-20",
         "end_date": "2025-02-14",
         "prerequisites": [
-          "Executive sponsorship",
-          "Security architecture team assigned",
-          "Legal and compliance representation"
+          "Executive sponsor assigned",
+          "Security architecture team available",
+          "Regulatory obligations documented"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Conduct independent technical and security review of the vendor's non-NIST 'quantum-safe' solution; require third-party cryptanalysis, FIPS 140-3 validation status, and interoperability evidence.",
-        "activity_type": "Vendor due diligence",
-        "start_date": "2025-02-03",
-        "end_date": "2025-03-14",
+        "activity": "Vendor due diligence: require the proposed vendor to provide NIST standardization status, third-party cryptographic review, FIPS validation evidence, interoperability test results, and a roadmap for alignment with NIST PQC standards; reject unsubstantiated 'better than NIST' claims.",
+        "activity_type": "Procurement / assurance",
+        "start_date": "2025-01-20",
+        "end_date": "2025-02-28",
         "prerequisites": [
-          "Vendor submits algorithm specification and security proofs",
-          "Independent cryptographer engaged",
-          "Contractual right to audit"
+          "Step 3 acceptance criteria defined",
+          "Legal and procurement review engaged"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Define target PQC architecture using NIST-standardized algorithms: ML-KEM (FIPS 203) for key establishment and ML-DSA (FIPS 204) for digital signatures; map to TLS 1.3 hybrid key exchange and certificate authentication.",
-        "activity_type": "Architecture design",
-        "start_date": "2025-02-17",
-        "end_date": "2025-03-28",
+        "activity": "Pilot PQC and hybrid TLS in a non-production environment using NIST-standardized algorithms (ML-KEM for key establishment, ML-DSA where signatures are required) and hybrid modes with classical algorithms, including performance and interoperability testing.",
+        "activity_type": "Technical validation",
+        "start_date": "2025-03-03",
+        "end_date": "2025-04-11",
         "prerequisites": [
-          "Step 3 governance established",
-          "NIST FIPS 203/204 standards available",
-          "Cryptographic inventory complete"
+          "Step 3 architecture approved",
+          "Step 4 vendor evidence reviewed",
+          "Non-production environment available",
+          "Test plan approved"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Assess vendor and platform PQC readiness: TLS terminators, load balancers, HSMs, CAs, operating systems, and application libraries; document confirmed vs claimed capabilities.",
-        "activity_type": "Vendor dependency assessment",
-        "start_date": "2025-03-03",
-        "end_date": "2025-04-11",
+        "activity": "Produce a phased production migration roadmap with risk-based prioritization, rollback plans, and a realistic timeline that separates immediate classical remediation from PQC adoption; communicate that full PQC migration cannot be completed within 3 months.",
+        "activity_type": "Planning / stakeholder communication",
+        "start_date": "2025-04-14",
+        "end_date": "2025-04-25",
         "prerequisites": [
-          "Step 5 architecture defined",
-          "Vendor questionnaires issued",
-          "Lab environment available"
+          "Step 5 pilot results",
+          "Step 4 vendor assessment",
+          "Budget reforecast"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Build and test PQC hybrid TLS (ML-KEM + classical) and ML-DSA certificate authentication in non-production lab; validate performance, interoperability, and fallback behavior.",
-        "activity_type": "Lab validation",
-        "start_date": "2025-04-14",
-        "end_date": "2025-06-06",
+        "activity": "Begin phased production rollout of hybrid TLS with ML-KEM for key establishment on highest-risk external services, subject to change control and downtime limits.",
+        "activity_type": "Production change",
+        "start_date": "2025-05-05",
+        "end_date": "2025-07-31",
         "prerequisites": [
-          "Step 6 vendor readiness confirmed for at least one platform",
-          "HSM firmware supporting ML-KEM/ML-DSA available (or software fallback approved)",
-          "Test certificates issued by PQC-capable CA"
+          "Step 6 roadmap approved",
+          "Pilot success criteria met",
+          "Change advisory board approval",
+          "Rollback tested"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Pilot PQC hybrid TLS on low-risk external-facing services with monitoring and rollback plan; collect operational metrics.",
-        "activity_type": "Pilot deployment",
-        "start_date": "2025-06-09",
-        "end_date": "2025-07-18",
+        "activity": "Introduce ML-DSA for digital signatures in certificate issuance and code/document signing where supported, following vendor and CA readiness.",
+        "activity_type": "Production change",
+        "start_date": "2025-08-01",
+        "end_date": "2025-12-19",
         "prerequisites": [
-          "Step 7 lab validation passed",
-          "Change advisory board approval",
-          "Rollback procedure tested",
-          "Regulatory notification if required"
+          "CA and HSM vendor ML-DSA support confirmed",
+          "Step 7 stable",
+          "Updated certificate policy"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Phased production rollout of PQC hybrid TLS and ML-DSA certificates across remaining systems, prioritized by risk and vendor support availability.",
-        "activity_type": "Production migration",
-        "start_date": "2025-07-21",
-        "end_date": "2026-03-31",
-        "prerequisites": [
-          "Step 8 pilot success criteria met",
-          "Vendor production support confirmed for each platform",
-          "Staff training completed",
-          "Change freezes respected (no rollout during quarter-end freezes)"
-        ]
-      },
-      {
-        "step_number": 10,
-        "activity": "Decommission legacy RSA-1024 and non-standard algorithms; update cryptographic policy and continuous monitoring.",
-        "activity_type": "Decommission / assurance",
-        "start_date": "2026-04-01",
+        "activity": "Complete migration of remaining systems, decommission classical-only cryptography where feasible, and establish continuous cryptographic inventory and crypto-agility monitoring.",
+        "activity_type": "Completion / operations",
+        "start_date": "2026-01-05",
         "end_date": "2026-06-30",
         "prerequisites": [
-          "Step 9 production rollout complete",
-          "All systems validated against PQC policy",
-          "Audit evidence retained"
+          "Steps 7 and 8 complete",
+          "Vendor support for all in-scope systems",
+          "Regulatory sign-off where required"
         ]
       }
     ],
     "blockers": [
       {
-        "blocker_id": "BLK-001",
-        "category": "Vendor / algorithm risk",
-        "blocker": "Vendor solution is not NIST-standardized and claims to be 'better than NIST'.",
-        "reason": "Non-standard cryptography lacks public cryptanalysis, interoperability, and regulatory acceptance; using it could create new vulnerabilities and compliance failures.",
-        "resolution_required": "Independent third-party cryptanalysis, published security proofs, FIPS 140-3 validation evidence, and interoperability test results. If not provided, reject vendor solution and use NIST FIPS 203/204."
+        "blocker_id": "B-001",
+        "category": "Vendor / standards",
+        "blocker": "Proposed vendor solution is not NIST-standardized and claims to be 'better than NIST'.",
+        "reason": "Non-standard cryptography lacks public cryptanalysis, interoperability, and regulatory acceptance; adopting it creates lock-in and unquantified risk.",
+        "resolution_required": "Vendor must provide NIST standardization status, independent cryptographic review, FIPS validation evidence, and interoperability results; otherwise exclude from production and use NIST-standardized ML-KEM/ML-DSA."
       },
       {
-        "blocker_id": "BLK-002",
+        "blocker_id": "B-002",
         "category": "Timeline",
-        "blocker": "CISO's 3-month timeline for full PQC migration is not achievable.",
-        "reason": "PQC standards, vendor support, HSM firmware, CA capabilities, and testing cycles require 12-18 months for a financial services firm; 3 months is insufficient for safe production migration.",
-        "resolution_required": "Executive re-baselining of timeline with phased milestones; immediate interim remediation (RSA-2048/ECDSA) within 3 months, full PQC in 12-18 months."
+        "blocker": "CISO's 3-month full PQC migration is not achievable.",
+        "reason": "PQC algorithm availability, vendor product support, HSM/CA readiness, testing, and change control cannot be completed in 3 months for an enterprise financial services estate.",
+        "resolution_required": "Executive agreement to a phased roadmap: immediate classical remediation, then hybrid PQC pilot, then phased production rollout over 12-18 months."
       },
       {
-        "blocker_id": "BLK-003",
+        "blocker_id": "B-003",
         "category": "Budget",
         "blocker": "Only $700,000 remains after $300,000 incident response commitment.",
-        "reason": "Full PQC migration including HSMs, CA upgrades, vendor licensing, testing, and staff training typically exceeds $700,000.",
-        "resolution_required": "Prioritize spend on interim certificate replacement and lab validation; seek additional budget or phase migration across fiscal years."
+        "reason": "Full PQC migration including HSMs, CA upgrades, vendor licensing, testing, and staff augmentation likely exceeds remaining budget.",
+        "resolution_required": "Reforecast budget, prioritize immediate certificate replacement and pilot, and seek additional funding or phased procurement."
       },
       {
-        "blocker_id": "BLK-004",
-        "category": "Vendor support",
-        "blocker": "PQC support in TLS terminators, HSMs, and CAs is not confirmed.",
-        "reason": "Many vendors have announced but not shipped ML-KEM/ML-DSA support; production deployment cannot proceed without validated firmware and certificates.",
-        "resolution_required": "Obtain written vendor roadmaps with committed dates, firmware versions, and validation evidence; do not schedule production changes before confirmation."
+        "blocker_id": "B-004",
+        "category": "Technical readiness",
+        "blocker": "HSM, CA, and TLS stack support for ML-KEM and ML-DSA is not confirmed.",
+        "reason": "PQC operations require hardware and software support that may not be available or validated in the current estate.",
+        "resolution_required": "Obtain vendor roadmaps and validation evidence; schedule upgrades; use hybrid classical+PQC where full PQC is unsupported."
       },
       {
-        "blocker_id": "BLK-005",
+        "blocker_id": "B-005",
         "category": "Regulatory / compliance",
-        "blocker": "Financial services regulatory approval for PQC algorithms and certificate authorities may be required.",
-        "reason": "Regulators may require notification or approval before changing cryptographic controls; non-standard algorithms likely prohibited.",
-        "resolution_required": "Engage compliance and regulators early; document use of NIST-standardized algorithms only."
-      },
-      {
-        "blocker_id": "BLK-006",
-        "category": "Operational",
-        "blocker": "Change freezes and downtime limits restrict production changes.",
-        "reason": "Quarter-end and month-end freezes in financial services limit windows for certificate replacement and PQC rollout.",
-        "resolution_required": "Schedule changes outside freeze periods; obtain emergency change approval for compromised certificate replacement."
+        "blocker": "Financial services regulatory approval for cryptographic changes is not confirmed.",
+        "reason": "Use of non-standard algorithms or unvalidated modules may breach regulatory requirements.",
+        "resolution_required": "Engage regulators and compliance; document algorithm choices; use NIST-standardized algorithms and validated modules."
       }
     ],
     "vendor_dependencies": [
       {
-        "vendor": "Non-NIST 'quantum-safe' vendor",
+        "vendor": "Proposed 'quantum-safe' vendor (non-NIST)",
         "pqc_support_status": "Claimed but unverified; not NIST-standardized",
-        "evidence_required": "Independent cryptanalysis, FIPS 140-3 validation, interoperability test reports, published algorithm specification, and security proofs"
+        "evidence_required": "NIST standardization status, independent cryptographic review, FIPS validation, interoperability test results, and production references"
       },
       {
-        "vendor": "TLS terminator / load balancer vendor",
-        "pqc_support_status": "Unknown; must be confirmed",
-        "evidence_required": "Written confirmation of ML-KEM and ML-DSA support, firmware version, release date, and test results"
+        "vendor": "Certificate authority / PKI provider",
+        "pqc_support_status": "Unknown; ML-DSA certificate issuance not confirmed",
+        "evidence_required": "Roadmap and validation evidence for ML-DSA certificate issuance and hybrid certificate support"
       },
       {
-        "vendor": "HSM vendor",
-        "pqc_support_status": "Unknown; must be confirmed",
-        "evidence_required": "FIPS 140-3 validation for ML-KEM/ML-DSA, firmware version, and performance benchmarks"
+        "vendor": "HSM provider",
+        "pqc_support_status": "Unknown; ML-KEM and ML-DSA firmware support not confirmed",
+        "evidence_required": "Firmware version, FIPS validation status, and performance benchmarks for ML-KEM and ML-DSA"
       },
       {
-        "vendor": "Certificate authority (CA)",
-        "pqc_support_status": "Unknown; must be confirmed",
-        "evidence_required": "Confirmation of ML-DSA certificate issuance, CRL/OCSP support, and root program acceptance"
-      },
-      {
-        "vendor": "Operating system / application library vendors",
-        "pqc_support_status": "Unknown; must be confirmed",
-        "evidence_required": "Support statements for OpenSSL 3.5+ or equivalent, ML-KEM/ML-DSA integration, and patch availability"
+        "vendor": "TLS load balancer / web server vendor",
+        "pqc_support_status": "Unknown; hybrid and PQC TLS support not confirmed",
+        "evidence_required": "Product documentation, version support matrix, and interoperability test results"
       }
     ],
     "algorithm_roles": {
-      "ML-KEM": "Post-quantum key establishment (FIPS 203) for TLS 1.3 hybrid key exchange; replaces RSA/ECDH key transport and key agreement.",
-      "ML-DSA": "Post-quantum digital signatures (FIPS 204) for certificate authentication and code signing; replaces RSA/ECDSA signatures."
+      "ML-KEM": "Post-quantum key establishment (encapsulation) for TLS and other key exchange, used in hybrid mode with classical ECDHE during transition.",
+      "ML-DSA": "Post-quantum digital signatures for certificates, code signing, and authentication where signatures are required; not used for key establishment."
     },
     "budget": {
-      "estimated_total_usd": 685000,
+      "estimated_total_usd": 950000,
       "budget_limit_usd": 1000000,
       "within_budget": true,
       "cost_assumptions": [
@@ -238,32 +215,32 @@
           "estimated_cost_usd": 300000
         },
         {
-          "category": "Emergency certificate replacement (RSA-2048/ECDSA)",
-          "estimated_cost_usd": 45000
-        },
-        {
-          "category": "Independent cryptographic review of vendor solution",
-          "estimated_cost_usd": 60000
-        },
-        {
-          "category": "PQC lab environment and testing",
+          "category": "Emergency certificate replacement and PKI remediation",
           "estimated_cost_usd": 80000
         },
         {
-          "category": "HSM firmware upgrade / replacement (partial)",
+          "category": "Architecture, policy, and vendor due diligence",
+          "estimated_cost_usd": 60000
+        },
+        {
+          "category": "PQC pilot lab and testing",
           "estimated_cost_usd": 120000
         },
         {
-          "category": "CA and certificate lifecycle tooling upgrade",
-          "estimated_cost_usd": 50000
+          "category": "HSM and CA upgrades for PQC",
+          "estimated_cost_usd": 200000
         },
         {
-          "category": "Staff training and change management",
-          "estimated_cost_usd": 30000
+          "category": "Vendor licensing and support (NIST-aligned)",
+          "estimated_cost_usd": 150000
+        },
+        {
+          "category": "Staff augmentation and training",
+          "estimated_cost_usd": 40000
         }
       ]
     },
-    "confidence": "Medium-low: immediate certificate replacement is achievable within 3 months, but full PQC migration depends on unconfirmed vendor support, regulatory approval, and budget constraints; non-standard vendor solution is high risk and should be rejected pending evidence."
+    "confidence": "Medium: immediate classical remediation is well understood; PQC production timeline and vendor capabilities remain unconfirmed and dependent on external evidence and regulatory review."
   },
   "grade_result": {
     "score": 6.5,
@@ -298,15 +275,12 @@
     ],
     "successes": [
       "G1: Freeze constraints, vendor-status constraints, and production migration prerequisites are satisfied.",
-      "G3: Migration step numbering is valid.",
-      "G3: ML-KEM is assigned to key establishment and ML-DSA is assigned to digital signatures.",
-      "G4: The $685,000.00 estimate is within the $1,000,000.00 limit and the numeric cost breakdown reconciles."
+      "G4: The $950,000.00 estimate is within the $1,000,000.00 limit and the numeric cost breakdown reconciles."
     ],
     "failures": [
       "G2: Required blocker 'non_nist' is missing or does not sufficiently explain its context and resolution.",
       "G2: Required blocker 'immediate_risk' is missing or does not sufficiently explain its context and resolution.",
-      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): architecture design, decommission / assurance, emergency remediation, governance / risk management, incident response / discovery.",
-      "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
+      "G3: Activities scheduled before the planning reference date (2026-10-30): architecture / governance, completion / operations, incident response / discovery, planning / stakeholder communication, procurement / assurance.",
       "G3: Required activity category 'risk_assessment' is missing.",
       "G3: Required activity category 'vendor_engagement' is missing.",
       "G3: Required activity category 'lab_testing' is missing.",
@@ -314,8 +288,5 @@
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied.",
       "G3: Risk assessment does not sufficiently prioritise long-lived sensitive data and HNDL exposure."
     ]
-  },
-  "grader_version": "3.0.0",
-  "prompt_hash": "98174db7ec8e0cec",
-  "task_file_hash": "5dbd0dc5ae440374"
+  }
 }

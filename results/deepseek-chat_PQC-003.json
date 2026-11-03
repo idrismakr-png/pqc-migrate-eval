@@ -1,16 +1,19 @@
 {
+  "grader_version": "3.0.0",
+  "prompt_hash": "0e7694de33ba31b8",
+  "task_file_hash": "cb91b3e8401a5df5",
   "task_id": "PQC-003",
   "task_file": "task_003.json",
   "model": "deepseek-chat",
   "status": "completed",
   "temperature": 0.0,
-  "elapsed_seconds": 13.27,
-  "created_at_utc": "2026-11-03T08:46:15.924041+00:00",
+  "elapsed_seconds": 14.99,
+  "created_at_utc": "2026-11-03T11:14:24.055193+00:00",
   "finish_reason": "stop",
   "usage": {
-    "completion_tokens": 2653,
+    "completion_tokens": 2875,
     "prompt_tokens": 1040,
-    "total_tokens": 3693,
+    "total_tokens": 3915,
     "completion_tokens_details": null,
     "prompt_tokens_details": {
       "audio_tokens": null,
@@ -31,7 +34,7 @@
     "migration_steps": [
       {
         "step_number": 1,
-        "activity": "Establish PQC migration program governance: appoint a migration lead, form a cross-functional working group (security, IT, clinical operations, legal, procurement, EHR vendor liaison), and define scope, decision rights, and reporting cadence.",
+        "activity": "Establish PQC migration program governance: appoint a migration lead, form a cross-functional working group (security, IT infrastructure, EHR application owners, clinical operations, procurement, legal/compliance), and define scope, decision rights, and reporting cadence.",
         "activity_type": "Governance and planning",
         "start_date": "2025-01-16",
         "end_date": "2025-02-14",
@@ -42,220 +45,225 @@
       },
       {
         "step_number": 2,
-        "activity": "Perform a cryptographic inventory and data-flow mapping across the centralized EHR, inter-hospital TLS 1.2 ECDHE traffic, database encryption (RSA-2048), HSMs, backups, and genomic record storage; classify data by confidentiality lifetime and quantum risk.",
+        "activity": "Perform a cryptographic inventory and data-flow mapping across the EHR database encryption, inter-hospital TLS 1.2 ECDHE traffic, HSMs, endpoints, backups, and genomic record storage; classify data by confidentiality lifetime and quantum risk.",
         "activity_type": "Discovery and risk assessment",
         "start_date": "2025-02-17",
         "end_date": "2025-04-11",
         "prerequisites": [
-          "Step 1 governance established",
-          "Access to network diagrams, EHR architecture documentation, and HSM configuration records"
+          "Governance working group established",
+          "Access to network diagrams, EHR configuration documentation, and HSM inventory"
         ]
       },
       {
         "step_number": 3,
-        "activity": "Conduct a quantum risk assessment and define a crypto-agility target architecture, including where ML-KEM (key establishment) and ML-DSA (digital signatures) would be applied once vendor-certified and FIPS 140-3 validated modules are available.",
-        "activity_type": "Risk assessment and architecture",
-        "start_date": "2025-04-14",
-        "end_date": "2025-05-23",
+        "activity": "Engage the EHR vendor formally to obtain a written PQC roadmap, certification timeline for ML-KEM and ML-DSA, supported algorithm list, and constraints on cryptographic configuration; document all vendor statements as unconfirmed until evidenced.",
+        "activity_type": "Vendor engagement",
+        "start_date": "2025-02-17",
+        "end_date": "2025-03-28",
         "prerequisites": [
-          "Step 2 inventory completed",
-          "FIPS 140-3 validation requirements documented"
+          "Governance working group established",
+          "Cryptographic inventory scope defined"
         ]
       },
       {
         "step_number": 4,
-        "activity": "Engage the EHR vendor formally to obtain a written roadmap and certification timeline for ML-KEM and ML-DSA support, including whether the vendor will certify these algorithms and under what FIPS 140-3 module validations.",
+        "activity": "Engage Utimaco to obtain written confirmation of ML-KEM and ML-DSA firmware support, FIPS 140-3 validation status of the planned firmware, upgrade path, and compatibility with existing HSM models; treat Q1 2027 as a vendor forecast, not a confirmed capability.",
         "activity_type": "Vendor engagement",
         "start_date": "2025-02-17",
-        "end_date": "2025-06-30",
+        "end_date": "2025-03-28",
         "prerequisites": [
-          "Step 1 governance established",
-          "Vendor liaison identified"
+          "Governance working group established",
+          "HSM inventory completed"
         ]
       },
       {
         "step_number": 5,
-        "activity": "Engage Utimaco to obtain written confirmation, firmware version details, and FIPS 140-3 validation certificates for ML-KEM and ML-DSA support targeted for Q1 2027; treat as forecast until evidence is provided.",
-        "activity_type": "Vendor engagement",
-        "start_date": "2025-02-17",
-        "end_date": "2025-06-30",
+        "activity": "Assess FIPS 140-3 implications: identify which cryptographic modules are currently validated, which PQC algorithms are approved within FIPS 140-3 validated modules, and what validation evidence will be required for ML-KEM and ML-DSA modules.",
+        "activity_type": "Compliance assessment",
+        "start_date": "2025-03-03",
+        "end_date": "2025-04-25",
         "prerequisites": [
-          "Step 1 governance established",
-          "HSM inventory from Step 2"
+          "Cryptographic inventory completed",
+          "Vendor responses received from EHR vendor and Utimaco"
         ]
       },
       {
         "step_number": 6,
-        "activity": "Assess non-EHR-controlled systems (network infrastructure, backup encryption, internal PKI, monitoring, and non-clinical applications) for independent PQC readiness and identify candidates for early ML-KEM/ML-DSA adoption using FIPS 140-3 validated modules.",
-        "activity_type": "Technical assessment",
-        "start_date": "2025-05-26",
-        "end_date": "2025-07-11",
+        "activity": "Develop a hybrid-cryptography strategy for non-EHR-controlled systems (network infrastructure, backups, monitoring, identity services) using ML-KEM for key establishment and ML-DSA for signatures where FIPS 140-3 validated modules are available; exclude EHR vendor-controlled components.",
+        "activity_type": "Architecture design",
+        "start_date": "2025-04-14",
+        "end_date": "2025-05-23",
         "prerequisites": [
-          "Step 2 inventory completed",
-          "Step 3 target architecture defined"
+          "FIPS 140-3 compliance assessment completed",
+          "Cryptographic inventory completed"
         ]
       },
       {
         "step_number": 7,
-        "activity": "Develop a hybrid-cryptography transition strategy (classical + PQC) for systems that can be migrated independently of the EHR vendor, ensuring FIPS 140-3 validated modules are used and no custom cryptographic configurations are applied to the EHR.",
-        "activity_type": "Architecture and design",
-        "start_date": "2025-07-14",
-        "end_date": "2025-08-22",
+        "activity": "Procure and deploy FIPS 140-3 validated PQC-capable modules for non-EHR systems only where vendor evidence confirms validation; do not deploy ML-KEM or ML-DSA in production until FIPS 140-3 validation certificates are obtained.",
+        "activity_type": "Procurement and deployment",
+        "start_date": "2025-05-26",
+        "end_date": "2025-09-30",
         "prerequisites": [
-          "Step 6 assessment completed",
-          "Step 3 target architecture defined"
+          "Hybrid-cryptography strategy approved",
+          "FIPS 140-3 validation certificates obtained for selected modules",
+          "Change advisory board approval"
         ]
       },
       {
         "step_number": 8,
-        "activity": "Procure and deploy FIPS 140-3 validated PQC-capable modules for non-EHR systems only after Utimaco provides validated firmware and certificates; schedule outside the December 1\u2013January 15 change freeze.",
-        "activity_type": "Procurement and deployment",
-        "start_date": "2027-01-16",
-        "end_date": "2027-06-30",
+        "activity": "Conduct non-production interoperability and performance testing of ML-KEM and ML-DSA in the non-EHR environment, including HSM integration, TLS handshake performance, and key lifecycle management; schedule outside the December 1 to January 15 change freeze.",
+        "activity_type": "Testing and validation",
+        "start_date": "2025-06-02",
+        "end_date": "2025-11-28",
         "prerequisites": [
-          "Step 5 Utimaco written confirmation and FIPS 140-3 certificates received",
-          "Step 7 hybrid strategy approved",
-          "Change freeze window avoided"
+          "PQC-capable FIPS 140-3 validated modules deployed in test environment",
+          "Test plan approved by security and operations"
         ]
       },
       {
         "step_number": 9,
-        "activity": "Pilot ML-KEM for key establishment and ML-DSA for digital signatures in a non-production environment for non-EHR systems, using only FIPS 140-3 validated modules and vendor-supported configurations.",
-        "activity_type": "Pilot and validation",
-        "start_date": "2027-07-01",
-        "end_date": "2027-09-30",
+        "activity": "Migrate non-EHR-controlled TLS endpoints and internal services to hybrid ML-KEM key establishment where supported by FIPS 140-3 validated modules, using a phased rollout with rollback capability; complete before December 1 change freeze or schedule after January 15.",
+        "activity_type": "Production migration",
+        "start_date": "2025-10-01",
+        "end_date": "2025-11-28",
         "prerequisites": [
-          "Step 8 deployment completed",
-          "Test plan approved",
-          "No production impact"
+          "Non-production testing completed successfully",
+          "Change advisory board approval",
+          "Rollback plan validated"
         ]
       },
       {
         "step_number": 10,
-        "activity": "Migrate non-EHR production systems to hybrid PQC (ML-KEM for key establishment, ML-DSA for signatures) where FIPS 140-3 validated modules and vendor support exist, with rollback plans and change management approvals.",
-        "activity_type": "Production migration",
-        "start_date": "2027-10-01",
-        "end_date": "2028-03-31",
+        "activity": "Monitor EHR vendor certification progress for ML-KEM and ML-DSA; obtain written certification evidence and updated supported algorithm lists before any EHR-related PQC change is planned.",
+        "activity_type": "Vendor dependency tracking",
+        "start_date": "2025-04-01",
+        "end_date": null,
         "prerequisites": [
-          "Step 9 pilot successful",
-          "Change advisory board approval",
-          "Change freeze windows avoided"
+          "EHR vendor engagement initiated"
         ]
       },
       {
         "step_number": 11,
-        "activity": "Re-engage EHR vendor after they certify ML-KEM and ML-DSA; obtain certification evidence and FIPS 140-3 validation details, then plan EHR migration only within vendor-supported configurations.",
-        "activity_type": "Vendor dependency resolution",
-        "start_date": null,
+        "activity": "Monitor Utimaco firmware delivery and FIPS 140-3 validation of ML-KEM and ML-DSA support; obtain validation certificates and compatibility evidence before scheduling HSM firmware upgrades.",
+        "activity_type": "Vendor dependency tracking",
+        "start_date": "2025-04-01",
         "end_date": null,
         "prerequisites": [
-          "EHR vendor publishes ML-KEM and ML-DSA certification",
-          "FIPS 140-3 validated modules confirmed for EHR"
+          "Utimaco engagement initiated"
         ]
       },
       {
         "step_number": 12,
-        "activity": "Migrate EHR database encryption and inter-hospital TLS to vendor-certified ML-KEM and ML-DSA configurations, following vendor procedures and change freeze constraints.",
-        "activity_type": "Production migration",
+        "activity": "Plan and execute EHR database encryption and inter-hospital TLS migration to ML-KEM and ML-DSA only after EHR vendor certification and FIPS 140-3 validated HSM firmware are both confirmed; schedule outside change freezes and with vendor-approved maintenance windows.",
+        "activity_type": "Production migration (blocked)",
         "start_date": null,
         "end_date": null,
         "prerequisites": [
-          "Step 11 vendor certification confirmed",
-          "FIPS 140-3 validation evidence accepted",
-          "Change freeze windows avoided",
-          "Clinical downtime limits respected"
+          "EHR vendor written certification of ML-KEM and ML-DSA",
+          "FIPS 140-3 validation certificates for Utimaco PQC firmware",
+          "Change advisory board approval",
+          "Vendor-approved maintenance window outside December 1 to January 15 freeze"
         ]
       }
     ],
     "blockers": [
       {
-        "blocker_id": "B-01",
+        "blocker_id": "BLK-001",
         "category": "Vendor certification",
         "blocker": "EHR vendor has not certified ML-KEM or ML-DSA and prohibits custom cryptographic configurations.",
-        "reason": "MediTrust cannot apply PQC algorithms to the EHR until the vendor explicitly certifies them; doing so would violate vendor policy and potentially void support.",
-        "resolution_required": "Obtain written EHR vendor certification for ML-KEM and ML-DSA, including supported configurations and FIPS 140-3 validation evidence."
+        "reason": "MediTrust cannot modify EHR database encryption or inter-hospital TLS algorithms without violating the vendor's certification policy, which could void support and compliance posture.",
+        "resolution_required": "Obtain written EHR vendor certification of ML-KEM and ML-DSA, including supported algorithm suites, configuration guidance, and a committed timeline with evidence."
       },
       {
-        "blocker_id": "B-02",
+        "blocker_id": "BLK-002",
         "category": "FIPS 140-3 validation",
-        "blocker": "Utimaco HSM firmware support for ML-KEM and ML-DSA is forecast for Q1 2027 but not yet validated or certified.",
-        "reason": "Hospital policy mandates FIPS 140-3 validated modules; forecast capabilities cannot be used in production until validation certificates are issued.",
-        "resolution_required": "Obtain Utimaco firmware release notes and FIPS 140-3 validation certificates for ML-KEM and ML-DSA; verify module versions."
+        "blocker": "No confirmed FIPS 140-3 validated modules supporting ML-KEM and ML-DSA are currently available for the EHR and HSM environments.",
+        "reason": "Hospital policy mandates FIPS 140-3 validated modules for all cryptography; deploying PQC without validated modules would violate policy.",
+        "resolution_required": "Obtain FIPS 140-3 validation certificates for ML-KEM and ML-DSA capable modules, including Utimaco firmware and any EHR-embedded cryptographic modules."
       },
       {
-        "blocker_id": "B-03",
+        "blocker_id": "BLK-003",
+        "category": "HSM firmware availability",
+        "blocker": "Utimaco HSM firmware supporting ML-KEM and ML-DSA is forecast for Q1 2027 but not confirmed or validated.",
+        "reason": "EHR database encryption and key management depend on HSM capabilities; without validated firmware, PQC migration of EHR encryption cannot proceed.",
+        "resolution_required": "Obtain written Utimaco confirmation of firmware release date, FIPS 140-3 validation certificate, and compatibility with existing HSM models; validate in non-production before production upgrade."
+      },
+      {
+        "blocker_id": "BLK-004",
         "category": "Change freeze",
-        "blocker": "Change freeze from December 1 to January 15 restricts production changes.",
-        "reason": "Any production migration activity must avoid this window; scheduling must account for it.",
-        "resolution_required": "Plan all production changes outside December 1\u2013January 15; obtain exception approval only if absolutely necessary and permitted by policy."
+        "blocker": "Change freeze from December 1 to January 15 prohibits production changes during that period.",
+        "reason": "Any production migration activity must be scheduled outside the freeze, limiting available windows and requiring careful sequencing.",
+        "resolution_required": "Schedule all production changes outside December 1 to January 15; obtain change advisory board approval for each window."
       },
       {
-        "blocker_id": "B-04",
+        "blocker_id": "BLK-005",
         "category": "Budget",
-        "blocker": "Budget of $500,000 may be insufficient for full EHR and HSM migration if vendor certification requires upgrades or professional services.",
-        "reason": "Costs for HSM firmware, FIPS validation, vendor professional services, and testing may exceed initial estimates.",
-        "resolution_required": "Obtain detailed quotes from Utimaco and EHR vendor; prioritize non-EHR systems first; seek additional budget if needed."
-      },
-      {
-        "blocker_id": "B-05",
-        "category": "Technical",
-        "blocker": "EHR uses RSA-2048 for database encryption and TLS 1.2 with ECDHE; migration to PQC requires vendor-supported changes.",
-        "reason": "Custom cryptographic changes are prohibited; the EHR must be upgraded by the vendor.",
-        "resolution_required": "Wait for EHR vendor certified release supporting ML-KEM and ML-DSA; plan upgrade windows."
+        "blocker": "Budget of $500,000 may be insufficient for full EHR and HSM PQC migration including validation, testing, and vendor professional services.",
+        "reason": "Full migration requires HSM firmware upgrades, FIPS 140-3 validation evidence, vendor professional services, testing, and potential EHR vendor certification costs; costs are not yet confirmed.",
+        "resolution_required": "Obtain detailed quotes from Utimaco, EHR vendor, and integration partners; prioritize non-EHR migration within budget and seek additional funding for EHR-dependent work if needed."
       }
     ],
     "vendor_dependencies": [
       {
         "vendor": "EHR vendor",
-        "pqc_support_status": "Not certified; no ML-KEM or ML-DSA support confirmed. Vendor prohibits custom cryptographic configurations.",
-        "evidence_required": "Written certification statement for ML-KEM and ML-DSA, supported configurations, FIPS 140-3 validation certificates, and release timeline."
+        "pqc_support_status": "Not certified; no ML-KEM or ML-DSA support confirmed. Vendor prohibits custom cryptographic configurations and only supports explicitly certified algorithms.",
+        "evidence_required": "Written certification statement for ML-KEM and ML-DSA, supported algorithm suites, configuration guidance, certification timeline, and commitment to FIPS 140-3 validated modules."
       },
       {
         "vendor": "Utimaco",
-        "pqc_support_status": "Forecast Q1 2027 for ML-KEM and ML-DSA firmware support; not yet validated or certified.",
-        "evidence_required": "Firmware release notes, FIPS 140-3 validation certificates for ML-KEM and ML-DSA, and confirmation of supported algorithms and key sizes."
+        "pqc_support_status": "Forecast support for ML-KEM and ML-DSA by Q1 2027; not confirmed, not validated, and no firmware version or FIPS 140-3 certificate provided.",
+        "evidence_required": "Written confirmation of firmware release date, FIPS 140-3 validation certificate for PQC firmware, compatibility matrix with existing HSM models, and upgrade procedure."
       }
     ],
     "algorithm_roles": {
-      "ML-KEM": "Post-quantum key establishment (key encapsulation) for TLS and other key exchange, replacing ECDHE where vendor-certified and FIPS 140-3 validated.",
-      "ML-DSA": "Post-quantum digital signatures for authentication, integrity, and certificate signing, replacing RSA/ECDSA signatures where vendor-certified and FIPS 140-3 validated."
+      "ML-KEM": "Post-quantum key establishment (key encapsulation) for TLS and other key exchange protocols; used to establish shared symmetric keys resistant to quantum cryptanalysis.",
+      "ML-DSA": "Post-quantum digital signatures for authentication, integrity, and non-repudiation; used in certificates, code signing, and protocol authentication where digital signatures are required."
     },
     "budget": {
-      "estimated_total_usd": 480000,
+      "estimated_total_usd": 485000,
       "budget_limit_usd": 500000,
       "within_budget": true,
       "cost_assumptions": [
         {
           "category": "Program management and governance",
-          "estimated_cost_usd": 50000
-        },
-        {
-          "category": "Cryptographic inventory and risk assessment",
           "estimated_cost_usd": 40000
         },
         {
-          "category": "Architecture and design",
+          "category": "Cryptographic inventory and risk assessment",
+          "estimated_cost_usd": 35000
+        },
+        {
+          "category": "Vendor engagement and professional services (EHR vendor and Utimaco)",
           "estimated_cost_usd": 60000
         },
         {
-          "category": "HSM firmware upgrade and FIPS validation support",
+          "category": "FIPS 140-3 compliance assessment and validation evidence",
+          "estimated_cost_usd": 45000
+        },
+        {
+          "category": "PQC-capable FIPS 140-3 validated modules for non-EHR systems",
           "estimated_cost_usd": 120000
         },
         {
-          "category": "Non-EHR system integration and testing",
-          "estimated_cost_usd": 100000
-        },
-        {
-          "category": "EHR vendor professional services (contingency)",
+          "category": "HSM firmware upgrade and integration (non-production and limited production)",
           "estimated_cost_usd": 80000
         },
         {
+          "category": "Testing, interoperability, and performance validation",
+          "estimated_cost_usd": 50000
+        },
+        {
           "category": "Training and change management",
+          "estimated_cost_usd": 25000
+        },
+        {
+          "category": "Contingency (10%)",
           "estimated_cost_usd": 30000
         }
       ]
     },
-    "confidence": "Medium-low: EHR vendor certification and Utimaco FIPS 140-3 validation are unconfirmed future dependencies; budget estimate is preliminary and may change based on vendor quotes."
+    "confidence": "Medium-low: non-EHR migration steps are feasible within budget and timeline, but EHR and HSM PQC migration is blocked by unconfirmed vendor certification and FIPS 140-3 validation; dates for blocked steps are null and depend on vendor evidence."
   },
   "grade_result": {
     "score": 6.5,
@@ -290,22 +298,18 @@
     ],
     "successes": [
       "G1: Freeze constraints, vendor-status constraints, and production migration prerequisites are satisfied.",
-      "G3: Migration step numbering is valid.",
-      "G3: ML-KEM is assigned to key establishment and ML-DSA is assigned to digital signatures.",
-      "G4: The $480,000.00 estimate is within the $500,000.00 limit and the numeric cost breakdown reconciles."
+      "G4: The $485,000.00 estimate is within the $500,000.00 limit and the numeric cost breakdown reconciles."
     ],
     "failures": [
       "G2: Required blocker 'ehr_certification' is missing or does not sufficiently explain its context and resolution.",
       "G2: Required blocker 'fips_validation' is missing or does not sufficiently explain its context and resolution.",
-      "G3: One or more migration activities are scheduled before the planning reference date (2026-10-30): architecture and design, discovery and risk assessment, governance and planning, risk assessment and architecture, technical assessment.",
-      "G3: An explicit production_crypto_change activity is missing; the plan must schedule production migration after validation.",
+      "G3: Activities scheduled before the planning reference date (2026-10-30): architecture design, compliance assessment, discovery and risk assessment, governance and planning, procurement and deployment.",
+      "G3: Required activity category 'risk_assessment' is missing.",
       "G3: Required activity category 'vendor_engagement' is missing.",
       "G3: Required activity category 'lab_testing' is missing.",
+      "G3: Required order 'inventory' before 'risk_assessment' is not satisfied.",
       "G3: Required order 'risk_assessment' before 'production_crypto_change' is not satisfied.",
       "G3: Risk assessment does not sufficiently prioritise long-lived sensitive data and HNDL exposure."
     ]
-  },
-  "grader_version": "3.0.0",
-  "prompt_hash": "0e7694de33ba31b8",
-  "task_file_hash": "0123fa3a4c38c924"
+  }
 }
