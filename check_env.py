@@ -12,10 +12,7 @@ if not api_key:
 print(f"PASS: key loaded (prefix={api_key[:12]}, length={len(api_key)})")
 print(f"PASS: python={sys.executable}")
 
-client = OpenAI(
-    base_url="https://api.deepseek.com/v1",
-    api_key=api_key,
-)
+client = OpenAI(base_url="https://api.deepseek.com/v1", api_key=api_key)
 
 try:
     resp = client.chat.completions.create(
