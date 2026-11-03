@@ -28,7 +28,7 @@
     "vendor_dependencies": [
       {
         "vendor": "String",
-        "pqc_support_status": "confirmed | unconfirmed | unsupported",
+        "pqc_support_status": "confirmed_current | confirmed_future | unconfirmed | unsupported",
         "evidence_required": "String"
       }
     ],
@@ -94,7 +94,8 @@
           ]
         ],
         "enforce_unconfirmed_vendors": true,
-        "enforce_lab_before_production": true
+        "enforce_lab_before_production": true,
+        "allow_future_vendor_support": true
       }
     },
     {

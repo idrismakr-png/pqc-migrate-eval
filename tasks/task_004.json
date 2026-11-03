@@ -28,7 +28,7 @@
     "vendor_dependencies": [
       {
         "vendor": "String",
-        "pqc_support_status": "String",
+        "pqc_support_status": "confirmed_current | confirmed_future | unconfirmed | unsupported",
         "evidence_required": "String"
       }
     ],

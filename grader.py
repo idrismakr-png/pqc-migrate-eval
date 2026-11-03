@@ -171,9 +171,14 @@ def evaluate_g1(params, response):
                         "as having confirmed PQC support."
                     )
                 elif status in {"confirmed_future", "planned", "projected"}:
-                    # Future commitments are acceptable if the timeline is
-                    # clearly stated as not-yet-available.
-                    pass
+                    # Future commitments are acceptable if the timeline
+                    # is clearly stated as not-yet-available, OR if the
+                    # task explicitly allows future vendor support.
+                    if not params.get("allow_future_vendor_support", False):
+                        failures.append(
+                            f"G1: Vendor '{vendor_name}' presented as confirmed "
+                            "future support but the task requires current confirmation."
+                        )
 
     # Lab-before-production check (opt-in, defaults to False).
     if params.get("enforce_lab_before_production", False):

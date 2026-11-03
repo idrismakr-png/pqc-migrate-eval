@@ -28,7 +28,7 @@
     "vendor_dependencies": [
       {
         "vendor": "Vendor or platform name",
-        "pqc_support_status": "confirmed | unconfirmed | unsupported",
+        "pqc_support_status": "confirmed_current | confirmed_future | unconfirmed | unsupported",
         "evidence_required": "Evidence required before production migration"
       }
     ],
